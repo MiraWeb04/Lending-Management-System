@@ -14,3 +14,9 @@
 *.log
 .DS_Store
 Thumbs.db
+
+/tmp_debug.php
+/audit_results.txt
+/modal_audit.py
+/lending_system/query_users_sample.php
+/lending_system/query*
