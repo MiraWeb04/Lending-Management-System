@@ -1,0 +1,6 @@
+# Web root for the lending app. Maintenance scripts stay off the public site.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^tools/ - [F,L]
+    RewriteRule ^(debug_|inspect_|tmp_).+\.php$ - [F,L]
+</IfModule>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline — RJ &amp; RR Finance</title>
+    <link rel="stylesheet" href="assets/vendor/bootstrap/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="css/design-system.css">
+    <link rel="stylesheet" href="css/pwa.css">
+</head>
+<body class="offline-shell">
+    <main class="offline-card">
+        <img src="images/logo.png" alt="RJ and RR Finance Services" class="offline-card__logo">
+        <h1 class="h4 fw-bold text-primary mb-2"><i class="fas fa-wifi-slash me-2"></i>You are offline</h1>
+        <p class="text-muted mb-4">This device is not connected to the office server or the network is unavailable. Reconnect to your local Wi‑Fi or LAN (same network as the lending server) to sign in and update records.</p>
+        <ul class="offline-tips list-unstyled small text-muted mb-4">
+            <li><i class="fas fa-check text-success me-2"></i>Installed app shell and styles may still load from cache.</li>
+            <li><i class="fas fa-check text-success me-2"></i>Live loan data requires connection to the XAMPP / office server.</li>
+            <li><i class="fas fa-check text-success me-2"></i>Use the server IP on your LAN if you are not on the internet (e.g. <code>http://192.168.x.x/lending_system/lending_system/</code>).</li>
+        </ul>
+        <div class="d-flex flex-wrap gap-2 justify-content-center">
+            <button type="button" class="btn btn-primary" onclick="window.location.reload()"><i class="fas fa-rotate-right me-1"></i> Try again</button>
+            <a href="index.php" class="btn btn-outline-primary">Portal home</a>
+        </div>
+    </main>
+</body>
+</html>

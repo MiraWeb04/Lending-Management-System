@@ -1,0 +1,16 @@
+/vendor/
+.env
+.env.*
+!.env.example
+
+/database/*.sql
+
+/lending_system/uploads/*
+!/lending_system/uploads/.htaccess
+!/lending_system/uploads/loan_documents/
+/lending_system/uploads/loan_documents/*
+!/lending_system/uploads/loan_documents/.htaccess
+
+*.log
+.DS_Store
+Thumbs.db

@@ -1,0 +1,9 @@
+{
+    "name": "rjrr/lending-system",
+    "description": "RJ and RR Finance Services lending management system",
+    "type": "project",
+    "require": {
+        "php": ">=8.1",
+        "phpmailer/phpmailer": "^6.9"
+    }
+}

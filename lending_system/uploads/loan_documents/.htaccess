@@ -1,0 +1,2 @@
+# Block direct web access; use download_loan_document_lending.php
+Require all denied

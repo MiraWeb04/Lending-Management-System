@@ -1,0 +1,240 @@
+/* Admin Reports & Analytics */
+
+.reports-hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.reports-hero__title {
+    font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+    font-weight: 800;
+    margin: 0 0 0.35rem;
+    color: var(--text-primary);
+}
+
+.reports-hero__subtitle {
+    margin: 0;
+    color: var(--text-secondary);
+    max-width: 42rem;
+    font-size: 0.9375rem;
+}
+
+.reports-type-nav .nav-link {
+    padding: 0.55rem 0.95rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    border: 1px solid transparent;
+}
+
+.reports-type-nav .nav-link:hover {
+    background: rgba(21, 91, 217, 0.06);
+    color: var(--primary);
+}
+
+.reports-type-nav .nav-link.active {
+    background: rgba(21, 91, 217, 0.12);
+    color: var(--primary);
+    border-color: rgba(21, 91, 217, 0.18);
+}
+
+.reports-filter-card {
+    border-radius: var(--panel-radius, 16px);
+    border: 1px solid rgba(15, 57, 116, 0.08);
+    background: #fff;
+    box-shadow: 0 12px 32px rgba(15, 35, 75, 0.05);
+    margin-bottom: 1.5rem;
+}
+
+.reports-period-field {
+    display: none;
+}
+
+.reports-period-field.is-active {
+    display: block;
+}
+
+.lending-period-filter .form-label {
+    margin-bottom: 0.35rem;
+    min-height: 1.25rem;
+}
+
+.lending-period-filter .form-select,
+.lending-period-filter .form-control {
+    height: 42px;
+    min-height: 42px;
+}
+
+.lending-period-filter .btn {
+    height: 42px;
+}
+
+.lending-period-showing {
+    margin-top: -0.25rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary, #64748b);
+}
+
+.lending-period-showing strong,
+#reports-filter-form .form-text strong {
+    color: var(--primary, #155bd9);
+}
+
+/* PDF export polish (KPIs, charts, tables) */
+.reports-export-document {
+    --reports-doc-green: #1a4d3e;
+    --reports-doc-green-dark: #123528;
+    --reports-doc-mint: #e8f4ef;
+    --reports-doc-mint-alt: #f4faf7;
+}
+
+body.reports-export-in-progress {
+    cursor: wait;
+}
+
+.reports-export-document--exporting {
+    background: #fff;
+    padding: 4px 0 12px;
+}
+
+.reports-export-document--exporting .dashboard-section__title,
+.reports-export-document--exporting .chart-panel__header h3 {
+    color: var(--reports-doc-green-dark);
+    font-weight: 800;
+}
+
+.reports-export-document--exporting .dashboard-section__head {
+    border-bottom: 2px solid var(--reports-doc-mint);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.reports-export-document--exporting .kpi-card {
+    border: 1px solid rgba(26, 77, 62, 0.12) !important;
+    box-shadow: none !important;
+    background: var(--reports-doc-mint-alt) !important;
+}
+
+.reports-export-document--exporting .kpi-card__label {
+    color: var(--reports-doc-green);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+}
+
+.reports-export-document--exporting .chart-panel {
+    border: 1px solid rgba(26, 77, 62, 0.12) !important;
+    box-shadow: none !important;
+}
+
+.reports-export-document--exporting .chart-panel__header {
+    background: var(--reports-doc-green) !important;
+    color: #fff !important;
+    border-radius: 8px 8px 0 0;
+}
+
+.reports-export-document--exporting .chart-panel__header .chart-badge {
+    background: rgba(255, 255, 255, 0.18) !important;
+    color: #fff !important;
+}
+
+.reports-export-document--exporting .table {
+    font-size: 0.8125rem;
+}
+
+.reports-export-document--exporting .table thead th {
+    background: var(--reports-doc-green) !important;
+    color: #fff !important;
+    border-color: var(--reports-doc-green-dark) !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.6875rem;
+    letter-spacing: 0.04em;
+}
+
+.reports-export-document--exporting .table tbody tr:nth-child(even) {
+    background: var(--reports-doc-mint) !important;
+}
+
+.reports-export-document--exporting .table tbody tr:nth-child(odd) {
+    background: #fff !important;
+}
+
+.reports-table-wrap {
+    overflow-x: auto;
+}
+
+@media print {
+    @page {
+        size: A4 landscape;
+        margin: 12mm;
+    }
+
+    body * {
+        visibility: hidden !important;
+    }
+
+    #reports-export-root,
+    #reports-export-root * {
+        visibility: visible !important;
+    }
+
+    #reports-export-root {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 0 !important;
+    }
+
+    .no-print,
+    .sidebar,
+    .topbar,
+    .reports-type-nav,
+    .reports-filter-card,
+    .app-footer {
+        display: none !important;
+    }
+
+    #reports-export-root.reports-export-document .dashboard-section__title,
+    #reports-export-root.reports-export-document .chart-panel__header h3 {
+        color: #123528;
+    }
+
+    #reports-export-root.reports-export-document .table thead th {
+        background: #1a4d3e !important;
+        color: #fff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    #reports-export-root.reports-export-document .table tbody tr:nth-child(even) {
+        background: #e8f4ef !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    #reports-export-root.reports-export-document .chart-panel__header {
+        background: #1a4d3e !important;
+        color: #fff !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .chart-panel,
+    .kpi-card {
+        break-inside: avoid;
+        box-shadow: none !important;
+        border: 1px solid rgba(26, 77, 62, 0.15) !important;
+    }
+
+    canvas {
+        max-height: 260px !important;
+    }
+}

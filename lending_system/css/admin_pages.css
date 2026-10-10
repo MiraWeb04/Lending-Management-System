@@ -1,0 +1,475 @@
+/* Admin / staff pages — legacy markup harmonization */
+
+.main-panel-body > .container-fluid.py-4,
+.main-panel-body > .app-content {
+    min-width: 0;
+}
+
+.main-panel-body .page-hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.main-panel-body .page-header-actions,
+.main-panel-body .page-hero .btn,
+.main-panel-body .page-hero > .btn {
+    flex-shrink: 0;
+}
+
+.main-panel-body .card.shadow-sm,
+.main-panel-body .card.metric-card {
+    border-radius: var(--panel-radius, 16px);
+    border: 1px solid rgba(15, 57, 116, 0.08);
+    box-shadow: 0 16px 40px rgba(15, 35, 75, 0.06);
+}
+
+.main-panel-body .card.shadow-sm > .card-header.bg-white,
+.main-panel-body .card.shadow-sm > .card-header {
+    background: transparent !important;
+    border-bottom: 1px solid rgba(15, 57, 116, 0.08);
+    padding: 1rem 1.25rem;
+}
+
+.main-panel-body .table thead.table-light th {
+    background: #f8fafc;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-secondary, #52637a);
+    border-bottom: 1px solid rgba(15, 57, 116, 0.08);
+}
+
+.main-panel-body .border-left-primary,
+.main-panel-body .border-left-success,
+.main-panel-body .border-left-warning,
+.main-panel-body .border-left-danger {
+    border-left: none !important;
+}
+
+.main-panel-body .modal-header.bg-primary,
+.main-panel-body .modal-header.bg-danger {
+    border-radius: 0;
+}
+
+.admin-form-panel {
+    max-width: 920px;
+    margin: 0 auto;
+}
+
+.contact-inquiry-list {
+    max-height: min(70vh, 640px);
+    overflow-y: auto;
+}
+
+.contact-inquiry-list__item--new:not(.active) {
+    border-left: 3px solid var(--primary);
+    background: rgba(21, 91, 217, 0.04);
+}
+
+.contact-inquiry-original__body,
+.contact-inquiry-reply__body {
+    padding: 1rem 1.15rem;
+    border-radius: 12px;
+    line-height: 1.6;
+    font-size: 0.95rem;
+}
+
+.contact-inquiry-original__body {
+    background: #f8fafc;
+    border: 1px solid rgba(15, 57, 116, 0.08);
+}
+
+.contact-inquiry-reply {
+    border-left: 3px solid #1e9c6e;
+    padding-left: 0.85rem;
+}
+
+.contact-inquiry-reply__body {
+    background: rgba(30, 156, 110, 0.06);
+    border: 1px solid rgba(30, 156, 110, 0.12);
+}
+
+/* Loan application review modal (admin underwriting) */
+.loan-application-review-modal .modal-dialog {
+    max-width: min(1140px, calc(100vw - 1.5rem));
+}
+
+.loan-application-review-modal__content {
+    border: 1px solid rgba(15, 57, 116, 0.1);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow:
+        0 24px 64px rgba(15, 35, 75, 0.14),
+        0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+.loan-application-review-modal__header {
+    padding: 1.35rem 1.5rem 0.5rem;
+    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.loan-application-review-modal__eyebrow {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--primary, #155bd9);
+}
+
+.loan-application-review-modal__body {
+    padding: 0.75rem 1.5rem 1.5rem;
+    background: #f1f5f9;
+}
+
+.loan-application-review-assessment {
+    position: relative;
+}
+
+.loan-application-review-assessment__lead {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    margin-bottom: 0.85rem;
+    padding: 0.75rem 1rem;
+    border-radius: 14px;
+    background: linear-gradient(105deg, rgba(21, 91, 217, 0.12) 0%, rgba(30, 156, 110, 0.1) 55%, rgba(245, 158, 11, 0.08) 100%);
+    border: 1px solid rgba(21, 91, 217, 0.15);
+    box-shadow: 0 8px 24px rgba(21, 91, 217, 0.08);
+}
+
+.loan-application-review-assessment__lead-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    color: #fff;
+    font-size: 1rem;
+    background: linear-gradient(135deg, #155bd9, #1e9c6e);
+    box-shadow: 0 6px 16px rgba(21, 91, 217, 0.35);
+    flex-shrink: 0;
+    animation: loan-assessment-lead-pulse 3s ease-in-out infinite;
+}
+
+@keyframes loan-assessment-lead-pulse {
+    0%,
+    100% {
+        transform: scale(1);
+        box-shadow: 0 6px 16px rgba(21, 91, 217, 0.35);
+    }
+    50% {
+        transform: scale(1.04);
+        box-shadow: 0 8px 22px rgba(30, 156, 110, 0.4);
+    }
+}
+
+.loan-application-review-assessment__lead-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+.loan-application-review-assessment__lead-copy strong {
+    font-size: 0.92rem;
+    color: #0f172a;
+}
+
+.loan-application-review-assessment__lead-copy span {
+    font-size: 0.78rem;
+    color: #475569;
+}
+
+.loan-application-review-modal .loan-assessment-admin-shell {
+    margin-bottom: 0.15rem;
+}
+
+.loan-application-review-modal .loan-assessment-card--admin {
+    box-shadow:
+        0 2px 4px rgba(15, 23, 42, 0.04),
+        0 20px 48px rgba(15, 57, 116, 0.12);
+}
+
+.loan-assessment-admin-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1rem 1.25rem;
+    margin-bottom: 1.15rem;
+    padding: 1rem 1.15rem;
+    border-radius: 16px;
+    border: 1px solid rgba(15, 57, 116, 0.1);
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.loan-assessment-admin-meta__eyebrow {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #64748b;
+    margin-bottom: 0.25rem;
+}
+
+.loan-assessment-admin-meta__title {
+    display: block;
+    font-size: 1.15rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: #0f172a;
+    line-height: 1.25;
+}
+
+.loan-assessment-admin-meta__subtitle {
+    display: block;
+    margin-top: 0.2rem;
+    font-size: 0.82rem;
+    color: #64748b;
+}
+
+.loan-assessment-admin-meta__pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    justify-content: flex-end;
+}
+
+.loan-assessment-admin-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: #334155;
+    background: #fff;
+    border: 1px solid rgba(15, 57, 116, 0.12);
+    white-space: nowrap;
+}
+
+.loan-assessment-admin-pill--is-within {
+    color: #0f766e;
+    background: rgba(30, 156, 110, 0.08);
+    border-color: rgba(30, 156, 110, 0.22);
+}
+
+.loan-assessment-admin-pill--is-over {
+    color: #be123c;
+    background: rgba(224, 62, 78, 0.08);
+    border-color: rgba(224, 62, 78, 0.22);
+}
+
+.loan-application-review-modal .card.shadow-sm {
+    border-radius: 18px;
+    border: 1px solid rgba(15, 57, 116, 0.08);
+    box-shadow: 0 10px 28px rgba(15, 35, 75, 0.06) !important;
+}
+
+.loan-application-review-modal .card.shadow-sm > .card-header.bg-white {
+    font-size: 0.92rem;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+}
+
+@media (max-width: 767.98px) {
+    .loan-assessment-admin-meta {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .loan-assessment-admin-meta__pills {
+        justify-content: flex-start;
+    }
+
+    .loan-application-review-modal__body {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+/* Record payment form (admin / collector) */
+.record-payment-shell {
+    margin-bottom: 2rem;
+}
+
+.record-payment-form .record-payment-section {
+    background: #fff;
+    border: 1px solid rgba(15, 57, 116, 0.1);
+    border-radius: 1.1rem;
+    padding: 1.15rem 1.25rem 1.25rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 10px 28px rgba(15, 35, 75, 0.05);
+}
+
+.record-payment-section__head {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+.record-payment-section__icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(21, 91, 217, 0.1);
+    color: var(--primary, #155bd9);
+    flex-shrink: 0;
+}
+
+.record-payment-section__title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin: 0 0 0.15rem;
+    color: var(--text-primary, #0f172a);
+}
+
+.record-payment-section__desc {
+    font-size: 0.82rem;
+    color: var(--text-secondary, #52637a);
+    margin: 0;
+}
+
+.record-payment-section .form-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-secondary, #52637a);
+}
+
+.record-payment-required {
+    color: #dc3545;
+    font-weight: 700;
+}
+
+.record-payment-borrower-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(21, 91, 217, 0.08);
+    border: 1px solid rgba(21, 91, 217, 0.15);
+    color: var(--primary, #155bd9);
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.record-payment-borrower-chip::before {
+    content: "\f007";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 0.75rem;
+    opacity: 0.85;
+}
+
+.record-payment-aside {
+    position: sticky;
+    top: 1rem;
+}
+
+.record-payment-summary {
+    background: linear-gradient(160deg, #0f3d8c 0%, #155bd9 55%, #1e6ef0 100%);
+    color: #fff;
+    border-radius: 1.1rem;
+    padding: 1.15rem 1.2rem;
+    box-shadow: 0 16px 36px rgba(21, 91, 217, 0.28);
+}
+
+.record-payment-summary__head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.92;
+    margin-bottom: 1rem;
+}
+
+.record-payment-summary__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.record-payment-summary__list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    font-size: 0.84rem;
+    opacity: 0.92;
+}
+
+.record-payment-summary__list li strong {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+}
+
+.record-payment-summary__highlight {
+    margin-top: 0.25rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.record-payment-summary__highlight strong {
+    font-size: 1.15rem;
+}
+
+.record-payment-aside__placeholder {
+    padding: 1rem 1.1rem;
+    border-radius: 1rem;
+    background: #f8fafc;
+    border: 1px dashed rgba(15, 57, 116, 0.18);
+    text-align: center;
+}
+
+.record-payment-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    padding: 1rem 1.25rem;
+    background: #fff;
+    border: 1px solid rgba(15, 57, 116, 0.1);
+    border-radius: 1rem;
+    box-shadow: 0 8px 24px rgba(15, 35, 75, 0.06);
+}
+
+.record-payment-actions__note {
+    font-size: 0.82rem;
+    color: var(--text-secondary, #52637a);
+}
+
+.record-payment-actions__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-left: auto;
+}
+
+@media (max-width: 991.98px) {
+    .record-payment-aside {
+        position: static;
+        order: -1;
+    }
+}

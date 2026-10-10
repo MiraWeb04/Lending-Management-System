@@ -1,0 +1,25 @@
+{
+  "name": "RJ & RR Finance Services",
+  "short_name": "RJRR Finance",
+  "description": "Lending management and borrower portal — works on your local office network without internet.",
+  "start_url": "./index.php",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#f4f7fb",
+  "theme_color": "#0f3974",
+  "icons": [
+    {
+      "src": "images/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

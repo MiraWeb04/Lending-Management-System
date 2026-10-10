@@ -1,0 +1,12 @@
+# Used when the host document root is the repository folder.
+# Point the domain at lending_system/ instead when the host allows it.
+
+<Files ".env">
+    Require all denied
+</Files>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^database/ - [F,L]
+    RewriteRule ^vendor/ - [F,L]
+</IfModule>
