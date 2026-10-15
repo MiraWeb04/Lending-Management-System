@@ -1,3 +1,4 @@
+-- Step 1 of 2: create QR Ph transaction table (idempotent). Always run step 2 next.
 CREATE TABLE IF NOT EXISTS `paymongo_qrph_transactions` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
   `internal_reference` VARCHAR(40) NOT NULL,
@@ -12,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `paymongo_qrph_transactions` (
   `amount` DECIMAL(12,2) NOT NULL,
   `penalty_paid` DECIMAL(12,2) NOT NULL DEFAULT 0.00,
   `currency` CHAR(3) NOT NULL DEFAULT 'PHP',
-  `status` ENUM('pending', 'failed', 'expired') NOT NULL DEFAULT 'pending',
+  `status` ENUM('pending', 'failed', 'expired', 'succeeded', 'review_required') NOT NULL DEFAULT 'pending',
   `provider_status` VARCHAR(60) NOT NULL DEFAULT 'initializing',
   `qr_image_url` LONGTEXT DEFAULT NULL,
   `failure_message` TEXT DEFAULT NULL,
