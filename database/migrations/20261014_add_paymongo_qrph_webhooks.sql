@@ -1,3 +1,4 @@
+-- Step 2 of 2: webhook audit table, payment link column, and transaction upgrades (idempotent).
 -- Ensure the Step 2 table exists so this migration is safe when deployed alone
 -- or when the Step 2 migration has already been applied.
 CREATE TABLE IF NOT EXISTS `paymongo_qrph_transactions` (
