@@ -19,13 +19,11 @@ try {
     die('Database connection failed. Please try again later or contact the administrator.');
 }
 
-if (empty($GLOBALS['_lending_status_sync_ran'])) {
-    $GLOBALS['_lending_status_sync_ran'] = true;
-    $syncFlag = (string)lendingEnv('LOAN_STATUS_SYNC_ON_REQUEST', '0');
-    if ($syncFlag === '1' || $syncFlag === 'true') {
-        require_once __DIR__ . '/update_status_lending.php';
-    }
-}
+$runStatusSyncOnRequest = in_array(
+    strtolower((string)lendingEnv('LOAN_STATUS_SYNC_ON_REQUEST', '0')),
+    ['1', 'true'],
+    true
+);
 /**
  * Execute a prepared query
  */
@@ -378,30 +376,86 @@ function deleteReadNotifications($userId) {
 
 ensureNotificationsSchema();
 
-function recordPaymentTransaction($loanId, $paymentDate, $amountPaid, $collectorName, $collectorId = null, $clientId = null, $paymentMethod = 'Cash', $referenceNumber = null, $penaltyPaid = 0.0, $remarks = null) {
+function sendRecordedPaymentEmail($loanId, $amountPaid, $receiptNumber, array $loanRow) {
+    require_once __DIR__ . '/loan_email_helpers.php';
+    $borrowerEmailRow = executeQuery(
+        'SELECT c.email, u.email AS user_email FROM clients c LEFT JOIN users u ON u.user_id = c.user_id WHERE c.client_id = (SELECT client_id FROM loans WHERE loan_id = ? LIMIT 1) LIMIT 1',
+        [$loanId]
+    )->fetch(PDO::FETCH_ASSOC);
+    $borrowerEmail = trim((string)($borrowerEmailRow['email'] ?? $borrowerEmailRow['user_email'] ?? ''));
+    if ($borrowerEmail === '') {
+        return;
+    }
+
+    $borrowerName = trim((string)($loanRow['borrower_name'] ?? ''));
+    $loanNumberLabel = trim((string)($loanRow['loan_number'] ?? ''));
+    $totalPayable = (float)($loanRow['total_payable'] ?? 0);
+    if (strcasecmp((string)($loanRow['status'] ?? ''), 'Paid') === 0) {
+        sendLoanFullyPaidEmail(
+            $borrowerEmail,
+            (int)$loanId,
+            (float)$amountPaid,
+            (string)$receiptNumber,
+            $totalPayable,
+            $borrowerName,
+            $loanNumberLabel
+        );
+        return;
+    }
+
+    sendPaymentReceivedEmail(
+        $borrowerEmail,
+        (int)$loanId,
+        (float)$amountPaid,
+        (string)$receiptNumber,
+        $totalPayable,
+        $borrowerName,
+        $loanNumberLabel
+    );
+}
+
+function recordPaymentTransaction($loanId, $paymentDate, $amountPaid, $collectorName, $collectorId = null, $clientId = null, $paymentMethod = 'Cash', $referenceNumber = null, $penaltyPaid = 0.0, $remarks = null, $paymongoTransactionId = null, $providerPaymentId = null) {
     global $conn;
 
     require_once __DIR__ . '/loan_helpers.php';
-    ensurePaymentReceiptColumns();
+    require_once __DIR__ . '/paymongo_qrph.php';
 
-    $penaltyPaid = max(0.0, round((float)$penaltyPaid, 2));
-    $remarksText = trim((string)($remarks ?? ''));
-    $remarksText = $remarksText !== '' ? $remarksText : null;
-    validatePaymentAmounts($loanId, (float)$amountPaid, $penaltyPaid);
-    $penaltyDueNow = (float)(calculateLoanBalanceSummary($loanId)['penalty_due'] ?? 0);
-    $penaltyPaid = min($penaltyPaid, $penaltyDueNow);
-    $installmentPaid = max(0.0, round((float)$amountPaid - $penaltyPaid, 2));
-    $interestPaid = allocatePaymentInterestPortion($loanId, $installmentPaid);
-
+    $ownsTransaction = !$conn->inTransaction();
+    if ($ownsTransaction) {
+        ensurePaymentReceiptColumns();
+    }
     $loanRow = null;
-    $conn->beginTransaction();
+    $paymentId = null;
+    if ($ownsTransaction) {
+        $conn->beginTransaction();
+    }
     try {
+        $lockLoan = $conn->prepare('SELECT loan_id FROM loans WHERE loan_id = ? LIMIT 1 FOR UPDATE');
+        $lockLoan->execute([(int)$loanId]);
+        if (!$lockLoan->fetchColumn()) {
+            throw new InvalidArgumentException('The loan for this payment no longer exists.');
+        }
+        if ($paymongoTransactionId === null) {
+            lendingAssertNoOpenPaymongoQrphTransaction($conn, (int)$loanId);
+        } else {
+            lendingAssertNoOpenPaymongoQrphTransaction($conn, (int)$loanId, (int)$paymongoTransactionId);
+        }
+
+        $penaltyPaid = max(0.0, round((float)$penaltyPaid, 2));
+        $remarksText = trim((string)($remarks ?? ''));
+        $remarksText = $remarksText !== '' ? $remarksText : null;
+        validatePaymentAmounts($loanId, (float)$amountPaid, $penaltyPaid);
+        $penaltyDueNow = (float)(calculateLoanBalanceSummary($loanId)['penalty_due'] ?? 0);
+        $penaltyPaid = min($penaltyPaid, $penaltyDueNow);
+        $installmentPaid = max(0.0, round((float)$amountPaid - $penaltyPaid, 2));
+        $interestPaid = allocatePaymentInterestPortion($loanId, $installmentPaid);
+
         $receiptNumber = null;
         $attempts = 0;
         while ($attempts < 5) {
             $receiptNumber = generatePaymentReceiptNumber();
             try {
-                insert('payments', [
+                $paymentData = [
                     'loan_id' => $loanId,
                     'payment_date' => $paymentDate,
                     'amount_paid' => $installmentPaid,
@@ -415,7 +469,11 @@ function recordPaymentTransaction($loanId, $paymentDate, $amountPaid, $collector
                     'remarks' => $remarksText,
                     'receipt_number' => $receiptNumber,
                     'receipt_generated_at' => date('Y-m-d H:i:s')
-                ]);
+                ];
+                if ($paymongoTransactionId !== null) {
+                    $paymentData['paymongo_qrph_transaction_id'] = (int)$paymongoTransactionId;
+                }
+                $paymentId = (int)insert('payments', $paymentData);
                 break;
             } catch (PDOException $e) {
                 if ($e->getCode() === '23000' && stripos($e->getMessage(), 'receipt_number') !== false) {
@@ -423,6 +481,19 @@ function recordPaymentTransaction($loanId, $paymentDate, $amountPaid, $collector
                     continue;
                 }
                 throw $e;
+            }
+        }
+
+        if ($paymongoTransactionId !== null) {
+            $paidUpdate = $conn->prepare(
+                "UPDATE paymongo_qrph_transactions
+                 SET status = 'succeeded', provider_status = 'succeeded', provider_payment_id = ?,
+                     payment_id = ?, paid_at = NOW(), updated_at = NOW()
+                 WHERE id = ? AND status = 'pending'"
+            );
+            $paidUpdate->execute([(string)$providerPaymentId, $paymentId, (int)$paymongoTransactionId]);
+            if ($paidUpdate->rowCount() !== 1) {
+                throw new RuntimeException('The PayMongo QR Ph transaction is no longer pending.');
             }
         }
 
@@ -474,48 +545,24 @@ function recordPaymentTransaction($loanId, $paymentDate, $amountPaid, $collector
             }
         }
 
-        $conn->commit();
-
-        if (!empty($loanRow)) {
-            require_once __DIR__ . '/loan_email_helpers.php';
-            $borrowerEmailRow = executeQuery(
-                'SELECT c.email, u.email AS user_email FROM clients c LEFT JOIN users u ON u.user_id = c.user_id WHERE c.client_id = (SELECT client_id FROM loans WHERE loan_id = ? LIMIT 1) LIMIT 1',
-                [$loanId]
-            )->fetch(PDO::FETCH_ASSOC);
-            $borrowerEmail = trim((string)($borrowerEmailRow['email'] ?? $borrowerEmailRow['user_email'] ?? ''));
-            if ($borrowerEmail !== '') {
-                $borrowerName = trim((string)($loanRow['borrower_name'] ?? ''));
-                $loanNumberLabel = trim((string)($loanRow['loan_number'] ?? ''));
-                $totalPayable = (float)($loanRow['total_payable'] ?? 0);
-                $loanIsFullyPaid = strcasecmp((string)($loanRow['status'] ?? ''), 'Paid') === 0;
-
-                if ($loanIsFullyPaid) {
-                    sendLoanFullyPaidEmail(
-                        $borrowerEmail,
-                        (int)$loanId,
-                        (float)$amountPaid,
-                        (string)$receiptNumber,
-                        $totalPayable,
-                        $borrowerName,
-                        $loanNumberLabel
-                    );
-                } else {
-                    sendPaymentReceivedEmail(
-                        $borrowerEmail,
-                        (int)$loanId,
-                        (float)$amountPaid,
-                        (string)$receiptNumber,
-                        $totalPayable,
-                        $borrowerName,
-                        $loanNumberLabel
-                    );
-                }
+        if ($ownsTransaction) {
+            $conn->commit();
+            if (!empty($loanRow)) {
+                sendRecordedPaymentEmail((int)$loanId, (float)$amountPaid, (string)$receiptNumber, $loanRow);
             }
         }
 
         return $receiptNumber;
-    } catch (Exception $e) {
-        $conn->rollBack();
+    } catch (Throwable $e) {
+        if ($ownsTransaction && $conn->inTransaction()) {
+            $conn->rollBack();
+        }
         throw $e;
     }
+}
+
+if (!empty($runStatusSyncOnRequest) && empty($GLOBALS['_lending_status_sync_ran'])) {
+    $GLOBALS['_lending_status_sync_ran'] = true;
+    require_once __DIR__ . '/update_status_lending.php';
+    syncLendingLoanStatuses();
 }

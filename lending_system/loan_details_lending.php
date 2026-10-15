@@ -267,7 +267,6 @@ foreach ($payments as $paymentRow) {
     <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/lending_styles.css">
-    <link rel="stylesheet" href="css/pwa.css">
 </head>
 <body>
     <?php include 'includes/nav_lending.php'; ?>
@@ -281,7 +280,7 @@ foreach ($payments as $paymentRow) {
             </div>
             <div class="quick-actions">
                 <?php if ($loan['status'] !== 'Paid' && (isAdmin() || isCollector())): ?>
-                <a href="payments_lending.php?add=true&loan=<?php echo $loanId; ?>&amount=<?php echo rawurlencode(number_format($scheduledInstallmentAmount, 2, '.', '')); ?>&borrower=<?php echo rawurlencode($loan['first_name'] . ' ' . $loan['last_name']); ?>" class="btn btn-success btn-sm"><i class="fas fa-cash-register me-1"></i> Record Payment</a>
+                <a href="payments_lending.php?add=true&loan=<?php echo $loanId; ?>&borrower=<?php echo rawurlencode($loan['first_name'] . ' ' . $loan['last_name']); ?>" class="btn btn-success btn-sm"><i class="fas fa-cash-register me-1"></i> Record Payment</a>
                 <?php endif; ?>
                 <a href="client_details_lending.php?id=<?php echo $loan['client_id']; ?>" class="btn btn-outline-primary btn-sm"><i class="fas fa-user me-1"></i> Borrower Profile</a>
             </div>

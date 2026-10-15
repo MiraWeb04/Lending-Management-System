@@ -197,16 +197,14 @@ function renderNotificationTopbarBell(int $unreadCount, string $href = 'notifica
         $bellClass .= ' has-unread';
     }
 
-    $html = '<a href="' . htmlspecialchars($href, ENT_QUOTES, 'UTF-8') . '" class="' . htmlspecialchars($bellClass, ENT_QUOTES, 'UTF-8') . '" aria-label="Notifications';
+    $html = '<a href="' . htmlspecialchars($href, ENT_QUOTES, 'UTF-8') . '" class="' . htmlspecialchars($bellClass, ENT_QUOTES, 'UTF-8') . '" data-nav-label="Notifications" aria-label="Notifications';
     if ($unreadCount > 0) {
         $html .= ', ' . (int)$unreadCount . ' unread';
     }
     $html .= '">';
     $html .= '<span class="notification-bell__icon"><i class="fas fa-bell" aria-hidden="true"></i></span>';
-    if ($unreadCount > 0) {
-        $display = $unreadCount > 99 ? '99+' : (string)(int)$unreadCount;
-        $html .= '<span class="notification-bell__badge">' . htmlspecialchars($display, ENT_QUOTES, 'UTF-8') . '</span>';
-    }
+    $display = $unreadCount > 99 ? '99+' : (string)max(0, (int)$unreadCount);
+    $html .= '<span class="notification-bell__badge" data-nav-count="notifications_lending.php" data-nav-hint="unread"' . ($unreadCount > 0 ? '' : ' hidden') . '>' . htmlspecialchars($display, ENT_QUOTES, 'UTF-8') . '</span>';
     $html .= '</a>';
 
     return $html;

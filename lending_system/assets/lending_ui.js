@@ -86,15 +86,20 @@
         }
 
         document.querySelectorAll('.alert:not(.alert-permanent)').forEach(function (alert) {
-            if (alert.closest('.toast-stack')) return;
+            if (alert.closest('.toast-stack') || alert.closest('.modal') || alert.closest('form')) return;
             if (alert.classList.contains('d-none') || alert.hidden || alert.closest('.d-none')) return;
-            const text = alert.textContent.trim();
+            const clone = alert.cloneNode(true);
+            clone.querySelectorAll('button, .btn-close').forEach(function (button) {
+                button.remove();
+            });
+            const text = clone.textContent.trim();
             if (!text) return;
             let toastType = 'info';
             if (alert.classList.contains('alert-success')) toastType = 'success';
             if (alert.classList.contains('alert-danger')) toastType = 'danger';
             if (alert.classList.contains('alert-warning')) toastType = 'warning';
             showAppToast(text, toastType);
+            alert.classList.add('d-none');
         });
 
         document.querySelectorAll('[data-global-search]').forEach(function (input) {
@@ -127,13 +132,13 @@
                             usePointStyle: true,
                             boxWidth: 10,
                             padding: 16,
-                            font: { family: 'Plus Jakarta Sans', size: 12, weight: '600' }
+                            font: { family: 'Segoe UI', size: 12, weight: '600' }
                         }
                     },
                     tooltip: {
                         backgroundColor: 'rgba(15, 23, 42, 0.94)',
-                        titleFont: { family: 'Plus Jakarta Sans', weight: '700', size: 13 },
-                        bodyFont: { family: 'Plus Jakarta Sans', size: 12 },
+                        titleFont: { family: 'Segoe UI', weight: '700', size: 13 },
+                        bodyFont: { family: 'Segoe UI', size: 12 },
                         padding: 12,
                         cornerRadius: 10,
                         displayColors: true,
@@ -148,14 +153,14 @@
                     x: {
                         grid: { display: false },
                         border: { display: false },
-                        ticks: { font: { family: 'Plus Jakarta Sans', size: 11 }, color: '#64748b', maxRotation: 0, autoSkipPadding: 12 }
+                        ticks: { font: { family: 'Segoe UI', size: 11 }, color: '#64748b', maxRotation: 0, autoSkipPadding: 12 }
                     },
                     y: {
                         beginAtZero: true,
                         border: { display: false },
                         grid: { color: 'rgba(15,57,116,0.06)', drawTicks: false },
                         ticks: {
-                            font: { family: 'Plus Jakarta Sans', size: 11 },
+                            font: { family: 'Segoe UI', size: 11 },
                             color: '#64748b',
                             padding: 8,
                             callback: function (value) {
@@ -179,7 +184,7 @@
                             usePointStyle: true,
                             boxWidth: 10,
                             padding: 14,
-                            font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' }
+                            font: { family: 'Segoe UI', size: 11, weight: '600' }
                         }
                     },
                     tooltip: {
@@ -214,10 +219,10 @@
                 ctx.textAlign = 'center';
                 ctx.textBaseline = 'middle';
                 ctx.fillStyle = '#1c2d48';
-                ctx.font = '700 1.35rem "Plus Jakarta Sans", sans-serif';
+                ctx.font = '700 1.35rem "Segoe UI", sans-serif';
                 ctx.fillText(String(text), x, y - 6);
                 ctx.fillStyle = '#64748b';
-                ctx.font = '600 0.68rem "Plus Jakarta Sans", sans-serif';
+                ctx.font = '600 0.68rem "Segoe UI", sans-serif';
                 ctx.fillText('TOTAL', x, y + 14);
                 ctx.restore();
             }

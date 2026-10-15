@@ -1,26 +1,39 @@
 <?php
-if (!isset($conn)) {
-    return;
-}
+/**
+ * Mark installment rows and loan accounts Paid or Overdue.
+ * Used by the daily cron script and, when enabled, by LOAN_STATUS_SYNC_ON_REQUEST.
+ */
 
-try {
-    $sql = "
-    UPDATE loans l
-    LEFT JOIN (
-        SELECT loan_id, COALESCE(SUM(amount_paid),0) AS paid
-        FROM payments
-        GROUP BY loan_id
-    ) p ON l.loan_id = p.loan_id
-    SET l.status = CASE
-        WHEN COALESCE(p.paid,0) >= l.total_payable THEN 'Paid'
-        WHEN l.due_date < CURDATE() AND COALESCE(p.paid,0) < l.total_payable THEN 'Overdue'
-        ELSE l.status
-    END
-    WHERE l.status IN ('Active','Overdue')
-    ";
+function syncLendingLoanStatuses(): array
+{
+    $counts = ['checked' => 0, 'paid' => 0, 'overdue' => 0, 'active' => 0];
+    $stmt = executeQuery("SELECT loan_id FROM loans WHERE status IN ('Active', 'Overdue')");
+    if (!$stmt) {
+        return $counts;
+    }
 
-    $conn->exec($sql);
+    $loanIds = $stmt->fetchAll(PDO::FETCH_COLUMN);
+    $counts['checked'] = count($loanIds);
 
-} catch (PDOException $e) {
-    error_log("Status update error: " . $e->getMessage());
+    foreach ($loanIds as $loanId) {
+        $loanId = (int)$loanId;
+        if ($loanId <= 0) {
+            continue;
+        }
+
+        recalculateLoanPaymentSchedule($loanId);
+        updateLoanStatusForLoan($loanId);
+
+        $statusStmt = executeQuery('SELECT status FROM loans WHERE loan_id = ? LIMIT 1', [$loanId]);
+        $status = strtolower(trim((string)($statusStmt ? $statusStmt->fetchColumn() : '')));
+        if ($status === 'paid') {
+            $counts['paid']++;
+        } elseif ($status === 'overdue') {
+            $counts['overdue']++;
+        } elseif ($status === 'active') {
+            $counts['active']++;
+        }
+    }
+
+    return $counts;
 }

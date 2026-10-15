@@ -40,7 +40,6 @@ $validUser = $token !== '' ? getUserByResetToken($token) : false;
     <title>Reset Password - RJ and RR Finance Services</title>
     <link href="assets/vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/lending_styles.css">
-    <link rel="stylesheet" href="css/pwa.css">
     <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
 </head>
 <body class="public-auth-page">

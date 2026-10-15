@@ -54,18 +54,25 @@ if (isBorrower()) {
 
 if (!isBorrower()) {
     $navSections[] = [
-        'label' => 'Loan Management',
+        'label' => 'Portfolio',
         'items' => array_values(array_filter([
             ['href' => 'clients_lending.php', 'icon' => 'fa-users', 'label' => 'Clients'],
             ['href' => 'loans_lending.php', 'icon' => 'fa-hand-holding-dollar', 'label' => 'Loans'],
             ['href' => 'payments_lending.php', 'icon' => 'fa-money-check-dollar', 'label' => 'Payments'],
-            isAdmin() ? ['href' => 'loan_applications_lending.php', 'icon' => 'fa-file-signature', 'label' => 'Loan Applications'] : null,
-            isAdmin() ? ['href' => 'loan_release_lending.php', 'icon' => 'fa-file-contract', 'label' => 'Loan Release'] : null,
-            isAdmin() ? ['href' => 'loan_release_invoices_lending.php', 'icon' => 'fa-file-invoice', 'label' => 'Release Invoices'] : null,
-            isAdmin() ? ['href' => 'borrower_approval_lending.php', 'icon' => 'fa-user-check', 'label' => 'Borrower Approval'] : null,
             isAdmin() ? ['href' => 'collectors_lending.php', 'icon' => 'fa-user-tie', 'label' => 'Collectors'] : null,
         ])),
     ];
+    if (isAdmin()) {
+        $navSections[] = [
+            'label' => 'Origination',
+            'items' => [
+                ['href' => 'loan_applications_lending.php', 'icon' => 'fa-file-signature', 'label' => 'Applications'],
+                ['href' => 'borrower_approval_lending.php', 'icon' => 'fa-user-check', 'label' => 'Borrower Approval'],
+                ['href' => 'loan_release_lending.php', 'icon' => 'fa-file-contract', 'label' => 'Loan Release'],
+                ['href' => 'loan_release_invoices_lending.php', 'icon' => 'fa-file-invoice', 'label' => 'Release Invoices'],
+            ],
+        ];
+    }
 }
 
 if (isAdmin()) {
@@ -87,10 +94,27 @@ if (isAdmin()) {
     ];
 }
 
+$currentNavLabel = 'Lending Management';
+$currentSectionLabel = 'Business operations console';
+foreach ($navSections as $section) {
+    foreach ($section['items'] as $item) {
+        if (isActivePage($item['href']) === 'active') {
+            $currentNavLabel = $item['label'];
+            $currentSectionLabel = $section['label'];
+            break 2;
+        }
+    }
+}
+
 $globalSearchTarget = isAdmin() ? 'clients_lending.php' : (isCollector() ? 'loans_lending.php' : '');
+
+require_once __DIR__ . '/sidebar_counts.php';
+$sidebarCounts = lendingSidebarActionCounts();
+$sidebarCountHints = lendingSidebarCountHints();
 ?>
 <a class="skip-link" href="#mainContent">Skip to content</a>
-<div class="dashboard-layout">
+<div class="dashboard-layout<?php echo isBorrower() ? ' dashboard-layout--borrower' : ''; ?>">
+    <div class="sidebar-backdrop" id="sidebarBackdrop" hidden></div>
     <aside class="sidebar sidebar--premium" id="mainSidebar" aria-label="Primary navigation">
         <div class="brand-logo">
             <img src="images/logo.png" alt="RJ and RR Finance Services logo">
@@ -102,10 +126,21 @@ $globalSearchTarget = isAdmin() ? 'clients_lending.php' : (isCollector() ? 'loan
                 <div class="nav-section-label"><?php echo htmlspecialchars($section['label']); ?></div>
                 <ul class="nav-links">
                     <?php foreach ($section['items'] as $item): ?>
+                        <?php
+                        $itemCount = array_key_exists($item['href'], $sidebarCounts) ? (int)$sidebarCounts[$item['href']] : null;
+                        $itemHint = $sidebarCountHints[$item['href']] ?? 'open';
+                        $itemTitle = $item['label'];
+                        if ($itemCount !== null && $itemCount > 0) {
+                            $itemTitle .= ', ' . $itemCount . ' ' . $itemHint;
+                        }
+                        ?>
                         <li>
-                            <a href="<?php echo htmlspecialchars($item['href']); ?>" class="<?php echo isActivePage($item['href']); ?>"<?php echo isActivePage($item['href']) === 'active' ? ' aria-current="page"' : ''; ?> title="<?php echo htmlspecialchars($item['label']); ?>">
+                            <a href="<?php echo htmlspecialchars($item['href']); ?>" class="<?php echo isActivePage($item['href']); ?>"<?php echo isActivePage($item['href']) === 'active' ? ' aria-current="page"' : ''; ?> data-nav-label="<?php echo htmlspecialchars($item['label']); ?>" title="<?php echo htmlspecialchars($itemTitle); ?>"<?php echo $itemCount !== null && $itemCount > 0 ? ' aria-label="' . htmlspecialchars($itemTitle) . '"' : ''; ?>>
                                 <i class="fas <?php echo htmlspecialchars($item['icon']); ?>" aria-hidden="true"></i>
-                                <span><?php echo htmlspecialchars($item['label']); ?></span>
+                                <span class="nav-label"><?php echo htmlspecialchars($item['label']); ?></span>
+                                <?php if ($itemCount !== null): ?>
+                                    <span class="nav-count" data-nav-count="<?php echo htmlspecialchars($item['href']); ?>" data-nav-hint="<?php echo htmlspecialchars($itemHint); ?>"<?php echo $itemCount > 0 ? '' : ' hidden'; ?> aria-hidden="true"><?php echo $itemCount > 99 ? '99+' : (int)$itemCount; ?></span>
+                                <?php endif; ?>
                             </a>
                         </li>
                     <?php endforeach; ?>
@@ -126,18 +161,18 @@ $globalSearchTarget = isAdmin() ? 'clients_lending.php' : (isCollector() ? 'loan
         <header class="topbar">
             <div class="topbar-inner">
                 <div class="topbar-left">
-                    <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
+                    <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar" aria-controls="mainSidebar" aria-expanded="false">
                         <i class="fas fa-bars"></i>
                     </button>
                     <div>
-                        <div class="topbar-title">Lending Management</div>
-                        <div class="small text-muted d-none d-md-block">Business operations console</div>
+                        <div class="topbar-title"><?php echo htmlspecialchars($currentNavLabel); ?></div>
+                        <div class="small text-muted d-none d-md-block"><?php echo htmlspecialchars($currentSectionLabel); ?></div>
                     </div>
                 </div>
 
                 <div class="topbar-meta">
                     <?php if ($globalSearchTarget !== ''): ?>
-                        <div class="topbar-search position-relative d-none d-lg-block">
+                        <div class="topbar-search position-relative">
                             <i class="fas fa-search" aria-hidden="true"></i>
                             <input type="search" class="form-control" placeholder="Search clients or records..." data-global-search="<?php echo htmlspecialchars($globalSearchTarget); ?>" aria-label="Search">
                         </div>

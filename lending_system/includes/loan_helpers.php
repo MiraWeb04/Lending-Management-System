@@ -354,6 +354,44 @@ function calculateLoanBalanceSummary(int $loanId): array
 }
 
 /**
+ * Overdue loans collect the snapshot total (remaining balance + penalties), not one installment.
+ */
+function shouldCollectFullAmountDue(int $loanId, ?array $balanceSummary = null): bool
+{
+    require_once __DIR__ . '/db_lending.php';
+
+    $summary = $balanceSummary ?? calculateLoanBalanceSummary($loanId);
+    if ((float)($summary['penalty_due'] ?? 0) > 0.009) {
+        return true;
+    }
+
+    $loan = executeQuery(
+        'SELECT release_id, status FROM loans WHERE loan_id = ? LIMIT 1',
+        [$loanId]
+    )->fetch(PDO::FETCH_ASSOC);
+
+    if (!$loan) {
+        return false;
+    }
+
+    if (strcasecmp(trim((string)($loan['status'] ?? '')), 'Overdue') === 0) {
+        return true;
+    }
+
+    $releaseId = (int)($loan['release_id'] ?? 0);
+    if ($releaseId <= 0) {
+        return false;
+    }
+
+    $overdueInstallments = (int)(executeQuery(
+        'SELECT COUNT(*) FROM loan_payment_schedules WHERE release_id = ? AND status = ?',
+        [$releaseId, 'Overdue']
+    )->fetchColumn() ?? 0);
+
+    return $overdueInstallments > 0;
+}
+
+/**
  * Prefill for "Total Payment Received": one installment when current; balance + penalties when overdue.
  */
 function calculateSuggestedPaymentReceived(int $loanId, ?array $balanceSummary = null): float
@@ -365,7 +403,7 @@ function calculateSuggestedPaymentReceived(int $loanId, ?array $balanceSummary =
     $remainingBalance = (float)($summary['remaining_balance'] ?? 0);
     $totalAmountDue = (float)($summary['total_amount_due'] ?? $remainingBalance);
 
-    if ($penaltyDue > 0.009) {
+    if ($penaltyDue > 0.009 || shouldCollectFullAmountDue($loanId, $summary)) {
         return round($totalAmountDue, 2);
     }
 

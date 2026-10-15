@@ -53,7 +53,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/lending_styles.css">
-    <link rel="stylesheet" href="css/pwa.css">
 </head>
 <body class="login-page-body">
     <div class="login-shell">
@@ -64,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <div>
                     <h1>Welcome back</h1>
-                    <p>Sign in to your borrower workspace</p>
+                    <p>Sign in to the staff console</p>
                 </div>
             </div>
 
@@ -97,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <input class="form-check-input" type="checkbox" id="rememberMe" name="remember_me" value="1">
                         <label class="form-check-label" for="rememberMe">Remember Me</label>
                     </div>
-                    <a href="login_lending.php" class="forgot-password">Forgot Password?</a>
+                    <a href="borrower_forgot_password_lending.php?return=staff" class="forgot-password">Forgot Password?</a>
                 </div>
 
                 <div class="d-grid">

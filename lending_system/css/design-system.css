@@ -1,5 +1,5 @@
 :root {
-    --font-sans: "Segoe UI", Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-sans: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     --sidebar-bg: linear-gradient(180deg, #0b1530 0%, #101f45 52%, #0f1a38 100%);
     --sidebar-border: rgba(255, 255, 255, 0.06);
     --sidebar-text: rgba(255, 255, 255, 0.72);
@@ -821,4 +821,121 @@ body {
     background: #f8fafc;
     font-weight: 800;
     border-top: 1px solid rgba(15, 57, 116, 0.08);
+}
+
+a.kpi-card {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+a.kpi-card:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+}
+
+.stat-mini-grid--4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    margin-bottom: 1.5rem;
+}
+
+.stat-mini__meta {
+    margin-top: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    line-height: 1.35;
+}
+
+@container app-content (max-width: 900px) {
+    .stat-mini-grid--4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.table-responsive > table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+@media (max-width: 767.98px) {
+    .table-stack thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .table-stack,
+    .table-stack tbody,
+    .table-stack tr,
+    .table-stack td {
+        display: block;
+        width: 100%;
+    }
+
+    .table-stack tbody tr {
+        margin: 0 0.75rem 0.75rem;
+        border: 1px solid rgba(15, 57, 116, 0.1);
+        border-radius: 14px;
+        overflow: hidden;
+        background: #fff;
+    }
+
+    .table-stack td {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 0.75rem;
+        text-align: right;
+        border-bottom: 1px solid rgba(15, 57, 116, 0.06);
+    }
+
+    .table-stack td:last-child {
+        border-bottom: 0;
+    }
+
+    .table-stack td::before {
+        content: attr(data-label);
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        text-align: left;
+        flex: 0 0 42%;
+    }
+
+    .table-stack td[colspan] {
+        display: block;
+        text-align: center;
+    }
+
+    .table-stack td[colspan]::before {
+        content: none;
+    }
+
+    .table-stack td .btn-group {
+        margin-left: auto;
+        flex-wrap: wrap;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }

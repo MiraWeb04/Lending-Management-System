@@ -408,7 +408,6 @@ function displayStatusText($value) {
     <link href="assets/vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="css/lending_styles.css">
-    <link rel="stylesheet" href="css/pwa.css">
 </head>
 <body>
     <?php include 'includes/nav_lending.php'; ?>

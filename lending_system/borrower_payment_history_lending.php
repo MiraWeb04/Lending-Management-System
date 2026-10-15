@@ -40,7 +40,7 @@ if (!$currentLoan && $loanHistory !== []) {
 $paymentRows = [];
 if ($currentLoan && (int)($currentLoan['loan_id'] ?? 0) > 0) {
     $paymentRows = executeQuery(
-        'SELECT p.payment_id, p.receipt_number, p.payment_date, p.amount_paid, p.collector_name, p.payment_method, p.reference_number, p.loan_id, p.receipt_generated_at, l.total_payable, l.loan_amount
+        'SELECT p.payment_id, p.receipt_number, p.payment_date, p.amount_paid, p.penalty_paid, p.collector_name, p.payment_method, p.reference_number, p.loan_id, p.receipt_generated_at, l.total_payable, l.loan_amount
          FROM payments p
          JOIN loans l ON p.loan_id = l.loan_id
          WHERE p.loan_id = ?
@@ -71,7 +71,6 @@ function getRemainingBalance($totalPayable, $amountPaid) {
     <link href="assets/vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="css/lending_styles.css">
-    <link rel="stylesheet" href="css/pwa.css">
 </head>
 <body>
     <?php include 'includes/nav_lending.php'; ?>
@@ -105,7 +104,7 @@ function getRemainingBalance($totalPayable, $amountPaid) {
                                 <tr>
                                     <th>Receipt Number</th>
                                     <th>Payment Date</th>
-                                    <th class="text-end">Amount Paid</th>
+                                    <th class="text-end">Total Received</th>
                                     <th>Payment Method</th>
                                     <th>Reference No.</th>
                                     <th class="text-end">Remaining Balance</th>
@@ -123,7 +122,7 @@ function getRemainingBalance($totalPayable, $amountPaid) {
                                         <tr>
                                             <td class="fw-semibold text-primary"><?php echo htmlspecialchars($payment['receipt_number'] ?: 'RJRR-' . str_pad($payment['payment_id'], 6, '0', STR_PAD_LEFT)); ?></td>
                                             <td><?php echo formatDate($payment['payment_date']); ?></td>
-                                            <td class="text-end fw-semibold"><?php echo formatCurrency($payment['amount_paid']); ?></td>
+                                            <td class="text-end fw-semibold"><?php echo formatCurrency((float)$payment['amount_paid'] + (float)($payment['penalty_paid'] ?? 0)); ?></td>
                                             <td><?php echo htmlspecialchars($payment['payment_method'] ?? 'Cash'); ?></td>
                                             <td><?php echo htmlspecialchars(lendingPaymentReferenceLabel($payment['payment_method'] ?? '', $payment['reference_number'] ?? '')); ?></td>
                                             <td class="text-end"><?php echo formatCurrency(getRemainingBalance($payment['total_payable'], $payment['amount_paid'])); ?></td>

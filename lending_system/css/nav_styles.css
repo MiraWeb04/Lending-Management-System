@@ -85,6 +85,34 @@ html {
     max-width: 100%;
 }
 
+.sidebar-backdrop {
+    display: none;
+}
+
+.sidebar-backdrop.is-visible {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background: rgba(11, 21, 48, 0.48);
+    z-index: 24;
+}
+
+@media (max-width: 1199.98px) {
+    .dashboard-layout.drawer-open .topbar {
+        z-index: 25;
+    }
+
+    .dashboard-layout.drawer-open .sidebar {
+        z-index: 30;
+    }
+}
+
+@media (min-width: 1200px) {
+    .sidebar-backdrop.is-visible {
+        display: none;
+    }
+}
+
 .sidebar {
     position: sticky;
     top: 0;
@@ -149,6 +177,7 @@ html {
 }
 
 .sidebar .nav-links a {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 0.9rem;
@@ -172,12 +201,52 @@ html {
     text-align: center;
 }
 
-.sidebar .nav-links a span {
+.sidebar .nav-links a .nav-label {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     transition: opacity 250ms ease;
 }
 
-.sidebar.collapsed .nav-links a span {
+.sidebar.collapsed .nav-links a .nav-label {
     opacity: 0;
+    flex: 0;
+    width: 0;
+}
+
+.nav-count {
+    margin-left: auto;
+    min-width: 1.35rem;
+    height: 1.35rem;
+    padding: 0 0.4rem;
+    border-radius: 999px;
+    background: #e03e4e;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 800;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.nav-count[hidden],
+.notification-bell__badge[hidden] {
+    display: none !important;
+}
+
+.sidebar.collapsed .nav-count {
+    position: absolute;
+    top: 0.28rem;
+    right: 0.28rem;
+    margin-left: 0;
+    min-width: 1.15rem;
+    height: 1.15rem;
+    padding: 0 0.28rem;
+    font-size: 0.62rem;
 }
 
 .sidebar .sidebar-footer {
@@ -371,7 +440,8 @@ html {
 
 @media (max-width: 991.98px) {
     .topbar-search {
-        display: none !important;
+        flex: 1 1 220px;
+        min-width: 0;
     }
 
     .topbar .profile-dropdown .btn span.d-none.d-sm-inline {
@@ -406,5 +476,92 @@ html {
     .page-hero {
         flex-direction: column;
         align-items: flex-start;
+    }
+}
+
+.dashboard-layout--borrower .sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    flex: 0 0 300px;
+    min-height: 100vh;
+    overflow-y: auto;
+    transition: transform 260ms ease;
+}
+
+.dashboard-layout--borrower .sidebar.collapsed {
+    width: 300px;
+    flex-basis: 300px;
+}
+
+.dashboard-layout--borrower .sidebar .brand-logo .brand-text {
+    opacity: 1;
+}
+
+.dashboard-layout--borrower .sidebar .nav-links a .nav-label {
+    width: auto;
+    flex: 1;
+    opacity: 1;
+}
+
+.dashboard-layout--borrower .sidebar .nav-count {
+    position: static;
+    margin-left: auto;
+    min-width: 1.35rem;
+    height: 1.35rem;
+    padding: 0 0.4rem;
+    font-size: 0.68rem;
+}
+
+.dashboard-layout--borrower .sidebar-footer-note {
+    margin-top: auto;
+    padding: 0.85rem 1rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.07);
+    color: rgba(255, 255, 255, 0.72);
+    overflow-wrap: anywhere;
+}
+
+.dashboard-layout--borrower .sidebar-logout-link {
+    display: flex;
+    align-items: center;
+}
+
+@media (min-width: 992px) {
+    .dashboard-layout--borrower .sidebar {
+        position: sticky;
+        top: 0;
+        transform: none;
+    }
+
+    .dashboard-layout--borrower .sidebar.open {
+        transform: none;
+    }
+
+    .dashboard-layout--borrower .topbar .sidebar-toggle {
+        display: none;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .dashboard-layout--borrower .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 300px;
+        flex-basis: 300px;
+        transform: translateX(-100%);
+        transition: transform 260ms ease;
+        z-index: 30;
+    }
+
+    .dashboard-layout--borrower .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .dashboard-layout--borrower .sidebar.collapsed {
+        width: 300px;
+        flex-basis: 300px;
     }
 }

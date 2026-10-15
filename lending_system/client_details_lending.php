@@ -214,7 +214,6 @@ $formattedTotalOutstanding = number_format($totalOutstanding, 2);
     <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/lending_styles.css">
-    <link rel="stylesheet" href="css/pwa.css">
 </head>
 <body>
     <?php include 'includes/nav_lending.php'; ?>
@@ -612,7 +611,7 @@ $formattedTotalOutstanding = number_format($totalOutstanding, 2);
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                                 <?php if ($loan['status'] !== 'Paid'): ?>
-                                                <a href="payments_lending.php?add=true&loan=<?php echo $loan['loan_id']; ?>&amount=<?php echo rawurlencode(number_format($loan['daily_payment'], 2, '.', '')); ?>&borrower=<?php echo rawurlencode($client['first_name'] . ' ' . $client['last_name']); ?>" class="btn btn-sm btn-success btn-rounded btn-action-hover" data-bs-toggle="tooltip" data-bs-placement="top" title="Record Payment">
+                                                <a href="payments_lending.php?add=true&loan=<?php echo $loan['loan_id']; ?>&borrower=<?php echo rawurlencode($client['first_name'] . ' ' . $client['last_name']); ?>" class="btn btn-sm btn-success btn-rounded btn-action-hover" data-bs-toggle="tooltip" data-bs-placement="top" title="Record Payment">
                                                     <i class="fas fa-cash-register"></i>
                                                 </a>
                                                 <?php endif; ?>

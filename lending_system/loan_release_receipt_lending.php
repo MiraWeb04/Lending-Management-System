@@ -129,7 +129,6 @@ $invoiceAuthorizedSignatory = invoiceBrand()['legal_name'];
     <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
 
     <link rel="stylesheet" href="css/lending_styles.css">
-    <link rel="stylesheet" href="css/pwa.css">
 
 </head>
 

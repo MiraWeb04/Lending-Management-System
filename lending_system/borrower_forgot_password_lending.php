@@ -31,6 +31,12 @@ $stage = (string)($_SESSION['password_reset_stage'] ?? 'request');
 $resetUserId = (int)($_SESSION['password_reset_user_id'] ?? 0);
 $emailMask = (string)($_SESSION['password_reset_email_mask'] ?? 'your email');
 $passwordUpdated = false;
+$signInHref = (($_GET['return'] ?? $_POST['return_to'] ?? '') === 'staff')
+    ? 'login_lending.php'
+    : 'borrower_login_lending.php';
+$returnToField = $signInHref === 'login_lending.php'
+    ? '<input type="hidden" name="return_to" value="staff">'
+    : '';
 
 if ($stage !== 'request' && $resetUserId <= 0) {
     clearPasswordOtpSession();
@@ -150,7 +156,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Forgot Password - RJ and RR Finance Services</title>
     <link href="assets/vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/lending_styles.css">
-    <link rel="stylesheet" href="css/pwa.css">
     <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
 </head>
 <body class="public-auth-page">
@@ -158,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php include 'includes/borrower_auth_brand_panel.php'; ?>
         <div class="public-auth-panel">
             <div class="public-auth-card shadow-sm">
-            <a href="borrower_login_lending.php" class="public-auth-back"><i class="fas fa-arrow-left"></i> Back to login</a>
+            <a href="<?php echo htmlspecialchars($signInHref, ENT_QUOTES, 'UTF-8'); ?>" class="public-auth-back"><i class="fas fa-arrow-left"></i> Back to login</a>
                 <h2 class="auth-title mb-1">Forgot password</h2>
                 <p class="auth-subtitle mb-4">
                     <?php if ($stage === 'otp'): ?>
@@ -180,11 +185,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 <?php if ($passwordUpdated): ?>
                     <div class="d-grid">
-                        <a href="borrower_login_lending.php" class="btn btn-primary btn-lg login-btn">Sign in</a>
+                        <a href="<?php echo htmlspecialchars($signInHref, ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-primary btn-lg login-btn">Sign in</a>
                     </div>
                 <?php elseif ($stage === 'otp'): ?>
                 <form method="post" class="public-auth-form" novalidate>
                     <input type="hidden" name="action" value="verify_otp">
+                    <?php echo $returnToField; ?>
                     <div class="mb-3">
                         <label class="form-label" for="otp">Email code</label>
                         <div class="input-group">
@@ -199,15 +205,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </form>
                 <form method="post" class="mt-3 d-grid gap-2">
                     <input type="hidden" name="action" value="resend_otp">
+                    <?php echo $returnToField; ?>
                     <button class="btn btn-outline-primary btn-lg rounded-pill" type="submit">Resend code</button>
                 </form>
                 <form method="post" class="mt-2 d-grid">
                     <input type="hidden" name="action" value="start_over">
+                    <?php echo $returnToField; ?>
                     <button class="btn btn-link" type="submit">Use a different account</button>
                 </form>
                 <?php elseif ($stage === 'password'): ?>
                 <form method="post" class="public-auth-form" novalidate>
                     <input type="hidden" name="action" value="change_password">
+                    <?php echo $returnToField; ?>
                     <div class="mb-3">
                         <label class="form-label" for="password">New password</label>
                         <div class="input-group">
@@ -224,12 +233,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="d-grid gap-2">
                         <button class="btn btn-primary btn-lg login-btn" type="submit">Change password</button>
-                        <a href="borrower_login_lending.php" class="btn btn-outline-primary btn-lg rounded-pill">Back to Login</a>
+                        <a href="<?php echo htmlspecialchars($signInHref, ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-outline-primary btn-lg rounded-pill">Back to Login</a>
                     </div>
                 </form>
                 <?php else: ?>
                 <form method="post" class="public-auth-form" novalidate>
                     <input type="hidden" name="action" value="send_otp">
+                    <?php echo $returnToField; ?>
                     <div class="mb-3">
                         <label class="form-label" for="identifier">Username or Email</label>
                         <div class="input-group">
@@ -239,7 +249,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <div class="d-grid gap-2">
                         <button class="btn btn-primary btn-lg login-btn" type="submit">Send code</button>
-                        <a href="borrower_login_lending.php" class="btn btn-outline-primary btn-lg rounded-pill">Back to Login</a>
+                        <a href="<?php echo htmlspecialchars($signInHref, ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-outline-primary btn-lg rounded-pill">Back to Login</a>
                     </div>
                 </form>
                 <?php endif; ?>

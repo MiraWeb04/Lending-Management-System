@@ -178,13 +178,14 @@ There is no database dump or migration folder in the repository. The visible sou
 
 ### Internal endpoint
 
-`payments_lending.php` provides a JSON lookup used by the payment interface:
+`payments_lending.php` provides authenticated JSON lookups used by the payment interface:
 
 ```text
 GET payments_lending.php?action=fetch_loan&loan_id=<id>
+GET payments_lending.php?action=qrph_status&transaction_id=<id>
 ```
 
-It returns the selected loan, borrower name, amount paid, and remaining balance when the current user is authorized. No public REST API, webhook receiver, payment gateway, SMS integration, or cloud storage integration was found.
+The first returns loan details when the current user is authorized. The second returns only the current status of a QR Ph transaction and is restricted to staff authorized for its loan. PayMongo confirmation is handled by `paymongo_webhook_lending.php`; browser redirects and elapsed local expiry timers do not record repayments.
 
 ## 9. Installation and Setup
 
@@ -223,7 +224,39 @@ It returns the selected loan, borrower name, amount paid, and remaining balance 
 
 8. Open the application URLs below.
 
+### Loan status cron
+
+Active loans do not become Overdue or Paid by themselves. Run this once a day so past-due installments switch to Overdue and fully paid accounts switch to Paid:
+
+```text
+php lending_system/tools/sync_loan_status_cli.php
+```
+
+`LOAN_STATUS_SYNC_ON_REQUEST` stays `0` so normal page loads do not do this work. Set it to `1` only when a scheduler is not available.
+
 The repository does not contain verified default administrator credentials. Create or provision an active administrator account in the database through the project’s established data-management process; do not rely on the unsupported `admin/admin123` values from older documentation.
+
+### PayMongo QR Ph test-mode setup
+
+PayMongo is restricted to test mode by this integration. Configure `PAYMONGO_SECRET_KEY`, `PAYMONGO_PUBLIC_KEY`, `PAYMONGO_MODE=test`, and `PAYMONGO_WEBHOOK_SECRET` in the server-side `.env` file. Obtain the webhook signing secret for the test-mode endpoint from PayMongo; do not put credentials in PHP, JavaScript, HTML, or source control.
+
+Before applying the database changes, take and verify a backup of the existing database. Apply `database/migrations/20261014_create_paymongo_qrph_transactions.sql`, then `database/migrations/20261014_add_paymongo_qrph_webhooks.sql`, using the project’s MariaDB migration procedure. If a DDL statement fails, inspect the schema for partial changes before retrying; MariaDB DDL may commit each statement independently. These migrations add QR transaction/audit structures and a nullable payment link; they are not run automatically by the application.
+
+Configure a test-mode PayMongo webhook to reach:
+
+```text
+https://<public-test-host>/lending_system/paymongo_webhook_lending.php
+```
+
+Subscribe to the documented `payment.paid`, `payment.failed`, and `qrph.expired` events. For local testing, use a temporary HTTPS tunnel and configure its URL in PayMongo. The handler only posts repayments for verified, matching `payment.paid` events. The current official webhook event reference does not provide a `qrph.expired` resource example or matching identifier, so that event is audited without changing local transaction status. A QR whose displayed expiry time has passed therefore remains unresolved; do not create a replacement QR or record a manual payment for that loan. Staff must reconcile an ambiguous attempt against the PayMongo dashboard before any manual database intervention.
+
+Run the local helper checks with:
+
+```text
+C:\xampp\php\php.exe lending_system\tools\paymongo_webhook_smoke_test.php
+```
+
+These checks do not contact PayMongo or post repayments. Follow PayMongo’s current test-mode QR instructions when exercising provider behavior; do not use a production key or scan a test QR with real funds.
 
 ## 10. How to Use
 
@@ -278,7 +311,7 @@ The repository does not contain verified default administrator credentials. Crea
 │   │   ├── mail_config.php             SMTP settings
 │   │   ├── email_templates.php         Email templates
 │   │   ├── nav_lending.php             Role-aware navigation
-│   │   └── update_status_lending.php   Loan status update query
+│   │   └── update_status_lending.php   Loan status sync used by the daily cron
 │   ├── assets/
 │   │   ├── lending.js
 │   │   └── lending_styles.css
@@ -291,7 +324,7 @@ The repository does not contain verified default administrator credentials. Crea
 │   ├── uploads/
 │   │   ├── loan_applications/           Application uploads
 │   │   └── loan_documents/              Supporting loan documents
-│   └── tools/                          Maintenance and data utilities
+│   └── tools/                          Maintenance utilities, including sync_loan_status_cli.php
 └── tmp_*.php                            Local inspection/debug utilities
 ```
 

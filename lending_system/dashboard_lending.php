@@ -234,7 +234,6 @@ $loanStatusColorsJSON = json_encode($loanStatusColorsList ?? []);
     <script src="assets/vendor/chartjs/chart.umd.min.js"></script>
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/lending_styles.css">
-    <link rel="stylesheet" href="css/pwa.css">
 </head>
 <body>
     <?php include 'includes/nav_lending.php'; ?>
@@ -253,45 +252,47 @@ $loanStatusColorsJSON = json_encode($loanStatusColorsList ?? []);
         </div>
 
         <div class="kpi-grid">
-            <div class="kpi-card kpi-card--primary">
-                <div class="kpi-card__top"><div class="kpi-card__label">Total Loans</div><div class="kpi-card__icon"><i class="fas fa-layer-group"></i></div></div>
-                <div class="kpi-card__value"><?php echo number_format($totalLoans); ?></div>
-                <div class="kpi-card__meta"><?php if ($loanGrowthPercent !== null): ?><span class="kpi-card__delta <?php echo $loanGrowthPercent < 0 ? 'is-negative' : ''; ?>"><?php echo ($loanGrowthPercent >= 0 ? '+' : '') . $loanGrowthPercent; ?>%</span> released vs last month · <?php endif; ?><?php echo number_format($totalClients); ?> clients</div>
-            </div>
-            <div class="kpi-card kpi-card--success">
-                <div class="kpi-card__top"><div class="kpi-card__label">Active Loans</div><div class="kpi-card__icon"><i class="fas fa-hand-holding-dollar"></i></div></div>
-                <div class="kpi-card__value"><?php echo number_format($activeLoans); ?></div>
-                <div class="kpi-card__meta"><?php echo number_format($paidLoans); ?> fully paid</div>
-            </div>
-            <div class="kpi-card kpi-card--info">
-                <div class="kpi-card__top"><div class="kpi-card__label">Total Released</div><div class="kpi-card__icon"><i class="fas fa-sack-dollar"></i></div></div>
-                <div class="kpi-card__value">₱<?php echo number_format($totalReleasedAmount, 0); ?></div>
-                <div class="kpi-card__meta">Principal released across portfolio</div>
-            </div>
-            <div class="kpi-card kpi-card--success">
-                <div class="kpi-card__top"><div class="kpi-card__label">Total Collected</div><div class="kpi-card__icon"><i class="fas fa-money-check-dollar"></i></div></div>
-                <div class="kpi-card__value">₱<?php echo number_format($totalCollectedAmount, 0); ?></div>
-                <div class="kpi-card__meta">Today: ₱<?php echo $formattedTodayCollection; ?></div>
-            </div>
-            <div class="kpi-card kpi-card--warning">
+            <a class="kpi-card kpi-card--danger" href="loans_lending.php?status=Overdue">
+                <div class="kpi-card__top"><div class="kpi-card__label">Overdue Loans</div><div class="kpi-card__icon"><i class="fas fa-triangle-exclamation"></i></div></div>
+                <div class="kpi-card__value"><?php echo number_format($overdueLoans); ?></div>
+                <div class="kpi-card__meta">Open the follow-up list</div>
+            </a>
+            <a class="kpi-card kpi-card--warning" href="loans_lending.php?status=Active">
                 <div class="kpi-card__top"><div class="kpi-card__label">Outstanding Balance</div><div class="kpi-card__icon"><i class="fas fa-scale-balanced"></i></div></div>
                 <div class="kpi-card__value">₱<?php echo number_format($outstandingBalance, 0); ?></div>
                 <div class="kpi-card__meta">Receivable: ₱<?php echo $formattedTotalReceivable; ?></div>
-            </div>
-            <div class="kpi-card kpi-card--danger">
-                <div class="kpi-card__top"><div class="kpi-card__label">Overdue Loans</div><div class="kpi-card__icon"><i class="fas fa-triangle-exclamation"></i></div></div>
-                <div class="kpi-card__value"><?php echo number_format($overdueLoans); ?></div>
-                <div class="kpi-card__meta">Requires follow-up</div>
-            </div>
-            <div class="kpi-card kpi-card--info">
-                <div class="kpi-card__top"><div class="kpi-card__label">Fully Paid Loans</div><div class="kpi-card__icon"><i class="fas fa-circle-check"></i></div></div>
-                <div class="kpi-card__value"><?php echo number_format($paidLoans); ?></div>
-                <div class="kpi-card__meta">Completed loan accounts</div>
-            </div>
-            <div class="kpi-card kpi-card--warning">
+            </a>
+            <a class="kpi-card kpi-card--success" href="payments_lending.php">
+                <div class="kpi-card__top"><div class="kpi-card__label">Collected Today</div><div class="kpi-card__icon"><i class="fas fa-money-check-dollar"></i></div></div>
+                <div class="kpi-card__value">₱<?php echo number_format((float)$todayCollection, 0); ?></div>
+                <div class="kpi-card__meta">All time: ₱<?php echo number_format($totalCollectedAmount, 0); ?></div>
+            </a>
+            <a class="kpi-card kpi-card--info" href="loan_applications_lending.php">
                 <div class="kpi-card__top"><div class="kpi-card__label">Pending Applications</div><div class="kpi-card__icon"><i class="fas fa-file-circle-plus"></i></div></div>
                 <div class="kpi-card__value"><?php echo number_format($pendingApplications); ?></div>
                 <div class="kpi-card__meta"><?php echo number_format($unreadNotificationCount); ?> unread notifications</div>
+            </a>
+        </div>
+
+        <div class="stat-mini-grid stat-mini-grid--4">
+            <div class="stat-mini">
+                <div class="stat-mini__label">Total loans</div>
+                <div class="stat-mini__value"><?php echo number_format($totalLoans); ?></div>
+                <?php if ($loanGrowthPercent !== null): ?>
+                    <div class="stat-mini__meta"><?php echo ($loanGrowthPercent >= 0 ? '+' : '') . $loanGrowthPercent; ?>% released vs last month</div>
+                <?php endif; ?>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini__label">Active</div>
+                <div class="stat-mini__value"><?php echo number_format($activeLoans); ?></div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini__label">Released</div>
+                <div class="stat-mini__value">₱<?php echo number_format($totalReleasedAmount, 0); ?></div>
+            </div>
+            <div class="stat-mini">
+                <div class="stat-mini__label">Fully paid</div>
+                <div class="stat-mini__value"><?php echo number_format($paidLoans); ?></div>
             </div>
         </div>
 

@@ -77,7 +77,6 @@ function penaltyMoney(float $amount): string
     <link href="assets/vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
     <link rel="stylesheet" href="css/lending_styles.css">
-    <link rel="stylesheet" href="css/pwa.css">
     <link rel="stylesheet" href="css/reports.css">
 </head>
 <body>
