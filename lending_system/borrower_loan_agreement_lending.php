@@ -34,9 +34,13 @@ if ($application) {
     repairGeneratedAgreementLenderAcceptance($applicationId);
     $agreementRow = executeQuery('SELECT * FROM loan_agreements WHERE application_id = ? ORDER BY id DESC LIMIT 1', [$applicationId])->fetch(PDO::FETCH_ASSOC);
     if ($agreementRow && strcasecmp((string)($agreementRow['agreement_status'] ?? ''), 'Generated') === 0) {
-        $agreementText = generateLoanAgreementText($application);
-        executeQuery('UPDATE loan_agreements SET agreement_text = ? WHERE id = ?', [$agreementText, (int)$agreementRow['id']]);
-        $agreementRow['agreement_text'] = $agreementText;
+        try {
+            $agreementText = generateLoanAgreementText($application);
+            executeQuery('UPDATE loan_agreements SET agreement_text = ? WHERE id = ?', [$agreementText, (int)$agreementRow['id']]);
+            $agreementRow['agreement_text'] = $agreementText;
+        } catch (InvalidArgumentException $e) {
+            // Keep the stored agreement. A missing term must not be rewritten as 12 months.
+        }
     }
 }
 
@@ -55,6 +59,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!in_array(strtolower((string)($application['status'] ?? '')), ['approved', 'ready for release', 'waiting for loan agreement', 'agreement accepted', 'agreement declined'], true)) {
         $message = 'Your loan agreement is not available yet because your application has not been approved or generated.';
         $messageType = 'warning';
+    } elseif ($action === 'accept' && !resolveApplicationLoanTerm(
+        isset($application['approved_loan_term']) ? (string)$application['approved_loan_term'] : null,
+        isset($application['loan_term']) ? (string)$application['loan_term'] : null
+    )['valid']) {
+        $message = loanTermValidationMessage();
+        $messageType = 'danger';
     } elseif ($action === 'accept') {
         if (!$agreementRow) {
             $message = 'No loan agreement is available to sign yet.';
@@ -100,8 +110,9 @@ $showPendingAgreement = $agreementStatus === 'generated';
 
 $paymentFrequency = 'Monthly';
 $paymentFrequencyDisplay = 'Monthly';
-$loanTermLabel = '12';
-$loanTermMonths = 12;
+$loanTermLabel = 'Not provided';
+$loanTermMonths = 0;
+$loanTermError = '';
 $loanAmount = 0.0;
 $interestRate = 5.0;
 $totalInterest = 0.0;
@@ -109,7 +120,8 @@ $monthlyInterestAmount = 0.0;
 $totalInterestForLoan = 0.0;
 $totalRepayment = 0.0;
 $scheduledInstallmentAmount = 0.0;
-$numberOfPayments = 12;
+$finalInstallmentAmount = 0.0;
+$numberOfPayments = 0;
 $totalPayable = 0.0;
 $loanReleaseDate = date('M d, Y', strtotime('+3 days'));
 $dueDateSchedule = date('M d, Y', strtotime('+30 days'));
@@ -118,18 +130,32 @@ $installments = [];
 if ($application) {
     $paymentFrequency = trim((string)($application['payment_frequency'] ?? $application['approved_payment_frequency'] ?? 'Monthly'));
     $paymentFrequencyDisplay = formatPaymentFrequencyLabel($paymentFrequency);
-    $loanTermLabel = trim((string)($application['approved_loan_term'] ?? $application['loan_term'] ?? '12'));
-    $loanTermMonths = resolveLoanTermMonths($loanTermLabel, $application['approved_first_payment_date'] ?? null, $application['approved_due_date'] ?? null);
+    $termChoice = resolveApplicationLoanTerm(
+        isset($application['approved_loan_term']) ? (string)$application['approved_loan_term'] : null,
+        isset($application['loan_term']) ? (string)$application['loan_term'] : null
+    );
+    $loanTermLabel = $termChoice['label'] !== '' ? $termChoice['label'] : 'Not provided';
+    $loanTermMonths = $termChoice['months'];
+    $loanTermError = $termChoice['valid'] ? '' : $termChoice['message'];
 
     $loanAmount = (float)($application['approved_loan_amount'] ?? $application['loan_amount'] ?? 0);
     $interestRate = getStandardMonthlyInterestRatePercent();
-    $interestBreakdown = calculateLoanInterestBreakdown($loanAmount, $interestRate, $loanTermMonths);
+    if ($loanTermError !== '' || $loanAmount < 0 || $loanTermMonths < 1) {
+        $interestBreakdown = ['monthly_interest' => 0.0, 'total_interest' => 0.0, 'total_payable' => 0.0];
+    } else {
+        $interestBreakdown = calculateLoanInterestBreakdown($loanAmount, $interestRate, $loanTermMonths);
+    }
     $monthlyInterestAmount = $interestBreakdown['monthly_interest'];
     $totalInterest = $interestBreakdown['total_interest'];
     $totalInterestForLoan = $interestBreakdown['total_interest'];
     $totalRepayment = $interestBreakdown['total_payable'];
+    if ($loanTermError === '') {
     $numberOfPayments = getNumberOfPayments($paymentFrequency, $loanTermMonths, $application['approved_first_payment_date'] ?? null, $application['approved_due_date'] ?? null);
-    $scheduledInstallmentAmount = $numberOfPayments > 0 ? round($totalRepayment / $numberOfPayments, 2) : 0.0;
+    $moneyRows = $numberOfPayments > 0
+        ? allocateEvenMoneyRows($loanAmount, (float)$totalInterestForLoan, (float)$totalRepayment, $numberOfPayments)
+        : [];
+    $scheduledInstallmentAmount = (float)($moneyRows[0]['total_amount_due'] ?? 0);
+    $finalInstallmentAmount = $moneyRows !== [] ? (float)$moneyRows[count($moneyRows) - 1]['total_amount_due'] : 0.0;
     $totalPayable = $totalRepayment;
     $loanReleaseDate = !empty($application['approved_first_payment_date']) ? date('M d, Y', strtotime($application['approved_first_payment_date'])) : date('M d, Y', strtotime('+3 days'));
     $dueDateSchedule = !empty($application['approved_due_date']) ? date('M d, Y', strtotime($application['approved_due_date'])) : date('M d, Y', strtotime("+{$loanTermMonths} month"));
@@ -159,17 +185,17 @@ if ($application) {
                 break;
         }
 
-        $principalAmount = $numberOfPayments > 0 ? round($loanAmount / $numberOfPayments, 2) : 0.0;
-        $interestAmountPerInstallment = $numberOfPayments > 0 ? round($totalInterestForLoan / $numberOfPayments, 2) : 0.0;
+        $money = $moneyRows[$i - 1] ?? ['principal_amount' => 0.0, 'interest_amount' => 0.0, 'total_amount_due' => 0.0];
 
         $installments[] = [
             'number' => $i,
             'due_date' => $dueDate->format('M d, Y'),
-            'principal' => number_format($principalAmount, 2),
-            'interest' => number_format($interestAmountPerInstallment, 2),
-            'total_due' => number_format($scheduledInstallmentAmount, 2),
+            'principal' => number_format($money['principal_amount'], 2),
+            'interest' => number_format($money['interest_amount'], 2),
+            'total_due' => number_format($money['total_amount_due'], 2),
             'status' => 'Upcoming'
         ];
+    }
     }
 }
 ?>
@@ -225,12 +251,19 @@ if ($application) {
                     <?php endif; ?>
                 </div>
             </div>
+        <?php elseif ($loanTermError !== ''): ?>
+            <div class="alert alert-danger rounded-4"><?php echo htmlspecialchars($loanTermError); ?></div>
         <?php else: ?>
             <?php
                 $agreementText = "<p>This Loan Agreement is entered into between <strong>RJ and RR Finance Services</strong> (the Lender) and <strong>" . htmlspecialchars($application['borrower_name'] ?? 'Borrower') . "</strong> (the Borrower). The Borrower agrees to borrow the principal amount of ₱" . number_format($loanAmount, 2) . ".</p>";
                 $agreementText .= "<p>The loan term is <strong>" . htmlspecialchars($loanTermLabel) . "</strong> at a fixed interest rate of <strong>" . number_format($interestRate, 2) . "%</strong>. Total interest for the loan is ₱" . number_format($totalInterestForLoan, 2) . ", making the total repayment amount ₱" . number_format($totalRepayment, 2) . ".</p>";
                 $agreementText .= "<p>Payment Frequency: <strong>" . htmlspecialchars($paymentFrequencyDisplay) . "</strong>. Total number of payments is <strong>" . htmlspecialchars((string)$numberOfPayments) . "</strong>.</p>";
-                $agreementText .= "<p>Each installment payment is ₱" . number_format($scheduledInstallmentAmount, 2) . " per " . htmlspecialchars(strtolower($paymentFrequencyDisplay)) . " installment. Payments must be made according to the agreed schedule until the loan is fully repaid.</p>";
+                if (round($finalInstallmentAmount, 2) === round($scheduledInstallmentAmount, 2)) {
+                    $installmentSentence = "Each installment payment is ₱" . number_format($scheduledInstallmentAmount, 2) . " per " . htmlspecialchars(strtolower($paymentFrequencyDisplay)) . " installment.";
+                } else {
+                    $installmentSentence = "Each regular installment is ₱" . number_format($scheduledInstallmentAmount, 2) . " and the final installment is ₱" . number_format($finalInstallmentAmount, 2) . ".";
+                }
+                $agreementText .= "<p>" . $installmentSentence . " Payments must be made according to the agreed schedule until the loan is fully repaid.</p>";
                 $agreementText .= "<p>By accepting this agreement, the Borrower confirms that all applicant information and loan details are accurate.</p>";
             ?>
             <div class="card shadow-sm mb-4">
@@ -264,6 +297,9 @@ if ($application) {
                                 <div class="col-md-6"><div class="consent-card h-100"><div class="text-muted small">Loan Term</div><div class="fw-semibold"><?php echo htmlspecialchars($loanTermLabel); ?></div></div></div>
                                 <div class="col-md-6"><div class="consent-card h-100"><div class="text-muted small">Payment Frequency</div><div class="fw-semibold"><?php echo htmlspecialchars($paymentFrequencyDisplay); ?></div></div></div>
                                 <div class="col-md-6"><div class="consent-card h-100"><div class="text-muted small">Installment Amount</div><div class="fw-semibold">₱<?php echo number_format($scheduledInstallmentAmount, 2); ?></div></div></div>
+                                <?php if (round($finalInstallmentAmount, 2) !== round($scheduledInstallmentAmount, 2)): ?>
+                                <div class="col-md-6"><div class="consent-card h-100"><div class="text-muted small">Final Installment</div><div class="fw-semibold">₱<?php echo number_format($finalInstallmentAmount, 2); ?></div></div></div>
+                                <?php endif; ?>
                                 <div class="col-md-6"><div class="consent-card h-100"><div class="text-muted small">Total Payable Amount</div><div class="fw-semibold">₱<?php echo number_format($totalPayable, 2); ?></div></div></div>
                                 <div class="col-md-6"><div class="consent-card h-100"><div class="text-muted small">Loan Release Date (Estimated)</div><div class="fw-semibold"><?php echo htmlspecialchars($loanReleaseDate); ?></div></div></div>
                                 <div class="col-md-6"><div class="consent-card h-100"><div class="text-muted small">Due Date Schedule</div><div class="fw-semibold"><?php echo htmlspecialchars($dueDateSchedule); ?></div></div></div>
@@ -284,7 +320,7 @@ if ($application) {
                                 <h6 class="fw-bold">Borrower Responsibilities</h6>
                                 <p class="small text-muted">The borrower shall provide accurate information, keep contact details updated, and make each scheduled payment on time.</p>
                                 <h6 class="fw-bold">Interest and Repayment</h6>
-                                <p class="small text-muted">Interest is fixed at <?php echo number_format($interestRate, 2); ?>% per month. Total interest is calculated as monthly interest multiplied by the loan term. The total payable amount is divided equally across <?php echo (int)$numberOfPayments; ?> <?php echo htmlspecialchars(strtolower($paymentFrequencyDisplay)); ?> payments, subject to normal rounding.</p>
+                                <p class="small text-muted">Interest is fixed at <?php echo number_format($interestRate, 2); ?>% per month. Total interest is calculated as monthly interest multiplied by the loan term. The total payable amount is split across <?php echo (int)$numberOfPayments; ?> <?php echo htmlspecialchars(strtolower($paymentFrequencyDisplay)); ?> payments. Earlier payments use the even centavo share, and the final payment receives the remainder so the schedule sums to the total payable.</p>
                                 <h6 class="fw-bold">Late Payment and Default</h6>
                                 <p class="small text-muted">A payment not made by its scheduled due date may be marked overdue. Any penalty must be separately disclosed and recorded by the lender; no undisclosed penalty is included in the amount above.</p>
                                 <h6 class="fw-bold">Early Payment</h6>
@@ -373,6 +409,9 @@ if ($application) {
                             <div class="d-flex justify-content-between mb-2"><span>Total Interest</span><strong>₱<?php echo number_format($totalInterest, 2); ?></strong></div>
                             <div class="d-flex justify-content-between mb-2"><span>Payment Frequency</span><strong><?php echo htmlspecialchars($paymentFrequencyDisplay); ?></strong></div>
                             <div class="d-flex justify-content-between mb-2"><span>Installment Amount</span><strong>₱<?php echo number_format($scheduledInstallmentAmount, 2); ?></strong></div>
+                            <?php if (round($finalInstallmentAmount, 2) !== round($scheduledInstallmentAmount, 2)): ?>
+                            <div class="d-flex justify-content-between mb-2"><span>Final Installment</span><strong>₱<?php echo number_format($finalInstallmentAmount, 2); ?></strong></div>
+                            <?php endif; ?>
                             <div class="d-flex justify-content-between"><span>Total Amount Payable</span><strong>₱<?php echo number_format($totalPayable, 2); ?></strong></div>
                         </div>
                     </div>

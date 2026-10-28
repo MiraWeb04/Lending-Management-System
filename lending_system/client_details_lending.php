@@ -396,29 +396,14 @@ $formattedTotalOutstanding = number_format($totalOutstanding, 2);
                     <div class="col-md-6">
                         <div class="text-muted small">Number of Payments</div>
                         <div class="fw-semibold"><?php 
-                            $numPayments = !empty($borrowerLoanApplication['number_of_payments']) ? (int)$borrowerLoanApplication['number_of_payments'] : 0;
                             $paymentFrequency = trim((string)($borrowerLoanApplication['payment_frequency'] ?? $borrowerLoanApplication['approved_payment_frequency'] ?? 'Monthly'));
-                            $loanTermMonths = 0;
-
-                            if (!$numPayments && !empty($borrowerLoanApplication['approved_loan_term'])) {
-                                $termStr = trim((string)$borrowerLoanApplication['approved_loan_term']);
-                                if (is_numeric($termStr)) {
-                                    $loanTermMonths = (int)$termStr;
-                                } elseif (preg_match('/(\d+)/', $termStr, $m)) {
-                                    $loanTermMonths = (int)$m[1];
-                                }
-                            }
-                            if (!$numPayments && $loanTermMonths === 0 && !empty($borrowerLoanApplication['loan_term'])) {
-                                $termStr = trim((string)$borrowerLoanApplication['loan_term']);
-                                if (is_numeric($termStr)) {
-                                    $loanTermMonths = (int)$termStr;
-                                } elseif (preg_match('/(\d+)/', $termStr, $m)) {
-                                    $loanTermMonths = (int)$m[1];
-                                }
-                            }
-                            if (!$numPayments && $loanTermMonths > 0) {
-                                $numPayments = getNumberOfPayments($paymentFrequency, $loanTermMonths, $borrowerLoanApplication['approved_first_payment_date'] ?? null, $borrowerLoanApplication['approved_due_date'] ?? null);
-                            }
+                            $clientTermChoice = resolveApplicationLoanTerm(
+                                isset($borrowerLoanApplication['approved_loan_term']) ? (string)$borrowerLoanApplication['approved_loan_term'] : null,
+                                isset($borrowerLoanApplication['loan_term']) ? (string)$borrowerLoanApplication['loan_term'] : null
+                            );
+                            $numPayments = $clientTermChoice['valid']
+                                ? getNumberOfPayments($paymentFrequency, $clientTermChoice['months'], $borrowerLoanApplication['approved_first_payment_date'] ?? null, $borrowerLoanApplication['approved_due_date'] ?? null)
+                                : 0;
                             echo $numPayments ? htmlspecialchars((string)$numPayments) : 'Not Available';
                         ?></div>
                     </div>
@@ -426,61 +411,41 @@ $formattedTotalOutstanding = number_format($totalOutstanding, 2);
                         <div class="text-muted small">Estimated Installment</div>
                         <div class="fw-semibold"><?php 
                             $installmentAmount = null;
+                            $installmentFinal = null;
                             $paymentFrequency = trim((string)($borrowerLoanApplication['payment_frequency'] ?? $borrowerLoanApplication['approved_payment_frequency'] ?? 'Monthly'));
-                            $paymentFrequencyDisplay = formatPaymentFrequencyLabel($paymentFrequency);
-                            $loanTermMonths = 0;
-                            $numberOfPayments = !empty($borrowerLoanApplication['number_of_payments']) ? (int)$borrowerLoanApplication['number_of_payments'] : 0;
-
-                            // First, try to get Amount to Collect from loans table
-                            if (!empty($loans)) {
-                                $firstLoan = reset($loans);
-                                if (!empty($firstLoan['amount_to_collect'])) {
-                                    $installmentAmount = (float)$firstLoan['amount_to_collect'];
+                            $clientInstallmentTerm = resolveApplicationLoanTerm(
+                                isset($borrowerLoanApplication['approved_loan_term']) ? (string)$borrowerLoanApplication['approved_loan_term'] : null,
+                                isset($borrowerLoanApplication['loan_term']) ? (string)$borrowerLoanApplication['loan_term'] : null
+                            );
+                            $principalForInstallment = (float)($borrowerLoanApplication['approved_loan_amount'] ?? 0);
+                            if ($principalForInstallment <= 0) {
+                                $principalForInstallment = (float)($borrowerLoanApplication['requested_loan_amount'] ?? $borrowerLoanApplication['loan_amount'] ?? 0);
+                            }
+                            if ($clientInstallmentTerm['valid'] && $principalForInstallment > 0) {
+                                $paymentCount = getNumberOfPayments($paymentFrequency, $clientInstallmentTerm['months'], $borrowerLoanApplication['approved_first_payment_date'] ?? null, $borrowerLoanApplication['approved_due_date'] ?? null);
+                                if ($paymentCount > 0) {
+                                    $installmentPair = describeEvenInstallments($principalForInstallment, getStandardMonthlyInterestRatePercent(), $clientInstallmentTerm['months'], $paymentCount);
+                                    $installmentAmount = $installmentPair['regular'];
+                                    $installmentFinal = $installmentPair['final'];
                                 }
                             }
 
-                            // If not found, try from stored values
-                            if (!$installmentAmount && !empty($borrowerLoanApplication['estimated_payment'])) {
-                                $installmentAmount = (float)$borrowerLoanApplication['estimated_payment'];
+                            if ($installmentAmount === null) {
+                                echo 'Not Provided';
+                            } else {
+                                echo '₱' . number_format((float)$installmentAmount, 2);
+                                if ($installmentFinal !== null && round($installmentFinal, 2) !== round((float)$installmentAmount, 2)) {
+                                    echo '<div class="form-text">Final installment ₱' . number_format($installmentFinal, 2) . '</div>';
+                                }
                             }
-                            if (!$installmentAmount && !empty($borrowerLoanApplication['estimated_monthly_payment'])) {
-                                $installmentAmount = (float)$borrowerLoanApplication['estimated_monthly_payment'];
-                            }
-
-                            if ($loanTermMonths === 0 && !empty($borrowerLoanApplication['approved_loan_term'])) {
-                                $termStr = trim((string)$borrowerLoanApplication['approved_loan_term']);
-                                $loanTermMonths = is_numeric($termStr) ? (int)$termStr : (preg_match('/(\d+)/', $termStr, $m) ? (int)$m[1] : 0);
-                            }
-                            if ($loanTermMonths === 0 && !empty($borrowerLoanApplication['loan_term'])) {
-                                $termStr = trim((string)$borrowerLoanApplication['loan_term']);
-                                $loanTermMonths = is_numeric($termStr) ? (int)$termStr : (preg_match('/(\d+)/', $termStr, $m) ? (int)$m[1] : 0);
-                            }
-
-                            if ($numberOfPayments <= 0 && $loanTermMonths > 0) {
-                                $numberOfPayments = getNumberOfPayments($paymentFrequency, $loanTermMonths, $borrowerLoanApplication['approved_first_payment_date'] ?? null, $borrowerLoanApplication['approved_due_date'] ?? null);
-                            }
-
-                            if (!$installmentAmount && !empty($borrowerLoanApplication['approved_loan_amount']) && $numberOfPayments > 0) {
-                                $P = (float)$borrowerLoanApplication['approved_loan_amount'];
-                                $totalRepayment = calculateLoanInterestBreakdown($P, getStandardMonthlyInterestRatePercent(), max(1, $loanTermMonths))['total_payable'];
-                                $installmentAmount = calculateAmountToCollect($totalRepayment, $paymentFrequency, max(1, $loanTermMonths), null, $borrowerLoanApplication['approved_first_payment_date'] ?? null, $borrowerLoanApplication['approved_due_date'] ?? null);
-                            }
-
-                            if (!$installmentAmount && !empty($borrowerLoanApplication['requested_loan_amount']) && $numberOfPayments > 0) {
-                                $P = (float)$borrowerLoanApplication['requested_loan_amount'];
-                                $totalRepayment = calculateLoanInterestBreakdown($P, getStandardMonthlyInterestRatePercent(), max(1, $loanTermMonths))['total_payable'];
-                                $installmentAmount = calculateAmountToCollect($totalRepayment, $paymentFrequency, max(1, $loanTermMonths), null, $borrowerLoanApplication['approved_first_payment_date'] ?? null, $borrowerLoanApplication['approved_due_date'] ?? null);
-                            }
-
-                            echo $installmentAmount ? '₱' . number_format((float)$installmentAmount, 2) : 'Not Provided';
                         ?></div>
                     </div>
                     <div class="col-md-6">
                         <div class="text-muted small">Estimated Due Date</div>
                         <div class="fw-semibold"><?php 
-                            $dueDate = !empty($borrowerLoanApplication['estimated_due_date']) ? trim((string)$borrowerLoanApplication['estimated_due_date']) : '';
+                            $dueDate = '';
                             // If there is an existing released loan for this client, prefer the schedule's final due date
-                            if (empty($dueDate) && !empty($loans)) {
+                            if (!empty($loans)) {
                                 foreach ($loans as $existingLoan) {
                                     $releaseId = !empty($existingLoan['release_id']) ? (int)$existingLoan['release_id'] : 0;
                                     if ($releaseId > 0) {
@@ -492,23 +457,12 @@ $formattedTotalOutstanding = number_format($totalOutstanding, 2);
                                     }
                                 }
                             }
-                            if (empty($dueDate) && !empty($borrowerLoanApplication['approved_loan_term'])) {
-                                $termStr = trim((string)$borrowerLoanApplication['approved_loan_term']);
-                                $termMonths = is_numeric($termStr) ? (int)$termStr : (preg_match('/(\d+)/', $termStr, $m) ? (int)$m[1] : 12);
-                                if ($termMonths > 0) {
-                                    $dueDateObj = new DateTime();
-                                    $dueDateObj->modify("+{$termMonths} months");
-                                    $dueDate = $dueDateObj->format('Y-m-d');
-                                }
-                            }
-                            if (empty($dueDate) && !empty($borrowerLoanApplication['loan_term'])) {
-                                $termStr = trim((string)$borrowerLoanApplication['loan_term']);
-                                $termMonths = is_numeric($termStr) ? (int)$termStr : (preg_match('/(\d+)/', $termStr, $m) ? (int)$m[1] : 12);
-                                if ($termMonths > 0) {
-                                    $dueDateObj = new DateTime();
-                                    $dueDateObj->modify("+{$termMonths} months");
-                                    $dueDate = $dueDateObj->format('Y-m-d');
-                                }
+                            if ($dueDate === '') {
+                                $dueDate = estimatePendingApplicationDueDate(
+                                    isset($borrowerLoanApplication['approved_loan_term']) ? (string)$borrowerLoanApplication['approved_loan_term'] : null,
+                                    isset($borrowerLoanApplication['loan_term']) ? (string)$borrowerLoanApplication['loan_term'] : null,
+                                    trim((string)($borrowerLoanApplication['approved_due_date'] ?? ''))
+                                );
                             }
                             echo $dueDate ? htmlspecialchars($dueDate) : 'Not Provided';
                         ?></div>
@@ -638,7 +592,7 @@ $formattedTotalOutstanding = number_format($totalOutstanding, 2);
                     <!-- Payments Tab -->
                     <div class="tab-pane fade" id="payments" role="tabpanel" aria-labelledby="payments-tab">
                         <?php if (count($payments) > 0): ?>
-                        <div class="table-responsive">
+                        <div class="table-responsive payment-history-scroll">
                             <table class="table table-hover">
                                 <thead class="table-light">
                                     <tr>

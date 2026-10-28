@@ -50,11 +50,25 @@ if (isset($_GET['action']) && $_GET['action'] === 'qrph_status') {
         [$transactionId]
     );
     $statusTransaction = $statusQuery->fetch(PDO::FETCH_ASSOC);
+    require_once 'includes/paymongo_qrph_webhook.php';
     if (!$statusTransaction
-        || (!isAdmin() && !ensureCollectorCanAccessLoan((int)$statusTransaction['loan_id'], (int)($user['user_id'] ?? 0)))) {
+        || !lendingStaffCanReconcilePaymongoQrph((int)$statusTransaction['loan_id'], (int)($user['user_id'] ?? 0))) {
         http_response_code(404);
         echo json_encode(['error' => 'PayMongo QR Ph transaction was not found.']);
         exit;
+    }
+
+    if ((string)$statusTransaction['status'] === 'pending') {
+        try {
+            lendingReconcilePaymongoQrphTransaction($transactionId);
+        } catch (Throwable $exception) {
+            error_log('PayMongo QR Ph status refresh could not reach the provider: ' . $exception->getMessage());
+        }
+        $statusTransaction = executeQuery(
+            'SELECT id, loan_id, status, payment_id, internal_reference
+             FROM paymongo_qrph_transactions WHERE id = ? LIMIT 1',
+            [$transactionId]
+        )->fetch(PDO::FETCH_ASSOC) ?: $statusTransaction;
     }
 
     echo json_encode([
@@ -134,7 +148,7 @@ function buildReceiptPdf($receiptData) {
         'Payment Method: ' . ($receiptData['payment_method'] ?? 'Cash'),
         '',
         'Previous Balance: ' . ($receiptData['previous_balance'] ?? ''),
-        'Amount Paid: ' . ($receiptData['amount_paid'] ?? ''),
+        'Loan Payment Portion: ' . ($receiptData['amount_paid'] ?? ''),
         'Remaining Balance: ' . ($receiptData['remaining_balance'] ?? ''),
         'Interest Paid: ' . ($receiptData['interest_paid'] ?? ''),
         'Penalty Paid: ' . ($receiptData['penalty_paid'] ?? ''),
@@ -229,8 +243,15 @@ if (isset($_GET['view']) && is_numeric($_GET['view'])) {
     }
 
     if ($viewPayment && isset($_GET['download']) && $_GET['download'] == '1') {
-        $paidQuery = "SELECT COALESCE(SUM(amount_paid), 0) AS total_paid FROM payments WHERE loan_id = ?";
-        $paidResult = executeQuery($paidQuery, [(int)($viewPayment['loan_id'] ?? 0)]);
+        $paidQuery = 'SELECT COALESCE(SUM(amount_paid), 0) AS total_paid FROM payments
+                      WHERE loan_id = ?
+                        AND (payment_date < ? OR (payment_date = ? AND payment_id <= ?))';
+        $paidResult = executeQuery($paidQuery, [
+            (int)($viewPayment['loan_id'] ?? 0),
+            (string)$viewPayment['payment_date'],
+            (string)$viewPayment['payment_date'],
+            (int)$viewPayment['payment_id'],
+        ]);
         $totalPaidToDate = (float)($paidResult->fetch()['total_paid'] ?? 0);
 
         $loanOutstanding = max(0, (float)($viewPayment['total_payable'] ?? 0) - $totalPaidToDate);
@@ -268,8 +289,15 @@ $invoicePenaltyPaid = 0.0;
 $invoiceTotalReceived = 0.0;
 if (!empty($viewPayment)) {
     $invoicePaidResult = executeQuery(
-        'SELECT COALESCE(SUM(amount_paid), 0) AS total_paid FROM payments WHERE loan_id = ?',
-        [(int)($viewPayment['loan_id'] ?? 0)]
+        'SELECT COALESCE(SUM(amount_paid), 0) AS total_paid FROM payments
+         WHERE loan_id = ?
+           AND (payment_date < ? OR (payment_date = ? AND payment_id <= ?))',
+        [
+            (int)($viewPayment['loan_id'] ?? 0),
+            (string)$viewPayment['payment_date'],
+            (string)$viewPayment['payment_date'],
+            (int)$viewPayment['payment_id'],
+        ]
     );
     $invoiceTotalPaidToDate = (float)($invoicePaidResult->fetch()['total_paid'] ?? 0);
     $invoiceTotalPayable = (float)($viewPayment['total_payable'] ?? 0);
@@ -390,6 +418,121 @@ if (isset($_GET['add']) && $_GET['add'] === 'true') {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     csrfRequireValid();
 
+    if (isset($_POST['reconcile_qrph'])) {
+        if (!isAdmin() && !isCollector()) {
+            http_response_code(403);
+            exit('Only authorized staff can check a PayMongo QR Ph payment.');
+        }
+
+        $reconcileTransactionId = isset($_POST['qrph_transaction_id']) && is_numeric($_POST['qrph_transaction_id'])
+            ? (int)$_POST['qrph_transaction_id']
+            : 0;
+        if ($reconcileTransactionId <= 0) {
+            header('Location: payments_lending.php?message=' . urlencode('A valid QR Ph transaction is required. No repayment was recorded.') . '&type=danger');
+            exit;
+        }
+
+        require_once 'includes/paymongo_qrph_webhook.php';
+        $reconcileTransaction = executeQuery(
+            'SELECT id, loan_id, status, payment_id FROM paymongo_qrph_transactions WHERE id = ? LIMIT 1',
+            [$reconcileTransactionId]
+        )->fetch(PDO::FETCH_ASSOC);
+        if (!$reconcileTransaction
+            || !lendingStaffCanReconcilePaymongoQrph((int)$reconcileTransaction['loan_id'], (int)($user['user_id'] ?? 0))) {
+            http_response_code(404);
+            exit('PayMongo QR Ph transaction was not found.');
+        }
+
+        $reconcileBeforeStatus = (string)$reconcileTransaction['status'];
+        if (!in_array($reconcileBeforeStatus, ['pending', 'expired', 'failed'], true)) {
+            $reconcileMessage = $reconcileBeforeStatus === 'succeeded'
+                ? 'This QR Ph payment was already recorded. It was not posted again.'
+                : 'This QR Ph payment cannot be checked again from this screen. No repayment was recorded.';
+            header('Location: payments_lending.php?message=' . urlencode($reconcileMessage) . '&type=warning');
+            exit;
+        }
+
+        try {
+            $reconcileResult = lendingReconcilePaymongoQrphTransaction($reconcileTransactionId);
+        } catch (Throwable $exception) {
+            error_log('PayMongo QR Ph staff reconcile failed: ' . $exception->getMessage());
+            header('Location: payments_lending.php?message=' . urlencode('PayMongo could not be reached. No repayment was recorded.') . '&type=danger');
+            exit;
+        }
+
+        $reconcileAfter = executeQuery(
+            'SELECT status, payment_id FROM paymongo_qrph_transactions WHERE id = ? LIMIT 1',
+            [$reconcileTransactionId]
+        )->fetch(PDO::FETCH_ASSOC) ?: [];
+        $reconcilePaymentId = (int)($reconcileAfter['payment_id'] ?? 0);
+        if ($reconcileResult === 'succeeded' && $reconcilePaymentId > 0) {
+            header('Location: payments_lending.php?view=' . $reconcilePaymentId . '&message=' . urlencode('PayMongo confirmed this QR Ph payment. The repayment was recorded once.') . '&type=success');
+            exit;
+        }
+
+        $reconcileMessages = [
+            'pending' => ['PayMongo still reports this QR as unpaid. No repayment was recorded.', 'warning'],
+            'expired' => ['PayMongo confirmed that this QR expired. No repayment was recorded.', 'warning'],
+            'failed' => ['PayMongo reported that this payment failed. No repayment was recorded.', 'warning'],
+            'review_required' => ['This QR Ph payment needs staff review. No repayment was recorded.', 'warning'],
+            'succeeded' => ['This QR Ph payment was already recorded. It was not posted again.', 'warning'],
+        ];
+        [$reconcileText, $reconcileType] = $reconcileMessages[$reconcileResult]
+            ?? ['The QR Ph payment could not be confirmed. No repayment was recorded.', 'warning'];
+        header('Location: payments_lending.php?message=' . urlencode($reconcileText) . '&type=' . urlencode($reconcileType));
+        exit;
+    }
+
+    // ============================
+    // Leave QR Ph and choose another payment method
+    // ============================
+    if (isset($_POST['cancel_qrph'])) {
+        if (!isCollector() && !isAdmin()) {
+            http_response_code(403);
+            exit('Only staff can change the payment method for a QR Ph attempt.');
+        }
+
+        $cancelTransactionId = isset($_POST['qrph_transaction_id']) && is_numeric($_POST['qrph_transaction_id'])
+            ? (int)$_POST['qrph_transaction_id']
+            : 0;
+        if ($cancelTransactionId <= 0) {
+            header('Location: payments_lending.php?add=true');
+            exit;
+        }
+
+        $cancelTransaction = executeQuery(
+            'SELECT id, loan_id, status FROM paymongo_qrph_transactions WHERE id = ? LIMIT 1',
+            [$cancelTransactionId]
+        )->fetch(PDO::FETCH_ASSOC);
+
+        if (!$cancelTransaction
+            || (!isAdmin() && !ensureCollectorCanAccessLoan((int)$cancelTransaction['loan_id'], (int)($user['user_id'] ?? 0)))) {
+            http_response_code(404);
+            exit('PayMongo QR Ph transaction was not found.');
+        }
+
+        $cancelLoanId = (int)$cancelTransaction['loan_id'];
+        if ((string)$cancelTransaction['status'] === 'pending') {
+            require_once 'includes/paymongo_qrph_webhook.php';
+            try {
+                lendingSupersedePendingPaymongoQrphAttempt(
+                    $cancelTransactionId,
+                    true,
+                    'Closed because the collector chose a different payment method.'
+                );
+            } catch (Throwable $exception) {
+                $message = htmlspecialchars($exception->getMessage(), ENT_QUOTES, 'UTF-8');
+                $messageType = 'danger';
+                $_GET['qrph'] = (string)$cancelTransactionId;
+            }
+        }
+
+        if (empty($message)) {
+            header('Location: payments_lending.php?add=true&loan=' . $cancelLoanId);
+            exit;
+        }
+    }
+
     // ============================
     // Initiate a pending PayMongo Dynamic QR Ph payment
     // ============================
@@ -402,15 +545,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $amountPaidValue = (string)($_POST['amount_paid'] ?? '');
         $penaltyPaidValue = (string)($_POST['penalty_paid'] ?? '0');
 
-        if (!isCollector()) {
+        if (!canInitiatePaymongoQrph()) {
             http_response_code(403);
-            exit('Only collectors can initiate a PayMongo QR Ph payment.');
+            exit('Only authorized staff can initiate a PayMongo QR Ph payment.');
+        }
+
+        $staffUserId = (int)($user['user_id'] ?? 0);
+        if ($staffUserId <= 0) {
+            http_response_code(403);
+            exit('Only authorized staff can initiate a PayMongo QR Ph payment.');
+        }
+        if (isCollector() && !ensureCollectorCanAccessLoan((int)($selectedLoanId ?? 0), $staffUserId)) {
+            http_response_code(403);
+            exit('You are not assigned to this loan.');
         }
 
         try {
             $transactionId = lendingCreatePaymongoQrphTransaction(
                 (int)($selectedLoanId ?? 0),
-                (int)($user['user_id'] ?? 0),
+                $staffUserId,
                 $paymentMethodValue,
                 $amountPaidValue,
                 $penaltyPaidValue
@@ -428,8 +581,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $loanId = isset($_POST['loan_id']) ? (int)$_POST['loan_id'] : null;
-        $paymentAmount = isset($_POST['amount_paid']) ? (float)$_POST['amount_paid'] : 0;
-        $penaltyPaid = isset($_POST['penalty_paid']) ? (float)$_POST['penalty_paid'] : 0;
+        $paymentAmount = $_POST['amount_paid'] ?? '';
+        $penaltyPaid = $_POST['penalty_paid'] ?? '0';
         $paymentDate = $_POST['payment_date'] ?? date('Y-m-d');
         $collectorName = isCollector()
             ? trim((string)($user['full_name'] ?? 'Unknown'))
@@ -452,9 +605,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($paymentMethod)) {
             $message = "Payment method is required.";
             $messageType = 'danger';
-        } elseif ($paymentAmount <= 0) {
-            $message = "Payment amount must be greater than zero.";
-            $messageType = 'danger';
         } elseif (!$loan) {
             $message = "Invalid loan selected.";
             $messageType = 'danger';
@@ -462,36 +612,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = 'You are not assigned to this loan.';
             $messageType = 'danger';
         } else {
-            $balanceSummary = calculateLoanBalanceSummary($loanId);
-            $remainingBalance = (float)($balanceSummary['remaining_balance'] ?? 0);
-            $penaltyDue = (float)($balanceSummary['penalty_due'] ?? 0);
-            $maxTotalPayment = (float)($balanceSummary['total_amount_due'] ?? $remainingBalance);
-
-            $effectivePenalty = min($penaltyPaid, $penaltyDue);
-            if ($paymentAmount <= 0) {
-                $message = 'Payment amount must be greater than zero.';
-                $messageType = 'danger';
-            } elseif ($penaltyPaid > $paymentAmount + 0.009) {
-                $message = 'Penalty portion cannot exceed total payment received.';
-                $messageType = 'danger';
-            } elseif ($paymentAmount > $maxTotalPayment + 0.009) {
-                $message = 'Payment amount cannot exceed the total amount due of ₱' . number_format($maxTotalPayment, 2) . ' (balance + penalties).';
-                $messageType = 'danger';
-            } elseif (($paymentAmount - $effectivePenalty) > $remainingBalance + 0.009) {
-                $message = 'Installment portion cannot exceed the remaining loan balance of ₱' . number_format($remainingBalance, 2) . '.';
+            $submittedToken = trim((string)($_POST['payment_submission_token'] ?? ''));
+            $storedToken = (string)($_SESSION['payment_submission_token'] ?? '');
+            if ($submittedToken === '' || $storedToken === '' || !hash_equals($storedToken, $submittedToken)) {
+                $message = 'This payment form was already submitted or has expired. Please review the form and try again.';
                 $messageType = 'danger';
             } else {
+                unset($_SESSION['payment_submission_token']);
                 try {
                     $collectorId = isCollector() ? (int)$user['user_id'] : null;
                     $clientId = (int)($loan['client_id'] ?? 0);
                     recordPaymentTransaction($loanId, $paymentDate, $paymentAmount, $collectorName, $collectorId, $clientId, $paymentMethod, null, $penaltyPaid, $remarksValue);
 
-                    $message = "Payment of ₱" . number_format($paymentAmount, 2) . " has been recorded successfully.";
+                    $message = "Payment of ₱" . number_format((float)$paymentAmount, 2) . " has been recorded successfully.";
                     $messageType = 'success';
 
                     header("Location: payments_lending.php?message=" . urlencode($message) . "&type=$messageType");
                     exit;
-                } catch (Exception $e) {
+                } catch (Throwable $e) {
                     $message = "Error recording payment: " . $e->getMessage();
                     $messageType = 'danger';
                 }
@@ -509,46 +647,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        $paymentId = (int)($_POST['payment_id'] ?? 0);
-        $loanId = (int)($_POST['loan_id'] ?? 0);
+        $paymentId = isset($_POST['payment_id']) && ctype_digit((string)$_POST['payment_id'])
+            ? (int)$_POST['payment_id']
+            : 0;
+        $loanId = isset($_POST['loan_id']) && ctype_digit((string)$_POST['loan_id'])
+            ? (int)$_POST['loan_id']
+            : 0;
 
-        if ($paymentId > 0 && $loanId > 0) {
-            $paymentQuery = "SELECT amount_paid FROM payments WHERE payment_id = ? LIMIT 1";
-            $paymentResult = executeQuery($paymentQuery, [$paymentId]);
-            $payment = $paymentResult->fetch();
-
-            if ($payment) {
-                try {
-                    $deleteQuery = "DELETE FROM payments WHERE payment_id = ?";
-                    executeQuery($deleteQuery, [$paymentId]);
-
-                    $loanQuery = "SELECT total_payable FROM loans WHERE loan_id = ? LIMIT 1";
-                    $loanResult = executeQuery($loanQuery, [$loanId]);
-                    $loan = $loanResult->fetch();
-
-                    if ($loan) {
-                        $paidQuery = "SELECT SUM(amount_paid) as total FROM payments WHERE loan_id = ?";
-                        $paidResult = executeQuery($paidQuery, [$loanId]);
-                        $totalPaid = $paidResult->fetch()['total'] ?? 0;
-
-                        if ($totalPaid < $loan['total_payable']) {
-                            $updateQuery = "UPDATE loans SET status = 'Active' WHERE loan_id = ? AND status = 'Paid'";
-                            executeQuery($updateQuery, [$loanId]);
-                        }
-                    }
-
-                    $message = "Payment has been deleted successfully.";
-                    $messageType = 'success';
-                    header("Location: payments_lending.php?message=" . urlencode($message) . "&type=$messageType");
-                    exit;
-                } catch (Exception $e) {
-                    $message = "Error deleting payment: " . $e->getMessage();
-                    $messageType = 'danger';
-                }
-            } else {
-                $message = "Payment not found.";
-                $messageType = 'danger';
-            }
+        try {
+            deletePaymentTransaction($paymentId, $loanId);
+            $message = "Payment has been deleted successfully.";
+            $messageType = 'success';
+            header("Location: payments_lending.php?message=" . urlencode($message) . "&type=$messageType");
+            exit;
+        } catch (Throwable $e) {
+            $message = "Error deleting payment: " . $e->getMessage();
+            $messageType = 'danger';
         }
     }
 }
@@ -598,6 +712,13 @@ if ($addPayment && $selectedLoanId) {
     }
 }
 
+if ($addPayment && empty($_SESSION['payment_submission_token'])) {
+    $_SESSION['payment_submission_token'] = bin2hex(random_bytes(32));
+}
+$paymentSubmissionToken = $addPayment
+    ? (string)($_SESSION['payment_submission_token'] ?? '')
+    : '';
+
 // Handle search and filtering
 if (isset($_GET['search'])) {
     $searchTerm = trim($_GET['search']);
@@ -641,7 +762,7 @@ $paymentsQuery .= " ORDER BY p.payment_date DESC, p.payment_id DESC";
 $paymentsResult = executeQuery($paymentsQuery, $queryParams);
 $payments = $paymentsResult->fetchAll();
 
-$periodStatsQuery = "SELECT COALESCE(SUM(p.amount_paid), 0) AS total, COUNT(*) AS payment_count FROM payments p JOIN loans l ON p.loan_id = l.loan_id JOIN clients c ON l.client_id = c.client_id WHERE DATE(p.payment_date) BETWEEN ? AND ?";
+$periodStatsQuery = "SELECT COALESCE(SUM(p.amount_paid + COALESCE(p.penalty_paid, 0)), 0) AS total, COUNT(*) AS payment_count FROM payments p JOIN loans l ON p.loan_id = l.loan_id JOIN clients c ON l.client_id = c.client_id WHERE DATE(p.payment_date) BETWEEN ? AND ?";
 $periodStatsParams = [$startDate, $endDate];
 if (isCollector()) {
     $periodStatsQuery .= " AND c.collector_id = ?";
@@ -652,7 +773,7 @@ $periodCollection = (float)($periodStatsRow['total'] ?? 0);
 $periodPaymentCount = (int)($periodStatsRow['payment_count'] ?? 0);
 
 // Get total collection for all time
-$totalCollectionQuery = "SELECT SUM(p.amount_paid) as total FROM payments p JOIN loans l ON p.loan_id = l.loan_id JOIN clients c ON l.client_id = c.client_id";
+$totalCollectionQuery = "SELECT SUM(p.amount_paid + COALESCE(p.penalty_paid, 0)) as total FROM payments p JOIN loans l ON p.loan_id = l.loan_id JOIN clients c ON l.client_id = c.client_id";
 $totalCollectionParams = [];
 if (isCollector()) {
     $totalCollectionQuery .= " WHERE c.collector_id = ?";
@@ -663,6 +784,24 @@ $totalCollection = $totalCollectionResult->fetch()['total'] ?? 0;
 
 $formattedPeriodCollection = number_format($periodCollection, 2);
 $formattedTotalCollection = number_format($totalCollection, 2);
+
+$pendingQrphTransactions = [];
+if (!$viewPayment && !$qrPayment && !$addPayment && (isAdmin() || isCollector()) && lendingPaymongoQrphTransactionsTableExists()) {
+    $pendingQrphSql = 'SELECT t.id, t.loan_id, t.internal_reference, t.amount, t.selected_method, t.provider_status,
+                              t.expires_at, l.loan_number, c.first_name, c.last_name
+                       FROM paymongo_qrph_transactions t
+                       JOIN loans l ON l.loan_id = t.loan_id
+                       JOIN clients c ON c.client_id = t.client_id
+                       WHERE t.status = ?';
+    $pendingQrphParams = ['pending'];
+    if (isCollector()) {
+        $pendingQrphSql .= ' AND (c.collector_id = ? OR l.collector_id = ?)';
+        $pendingQrphParams[] = $collectorUserId;
+        $pendingQrphParams[] = $collectorUserId;
+    }
+    $pendingQrphSql .= ' ORDER BY t.id DESC LIMIT 50';
+    $pendingQrphTransactions = executeQuery($pendingQrphSql, $pendingQrphParams)->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>
 
 <!DOCTYPE html>
@@ -688,6 +827,9 @@ $formattedTotalCollection = number_format($totalCollection, 2);
         <?php if ($viewPayment): ?>
         <?php
         $borrowerDisplayName = trim(($viewPayment['first_name'] ?? '') . ' ' . ($viewPayment['last_name'] ?? ''));
+        $invoiceBorrowerSignature = invoicePaymentBorrowerSignature((int)($viewPayment['loan_id'] ?? 0), $borrowerDisplayName);
+        $invoiceCollectorSignature = trim((string)($viewPayment['collector_name'] ?? ''));
+        $invoiceAuthorizedSignatory = invoiceAuthorizedSignatoryName();
         $receiptNumberDisplay = $viewPayment['receipt_number'] ?? 'RJRR-000000';
         $paymentMethodDisplay = $viewPayment['payment_method'] ?? 'Cash';
         $paymentDateLong = date('F d, Y', strtotime($viewPayment['payment_date']));
@@ -821,7 +963,7 @@ $formattedTotalCollection = number_format($totalCollection, 2);
                                     <span><?php echo invoiceMoney($invoicePreviousBalance); ?></span>
                                 </div>
                                 <div class="invoice-totals__row invoice-totals__row--emphasis">
-                                    <span>Amount paid</span>
+                                    <span>Loan payment portion</span>
                                     <span><?php echo invoiceMoney($invoiceAmountPaid); ?></span>
                                 </div>
                                 <div class="invoice-totals__row">
@@ -837,16 +979,23 @@ $formattedTotalCollection = number_format($totalCollection, 2);
 
                         <div class="invoice-signatures">
                             <div class="invoice-signature">
+                                <?php if ($invoiceBorrowerSignature !== ''): ?>
+                                <p class="invoice-signature__name"><?php echo htmlspecialchars($invoiceBorrowerSignature, ENT_QUOTES, 'UTF-8'); ?></p>
+                                <?php endif; ?>
                                 <div class="invoice-signature__line"></div>
                                 <p class="invoice-signature__label">Borrower</p>
                             </div>
                             <div class="invoice-signature">
+                                <?php if ($invoiceCollectorSignature !== ''): ?>
+                                <p class="invoice-signature__name"><?php echo htmlspecialchars($invoiceCollectorSignature, ENT_QUOTES, 'UTF-8'); ?></p>
+                                <?php endif; ?>
                                 <div class="invoice-signature__line"></div>
                                 <p class="invoice-signature__label">Collector</p>
                             </div>
                             <div class="invoice-signature">
+                                <p class="invoice-signature__name"><?php echo htmlspecialchars($invoiceAuthorizedSignatory, ENT_QUOTES, 'UTF-8'); ?></p>
                                 <div class="invoice-signature__line"></div>
-                                <p class="invoice-signature__label">Authorized signatory</p>
+                                <p class="invoice-signature__label">System admin</p>
                             </div>
                         </div>
 
@@ -885,6 +1034,48 @@ $formattedTotalCollection = number_format($totalCollection, 2);
             'review_required' => 'review',
         ];
         $qrExpiryTimestamp = strtotime((string)$qrPayment['expires_at']);
+        $qrPaymongoConfiguredMode = lendingPaymongoConfiguredMode();
+        $qrPaymongoTestMode = $qrPaymongoConfiguredMode === 'test';
+        $qrPaymongoLiveMode = $qrPaymongoConfiguredMode === 'live';
+        $qrPaymongoTestUrl = '';
+        if ($qrPaymongoTestMode && $qrStatus === 'pending') {
+            $qrIntentId = trim((string)($qrPayment['payment_intent_id'] ?? ''));
+            if ($qrIntentId !== '') {
+                try {
+                    $qrIntent = lendingPaymongoRetrievePaymentIntent($qrIntentId);
+                    $qrNextAction = is_array($qrIntent['attributes']['next_action'] ?? null)
+                        ? $qrIntent['attributes']['next_action']
+                        : [];
+                    $qrCodeAction = is_array($qrNextAction['code'] ?? null) ? $qrNextAction['code'] : [];
+                    $candidateTestUrl = trim((string)($qrCodeAction['test_url'] ?? ''));
+                    if ($candidateTestUrl !== ''
+                        && preg_match('#^https://([a-z0-9-]+\.)*paymongo\.com/#i', $candidateTestUrl) === 1) {
+                        $qrPaymongoTestUrl = $candidateTestUrl;
+                    }
+                } catch (Throwable $qrTestUrlException) {
+                    error_log('PayMongo QR Ph test URL lookup failed: ' . $qrTestUrlException->getMessage());
+                }
+            }
+        }
+        $qrLoanId = (int)$qrPayment['loan_id'];
+        $qrRecordPaymentUrl = 'payments_lending.php?add=true&loan=' . $qrLoanId;
+        $qrHeaderActions = '<div class="d-flex flex-wrap gap-2 justify-content-end">'
+            . '<a href="payments_lending.php" class="btn btn-light border btn-sm"><i class="fas fa-arrow-left me-1"></i> Back to payments</a>';
+        if ($qrStatus === 'pending') {
+            $qrHeaderActions .= '<form method="post" action="payments_lending.php?qrph=' . (int)$qrPayment['id'] . '" class="d-inline">'
+                . csrfField()
+                . '<input type="hidden" name="qrph_transaction_id" value="' . (int)$qrPayment['id'] . '">'
+                . '<button type="submit" name="cancel_qrph" value="1" class="btn btn-outline-primary btn-sm">'
+                . '<i class="fas fa-exchange-alt me-1"></i> Change payment method'
+                . '</button></form>';
+        } elseif ($qrExpired || $qrFailed) {
+            $qrHeaderActions .= '<a href="' . htmlspecialchars($qrRecordPaymentUrl, ENT_QUOTES, 'UTF-8') . '" class="btn btn-outline-primary btn-sm">'
+                . '<i class="fas fa-plus me-1"></i> Record another payment</a>';
+        } elseif ($qrSucceeded && !empty($qrPayment['payment_id'])) {
+            $qrHeaderActions .= '<a href="payments_lending.php?view=' . (int)$qrPayment['payment_id'] . '" class="btn btn-outline-primary btn-sm">'
+                . '<i class="fas fa-receipt me-1"></i> View receipt</a>';
+        }
+        $qrHeaderActions .= '</div>';
         ?>
         <?php
         echo renderAdminDashboardHeader(
@@ -892,11 +1083,32 @@ $formattedTotalCollection = number_format($totalCollection, 2);
             'Scan the PayMongo QR Ph code to make this repayment. The loan balance will remain unchanged until the payment is confirmed and recorded.',
             'fa-qrcode',
             'Payments',
-            ($qrExpired || $qrFailed)
-                ? '<a href="payments_lending.php?add=true" class="btn btn-outline-primary btn-sm"><i class="fas fa-plus me-1"></i> New payment</a>'
-                : ''
+            $qrHeaderActions
         );
         ?>
+        <?php if (!empty($message)): ?>
+        <div class="alert alert-<?php echo htmlspecialchars($messageType ?: 'info', ENT_QUOTES, 'UTF-8'); ?> alert-dismissible fade show" role="alert">
+            <?php echo $message; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <?php endif; ?>
+        <?php if ($qrPaymongoTestMode): ?>
+        <div class="alert alert-warning mb-3" role="status">
+            <strong>Test mode — do not scan with GCash or a real e-wallet app.</strong>
+            PayMongo says test QR images can behave like live QR codes if you scan them with a banking app.
+            For testing, open PayMongo&apos;s simulation page instead (button below). No real wallet balance is charged there, but a successful simulation <strong>will</strong> record the loan payment in this system.
+        </div>
+        <?php elseif ($qrPaymongoLiveMode): ?>
+        <div class="alert alert-danger mb-3" role="status">
+            <strong>Live mode — real money.</strong>
+            Scanning this QR with GCash or another QR Ph app will charge the amount shown. Use a small amount (for example ₱1.00) while verifying live behavior.
+            <?php
+            $liveMaxDisplay = trim((string)lendingEnv('PAYMONGO_LIVE_MAX_AMOUNT', ''));
+            if ($liveMaxDisplay !== '' && is_numeric($liveMaxDisplay)): ?>
+                Live QR amounts are capped at <strong>₱<?php echo htmlspecialchars(number_format((float)$liveMaxDisplay, 2), ENT_QUOTES, 'UTF-8'); ?></strong> by <code>PAYMONGO_LIVE_MAX_AMOUNT</code>.
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
         <section class="qrph-payment-card" data-qrph-transaction-id="<?php echo (int)$qrPayment['id']; ?>" data-qrph-status="<?php echo htmlspecialchars($qrStatus, ENT_QUOTES, 'UTF-8'); ?>">
             <div class="qrph-payment-card__heading">
                 <div>
@@ -942,7 +1154,18 @@ $formattedTotalCollection = number_format($totalCollection, 2);
                         <?php else: ?>
                             <div class="alert alert-danger mb-0">The provider did not return a QR image. No payment was recorded.</div>
                         <?php endif; ?>
-                        <p class="small text-muted mb-0">Scan this code with a QR Ph-enabled banking or e-wallet app.</p>
+                        <?php if ($qrPaymongoTestMode): ?>
+                            <?php if ($qrPaymongoTestUrl !== ''): ?>
+                                <a href="<?php echo htmlspecialchars($qrPaymongoTestUrl, ENT_QUOTES, 'UTF-8'); ?>" class="btn btn-primary" target="_blank" rel="noopener noreferrer">
+                                    <i class="fas fa-flask me-1"></i> Simulate test payment (PayMongo)
+                                </a>
+                                <p class="small text-muted mb-0">Use this link for testing. Do not scan the QR with GCash, Maya, or your bank app while <code>sk_test_</code> keys are configured.</p>
+                            <?php else: ?>
+                                <p class="small text-muted mb-0">Test simulation link is unavailable. Refresh this page or check PayMongo Dashboard for this Payment Intent.</p>
+                            <?php endif; ?>
+                        <?php else: ?>
+                            <p class="small text-muted mb-0">Scan this code with a QR Ph-enabled banking or e-wallet app.</p>
+                        <?php endif; ?>
                     </div>
                     <dl class="qrph-payment-details">
                         <div><dt>Borrower</dt><dd><?php echo htmlspecialchars($qrBorrowerName, ENT_QUOTES, 'UTF-8'); ?></dd></div>
@@ -965,6 +1188,18 @@ $formattedTotalCollection = number_format($totalCollection, 2);
                     This is a pending transaction, not a receipt. Do not mark the repayment as received or change the loan balance because a QR code was generated.
                     If the QR expiry time passes, the system will keep checking for provider confirmation; the clock alone does not prove expiration.
                 </p>
+                <div class="qrph-payment-actions">
+                    <a href="payments_lending.php" class="btn btn-light border">
+                        <i class="fas fa-arrow-left me-1"></i> Back to payments
+                    </a>
+                    <form method="post" action="payments_lending.php?qrph=<?php echo (int)$qrPayment['id']; ?>" class="d-inline">
+                        <?php echo csrfField(); ?>
+                        <input type="hidden" name="qrph_transaction_id" value="<?php echo (int)$qrPayment['id']; ?>">
+                        <button type="submit" name="cancel_qrph" value="1" class="btn btn-outline-primary">
+                            <i class="fas fa-exchange-alt me-1"></i> Change payment method
+                        </button>
+                    </form>
+                </div>
             <?php endif; ?>
         </section>
         <?php elseif ($addPayment): ?>
@@ -990,6 +1225,7 @@ $formattedTotalCollection = number_format($totalCollection, 2);
             <form action="payments_lending.php" method="post" class="needs-validation record-payment-form" id="payment-record-form" novalidate>
                 <?php echo csrfField(); ?>
                 <input type="hidden" name="add_payment" value="1">
+                <input type="hidden" name="payment_submission_token" value="<?php echo htmlspecialchars($paymentSubmissionToken, ENT_QUOTES, 'UTF-8'); ?>">
 
                 <div class="row g-4">
                     <div class="col-lg-8">
@@ -1052,7 +1288,7 @@ $formattedTotalCollection = number_format($totalCollection, 2);
                                     <label for="amount_paid" class="form-label">Total payment received <span class="record-payment-required">*</span></label>
                                     <div class="input-group input-group-lg has-validation">
                                         <span class="input-group-text rounded-start-3">₱</span>
-                                        <input type="number" class="form-control rounded-end-3" id="amount_paid" name="amount_paid" min="0.01" step="any" data-collect-full="<?php echo $recordPaymentCollectFull ? '1' : '0'; ?>" value="<?php echo htmlspecialchars($amountPaidValue); ?>" required>
+                                        <input type="number" class="form-control rounded-end-3" id="amount_paid" name="amount_paid" min="0.01" step="0.01" data-collect-full="<?php echo $recordPaymentCollectFull ? '1' : '0'; ?>" value="<?php echo htmlspecialchars($amountPaidValue); ?>" required>
                                         <div class="invalid-feedback">Please enter a valid payment amount.</div>
                                     </div>
                                     <div class="form-text">Prefilled with <strong>one installment</strong> when current, or <strong>balance plus penalties</strong> when overdue.</div>
@@ -1061,7 +1297,7 @@ $formattedTotalCollection = number_format($totalCollection, 2);
                                     <label for="penalty_paid" class="form-label">Penalty portion</label>
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text rounded-start-3">₱</span>
-                                        <input type="number" class="form-control rounded-end-3" id="penalty_paid" name="penalty_paid" min="0" step="any" value="<?php echo htmlspecialchars($penaltyPaidValue); ?>">
+                                        <input type="number" class="form-control rounded-end-3" id="penalty_paid" name="penalty_paid" min="0" step="0.01" value="<?php echo htmlspecialchars($penaltyPaidValue); ?>">
                                     </div>
                                     <?php
                                     $hintPenaltyDue = $selectedLoanSummary ? (float)($selectedLoanSummary['penalty_due'] ?? 0) : 0;
@@ -1159,7 +1395,7 @@ $formattedTotalCollection = number_format($totalCollection, 2);
                         <a href="payments_lending.php" class="btn btn-light border">
                             <i class="fas fa-times me-1"></i> Cancel
                         </a>
-                        <?php if (isCollector()): ?>
+                        <?php if (canInitiatePaymongoQrph()): ?>
                         <button type="submit" class="btn btn-outline-primary btn-lg px-4" id="start-qrph-payment" name="start_qrph" value="1" hidden disabled>
                             <i class="fas fa-qrcode me-2"></i> Create Dynamic QR Ph
                         </button>
@@ -1252,13 +1488,70 @@ $formattedTotalCollection = number_format($totalCollection, 2);
             </div>
         </div>
 
+        <?php if ($pendingQrphTransactions !== []): ?>
+        <div class="panel-card panel-card--flush mb-4">
+            <div class="chart-panel__header">
+                <h6 class="m-0 fw-bold"><i class="fas fa-qrcode me-2 text-primary"></i>Pending QR Ph payments</h6>
+            </div>
+            <div class="chart-panel__body pt-0">
+                <p class="small text-muted">Each row is still pending. Check with PayMongo retrieves that one Payment Intent on the server. A repayment is recorded only when the existing verification checks succeed.</p>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Reference</th>
+                                <th>Borrower</th>
+                                <th>Loan</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Provider status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($pendingQrphTransactions as $pendingQrph): ?>
+                            <?php
+                            $pendingLoanLabel = trim((string)($pendingQrph['loan_number'] ?? ''));
+                            if ($pendingLoanLabel === '') {
+                                $pendingLoanLabel = '#' . (int)$pendingQrph['loan_id'];
+                            }
+                            ?>
+                            <tr>
+                                <td><?php echo htmlspecialchars((string)$pendingQrph['internal_reference'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars(trim((string)$pendingQrph['first_name'] . ' ' . (string)$pendingQrph['last_name']), ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td>
+                                    <a href="loan_details_lending.php?id=<?php echo (int)$pendingQrph['loan_id']; ?>">
+                                        <?php echo htmlspecialchars($pendingLoanLabel, ENT_QUOTES, 'UTF-8'); ?>
+                                    </a>
+                                </td>
+                                <td>₱<?php echo number_format((float)$pendingQrph['amount'], 2); ?></td>
+                                <td><?php echo htmlspecialchars((string)$pendingQrph['selected_method'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars((string)$pendingQrph['provider_status'], ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td class="text-end">
+                                    <form method="post" action="payments_lending.php" class="d-inline">
+                                        <?php echo csrfField(); ?>
+                                        <input type="hidden" name="qrph_transaction_id" value="<?php echo (int)$pendingQrph['id']; ?>">
+                                        <button type="submit" name="reconcile_qrph" value="1" class="btn btn-sm btn-outline-primary">
+                                            Check with PayMongo
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
+
         <div class="panel-card panel-card--flush mb-4">
             <div class="chart-panel__header">
                 <h6 class="m-0 fw-bold"><i class="fas fa-list me-2 text-primary"></i>Payments list</h6>
             </div>
             <div class="chart-panel__body pt-0">
                 <?php if (count($payments) > 0): ?>
-                <div class="table-responsive">
+                <div class="table-responsive payment-history-scroll">
                     <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
@@ -1266,7 +1559,9 @@ $formattedTotalCollection = number_format($totalCollection, 2);
                                 <th>Date</th>
                                 <th>Client</th>
                                 <th>Loan ID</th>
-                                <th>Amount</th>
+                                <th>Loan payment</th>
+                                <th>Penalty</th>
+                                <th>Total received</th>
                                 <th>Method</th>
                                 <th>Reference No.</th>
                                 <th>Collector</th>
@@ -1286,7 +1581,9 @@ $formattedTotalCollection = number_format($totalCollection, 2);
                                         #<?php echo $payment['loan_id']; ?>
                                     </a>
                                 </td>
-                                <td>₱<?php echo number_format($payment['amount_paid'], 2); ?></td>
+                                <td>₱<?php echo number_format((float)$payment['amount_paid'], 2); ?></td>
+                                <td>₱<?php echo number_format((float)($payment['penalty_paid'] ?? 0), 2); ?></td>
+                                <td class="fw-semibold">₱<?php echo number_format((float)$payment['amount_paid'] + (float)($payment['penalty_paid'] ?? 0), 2); ?></td>
                                 <td><?php echo htmlspecialchars((string)($payment['payment_method'] ?? 'Cash')); ?></td>
                                 <td><?php echo htmlspecialchars(lendingPaymentReferenceLabel($payment['payment_method'] ?? '', $payment['reference_number'] ?? '')); ?></td>
                                 <td><?php echo htmlspecialchars($payment['collector_name']); ?></td>
@@ -1359,6 +1656,31 @@ $formattedTotalCollection = number_format($totalCollection, 2);
                 var onlineMethod = paymentMethodSelect.value === 'Bank Transfer' || paymentMethodSelect.value === 'E-Wallet';
                 qrphButton.hidden = !onlineMethod;
                 qrphButton.disabled = !onlineMethod;
+            }
+
+            function validatePaymentAmounts() {
+                var amount = amountPaidInput ? Number(amountPaidInput.value) : NaN;
+                var amountIsValid = isFinite(amount) && amount > 0 && Math.abs(amount - Math.round(amount * 100) / 100) < 0.000001;
+                if (amountPaidInput) {
+                    amountPaidInput.setCustomValidity(amountIsValid ? '' : 'Enter a valid amount greater than zero with no more than two decimal places.');
+                }
+
+                if (!penaltyPaidInput) {
+                    return;
+                }
+
+                var penalty = penaltyPaidInput.value === '' ? 0 : Number(penaltyPaidInput.value);
+                var selectedOption = loanSelect.options[loanSelect.selectedIndex];
+                var penaltyDue = selectedOption ? Number(selectedOption.dataset.penaltyDue || 0) : 0;
+                var penaltyError = '';
+                if (!isFinite(penalty) || penalty < 0 || Math.abs(penalty - Math.round(penalty * 100) / 100) >= 0.000001) {
+                    penaltyError = 'Enter a valid penalty amount with no more than two decimal places.';
+                } else if (penalty > amount + 0.000001) {
+                    penaltyError = 'Penalty portion cannot exceed total payment received.';
+                } else if (penalty > penaltyDue + 0.009) {
+                    penaltyError = 'Penalty portion cannot exceed the outstanding penalty due.';
+                }
+                penaltyPaidInput.setCustomValidity(penaltyError);
             }
 
             function loanSnapshotFromOption(option) {
@@ -1522,13 +1844,16 @@ $formattedTotalCollection = number_format($totalCollection, 2);
             if (amountPaidInput) {
                 amountPaidInput.addEventListener('input', function () {
                     userEditedAmount = true;
+                    validatePaymentAmounts();
                 });
             }
             if (penaltyPaidInput) {
                 penaltyPaidInput.addEventListener('input', function () {
                     userEditedPenalty = true;
+                    validatePaymentAmounts();
                 });
             }
+            loanSelect.addEventListener('change', validatePaymentAmounts);
 
             applyUrlPrefill();
             updateQrphButton();
@@ -1541,15 +1866,7 @@ $formattedTotalCollection = number_format($totalCollection, 2);
 
             form.addEventListener('submit', function (event) {
                 loanSelect.setCustomValidity(loanSelect.value ? '' : 'Please select a loan.');
-
-                if (amountPaidInput) {
-                    var enteredPayment = parseFloat(amountPaidInput.value);
-                    amountPaidInput.setCustomValidity(
-                        (isNaN(enteredPayment) || enteredPayment <= 0)
-                            ? 'Please enter a valid payment amount.'
-                            : ''
-                    );
-                }
+                validatePaymentAmounts();
 
                 if (paymentMethodSelect) {
                     paymentMethodSelect.setCustomValidity(

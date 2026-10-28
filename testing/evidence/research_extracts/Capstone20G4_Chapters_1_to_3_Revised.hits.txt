@@ -1,0 +1,10 @@
+38: • evaluate the system through unit testing, integration testing, and user acceptance testing.
+41: The eligibility estimate uses monthly income, existing debt payments, other monthly obligations, employment or business length, the requested amount, the term, and the interest rate. The default limits in the program are a maximum debt-to-i
+71: Juventud, Matigas, Himongala, Galla, and Abiol (2023) assessed perceived credit risk of microfinance loans among micro-enterprise owners in Barangay Población, Iligan City. Using a descriptive-correlational design and 75 business owners, th
+132: This chapter describes how FRAMS was planned and how the system is designed. The order follows the capstone guide: the development life cycle, the requirements, the system design, the technical specifications, and the development and testin
+137: Planning. The need for the system was identified from the difficulty of managing applications, credit review, and payment tracking in disconnected records. Selected borrowers, lenders, and administrators were the intended respondents for a 
+138: Instruments and procedures. The instruments identified for the study were a survey questionnaire, an interview guide for lenders and administrators, observation of loan processing and payment tracking, and secondary sources consisting of th
+142: Testing. Unit testing, integration testing, and user acceptance testing are the methods required for the report. They are described in Section 3.5 and carried out in Chapter 4.
+252: Development used a local XAMPP environment, MySQL, and a code editor, with the project files kept under version control. Testing follows the capstone requirement for unit testing, integration testing, and user acceptance testing.
+253: Unit testing. Login, registration, the eligibility gate, document upload, and the payment amount check are tested as separate rules. The expected results are stated in Chapter 4.
+255: User acceptance testing. The respondents identified for evaluation use the tasks allowed for their role. Scores are computed from the questionnaires with the scale adopted for the study and are reported only after they are tallied. Chapter 

@@ -362,17 +362,23 @@ function displayLoanSummaryDate($value) {
 }
 
 function parseLoanTermMonths($loanTerm) {
-    $loanTerm = trim((string)$loanTerm);
-    if (preg_match('/^(\d+)/', $loanTerm, $matches)) {
-        return (int)$matches[1];
-    }
-    return 0;
+    return parseLoanTermMonthsValue($loanTerm);
 }
 
 function calculateLoanEstimates(float $loanAmount, int $loanTermMonths): array {
+    if ($loanAmount < 0) {
+        throw new InvalidArgumentException('Loan principal cannot be negative.');
+    }
     $monthlyInterestRatePercent = getStandardMonthlyInterestRatePercent();
+    if ($loanTermMonths < 1) {
+        return [
+            'monthly_interest_rate' => $monthlyInterestRatePercent / 100,
+            'estimated_interest' => 0.0,
+            'estimated_monthly_payment' => 0.0,
+        ];
+    }
     $interestBreakdown = calculateLoanInterestBreakdown($loanAmount, $monthlyInterestRatePercent, $loanTermMonths);
-    $estimatedMonthlyPayment = $interestBreakdown['total_payable'] / max(1, $loanTermMonths);
+    $estimatedMonthlyPayment = $interestBreakdown['total_payable'] / $loanTermMonths;
 
     return [
         'monthly_interest_rate' => $monthlyInterestRatePercent / 100,
@@ -837,7 +843,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $requireWizardDocuments = !empty($loanWizardConfig['require_documents']);
 
     if ($step === 5 && $formAction === 'submit') {
-        if (!$declaration) {
+        $step3ForTerm = $_SESSION[lwSessionKey($loanWizardConfig, 3)] ?? [];
+        $submitTerm = resolveApplicationLoanTerm(null, (string)($step3ForTerm['loan_term'] ?? ''));
+        if (!$submitTerm['valid']) {
+            $step = 3;
+            $error = $submitTerm['message'];
+        } elseif (!$declaration) {
             $step = 5;
             $error = 'Please confirm the declaration before submitting the loan application.';
         } elseif ($isAdminLoanWizard) {
@@ -1350,18 +1361,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($step2BlockMessage !== null) {
                 $error = $step2BlockMessage;
             }
-        } elseif (!$skipEligibility && $step === 3 && $wizardEligibilityUserId > 0) {
-            $step2ForEligibility = enrichWizardStep2ForBorrowerEligibility(
-                $_SESSION[lwSessionKey($loanWizardConfig, 2)] ?? [],
-                $wizardEligibilityUserId
-            );
+        } elseif ($step === 3) {
             $step3ForEligibility = $_SESSION[lwSessionKey($loanWizardConfig, 3)] ?? [];
-            $eligibilityForProgress = assessLoanEligibility(
-                buildLoanEligibilityInputFromWizard($step2ForEligibility, $step3ForEligibility, getStandardMonthlyInterestRatePercent())
-            );
-            $eligibilityBlockMessage = loanEligibilityBlocksWizardProgress($eligibilityForProgress);
-            if ($eligibilityBlockMessage !== null) {
-                $error = $eligibilityBlockMessage;
+            $termChoice = resolveApplicationLoanTerm(null, (string)($step3ForEligibility['loan_term'] ?? ''));
+            if (!$termChoice['valid']) {
+                $error = $termChoice['message'];
+            } elseif (!$skipEligibility && $wizardEligibilityUserId > 0) {
+                $step2ForEligibility = enrichWizardStep2ForBorrowerEligibility(
+                    $_SESSION[lwSessionKey($loanWizardConfig, 2)] ?? [],
+                    $wizardEligibilityUserId
+                );
+                $eligibilityForProgress = assessLoanEligibility(
+                    buildLoanEligibilityInputFromWizard($step2ForEligibility, $step3ForEligibility, getStandardMonthlyInterestRatePercent())
+                );
+                $eligibilityBlockMessage = loanEligibilityBlocksWizardProgress($eligibilityForProgress);
+                if ($eligibilityBlockMessage !== null) {
+                    $error = $eligibilityBlockMessage;
+                }
             }
         }
 
@@ -1395,19 +1411,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $step++;
             }
-        } elseif ($step === 3 && !$skipEligibility && $wizardEligibilityUserId > 0) {
-            $step2ForEligibility = enrichWizardStep2ForBorrowerEligibility(
-                $_SESSION[lwSessionKey($loanWizardConfig, 2)] ?? [],
-                $wizardEligibilityUserId
-            );
+        } elseif ($step === 3) {
             $step3ForEligibility = $_SESSION[lwSessionKey($loanWizardConfig, 3)] ?? [];
-            $eligibilityForProgress = assessLoanEligibility(
-                buildLoanEligibilityInputFromWizard($step2ForEligibility, $step3ForEligibility, getStandardMonthlyInterestRatePercent())
-            );
-            $eligibilityBlockMessage = loanEligibilityBlocksWizardProgress($eligibilityForProgress);
-            if ($eligibilityBlockMessage !== null) {
+            $termChoice = resolveApplicationLoanTerm(null, (string)($step3ForEligibility['loan_term'] ?? ''));
+            if (!$termChoice['valid']) {
                 $step = 3;
-                $error = $eligibilityBlockMessage;
+                $error = $termChoice['message'];
+            } elseif (!$skipEligibility && $wizardEligibilityUserId > 0) {
+                $step2ForEligibility = enrichWizardStep2ForBorrowerEligibility(
+                    $_SESSION[lwSessionKey($loanWizardConfig, 2)] ?? [],
+                    $wizardEligibilityUserId
+                );
+                $eligibilityForProgress = assessLoanEligibility(
+                    buildLoanEligibilityInputFromWizard($step2ForEligibility, $step3ForEligibility, getStandardMonthlyInterestRatePercent())
+                );
+                $eligibilityBlockMessage = loanEligibilityBlocksWizardProgress($eligibilityForProgress);
+                if ($eligibilityBlockMessage !== null) {
+                    $step = 3;
+                    $error = $eligibilityBlockMessage;
+                } else {
+                    $step++;
+                }
             } else {
                 $step++;
             }

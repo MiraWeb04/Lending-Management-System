@@ -65,6 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errorMsg = 'All password fields are required';
         } elseif ($newPassword !== $confirmPassword) {
             $errorMsg = 'New passwords do not match';
+        } elseif (($passwordError = lendingValidatePassword($newPassword)) !== '') {
+            $errorMsg = $passwordError;
         } else {
             // Verify current password
             $passwordQuery = "SELECT password FROM users WHERE user_id = ?";
@@ -186,7 +188,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             </div>
                             <div class="mb-3">
                                 <label for="new_password" class="form-label">New Password</label>
-                                <input type="password" class="form-control" id="new_password" name="new_password" required autocomplete="new-password">
+                                <input type="password" class="form-control" id="new_password" name="new_password" <?php echo lendingPasswordInputAttributes(); ?> required>
+                                <?php echo lendingPasswordHintHtml(); ?>
                             </div>
                             <div class="mb-3">
                                 <label for="confirm_password" class="form-label">Confirm New Password</label>

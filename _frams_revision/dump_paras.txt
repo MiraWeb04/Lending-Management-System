@@ -1,0 +1,93 @@
+
+===== P36 =====
+
+In addition to payments recorded at the lending office, FRAMS includes PayMongo Dynamic QR Ph. A collector starts the code for an assigned loan when the method is bank transfer or e-wallet. The borrower pays by scanning that code. The balance, receipt, and installment status change only after PayMongo sends a verified webhook and the paid amount matches the loan. Showing the code, returning to the browser, or waiting for a local timer does not record the repayment. Cash is recorded directly by authorized staff. Bank transfer and e-wallet may also be recorded directly, without a QR code, by an administrator or the assigned collector.
+
+===== P67 =====
+
+FRAMS includes PayMongo Dynamic QR Ph for bank transfer and e-wallet collection. Only a collector can start a QR code, and only for an assigned loan. A repayment is posted only after a verified PayMongo webhook. The integration depends on the configured secret key, webhook secret, and mode, which is test or live. Borrowers do not have a separate checkout page. The study does not include credit bureau integration, SMS integration, loan restructuring, deposits, savings, or investment accounts. Dependents and collateral notes may be stored, but they are not variables in the eligibility formula. The eligibility estimate remains rule-based and does not predict default. The study also does not establish that all recording errors have been eliminated or that the system has been deployed across multiple branches.
+
+===== P217 =====
+
+Payments and penalties. The system records a payment with amount, date, method, collector, optional reference, and a penalty portion. It rejects a payment that exceeds the remaining balance plus the penalty still due. It recomputes the balance and the installment status. For an unpaid installment past its due date, it computes a penalty of 1 percent, 2 percent, 3 percent, or 5 percent of the installment amount for daily, weekly, semi-monthly, and monthly loans. Cash, bank transfer, and e-wallet can be recorded at once by an administrator or the assigned collector. For bank transfer or e-wallet, a collector may instead start PayMongo Dynamic QR Ph. That repayment is stored only after a verified webhook. 
+
+===== P227 =====
+
+Figure 2 is the Level 1 data flow diagram, with processes 1.0 through 5.0. The borrower, the collector, and the administrator send data into those processes and receive the records that belong to their role. Process 4.0 is a payment recorded by the collector. An administrator can record cash, bank transfer, and e-wallet on the same payments store. A verified PayMongo webhook also writes that store, and it is not drawn as a separate process on this figure.
+
+===== P279 =====
+
+paymongo_qrph_webhook_events. Stores PayMongo webhook events for a QR Ph transaction and whether each event was processed. The repayment is posted from a verified event, not from the browser return.
+
+===== P471 =====
+
+Figure 5.7 is the immediate recording path for cash, bank transfer, and e-wallet. An administrator or the assigned collector can save that payment as soon as the amount is valid. PayMongo Dynamic QR Ph waits for a later confirmation. The Create Dynamic QR Ph action is shown only for bank transfer or e-wallet, and only a collector can start it. The page stores a pending QR Ph transaction and shows the code. The balance stays unchanged until PayMongo’s webhook is verified and the paid amount matches the loan. A failed, expired, or mismatched attempt does not post a payment. A verified QR Ph payment remains on the receipt record and is not deleted.
+
+===== P506 =====
+
+PayMongo QR Ph testing covered QR creation attempts, payment amount validation, cash-versus-QR controls, collector assignment, borrower access restrictions, unresolved pending attempts, webhook-event handling, invalid-signature rejection, and protection of verified QR-linked repayments. The test procedure used an isolated FRAMS test server and disposable test records. The evidence distinguishes provider rejection caused by an isolated invalid test key from successful QR creation; local webhook simulations are identified as simulations and are not treated as external PayMongo deliveries or live charges. The detailed cases and results are presented in Chapter IV and Figures B26–B37.
+
+===== P507 =====
+
+PayMongo testing evaluated the integration between FRAMS and PayMongo QR Ph payment processing. The tests covered applicable payment creation, transaction validation, payment confirmation, webhook processing, and the recording of payment results in the system. The twelve PayMongo test cases, identified as PM-01 to PM-12, are presented in Table 4.7.
+
+===== P515 =====
+
+FRAMS was implemented as a browser-based application for a local Apache, PHP, and MySQL environment. The documented local setup is XAMPP, with the application placed under the web server document root. Authorized users open the pages in a web browser. The server renders each page, checks the signed-in role, reads and writes the database, and returns HTML. There is no separate mobile application and no separate public web service for the screens. The payments page uses two authenticated JSON lookups. One loads the selected loan and its remaining balance into the payment form. The other returns the status of a PayMongo QR Ph transaction. A QR Ph repayment is posted only after the webhook is verified.
+
+===== P666 =====
+
+Payment and collection management. The payments page lists collections and records a payment for an authorized loan. The form shows the borrower, the amount already paid, and the remaining balance. The fields stored are the amount, date, collector, method, optional reference number, and penalty portion. The receipt number uses the prefix RJRR, the date, and a numeric sequence. The borrower can view that borrower's payment history and download a receipt for that borrower's own payment. The collector works from assigned accounts. When the method is bank transfer or e-wallet, that collector can start PayMongo Dynamic QR Ph. The repayment, receipt, and balance change are saved only after the webhook is verified. An unverified, expired, or mismatched QR code does not post a payment, and a verified QR Ph payment is not deleted from the list. A payment that fails the amount checked in Section 4.1.1 is rejected.
+
+===== P720 =====
+
+The results of unit, integration, system, PayMongo integration, and security testing are organized in Tables 4.4 to 4.8 and Appendix B. The attached PayMongo evidence (Figures B26–B37) documents 12 passed checks in the isolated test environment, including safe rejection when the isolated test key was invalid. PM-09 and PM-10 used local webhook simulations and are not evidence of an external PayMongo delivery. The attached penetration evidence (Figures B38–B49) documents 12 passed controlled security checks. The 12 system test cases remain Not Yet Tested in this report. Unit and integration testing entries are retained without changes.
+
+===== P1002 =====
+
+The PayMongo evidence for PM-01 to PM-12 is attached after the main manuscript appendix as Figures B26–B37. All 12 recorded checks passed in the isolated FRAMS test environment. PM-01 and PM-02 document safe failure handling with an isolated invalid test key, not successful QR generation. PM-09 and PM-10 are local webhook simulations, not external PayMongo deliveries or live charges. Provider messages and sensitive test-key material are redacted.
+
+===== P1259 =====
+
+PM-01 and PM-02 record the behavior available with the isolated invalid test key: PayMongo rejects creation, the QR page does not open, and the balance does not change. They do not show a PayMongo QR image. PM-09 and PM-10 completed through a local webhook simulation. That simulation is not a payment delivered by PayMongo.
+T11R0: Testing Level || Test Cases || Passed || Failed || Remarks
+T11R1: Unit testing || 6 || â€” || â€” || Retain a pass count only after Figures B1â€“B6 match the expected results, including Pending Approval for UT-03.
+T11R2: Integration testing || 7 || â€” || â€” || Retain a pass count only after Figures B7â€“B13 match the expected results, including the approval list for IT-02.
+T11R3: System Testing || 12 || — || — || 12 system cases remain Not Yet Tested; no completed system-test evidence was supplied.
+T11R4: PayMongo Testing || 12 || 12 || 0 || 12/12 cases passed in the isolated test environment. PM-01/02 verified safe rejection with an invalid test key; PM-09/10 used local webhook simulation, not external PayMongo delivery. See Figures B26–B37.
+T11R5: Penetration Testing || 12 || 12 || 0 || 12/12 controlled security checks passed in the isolated test environment. See Figures B38–B49.
+T11R6: Total || 49 || 24* || 0* || *Verified counts in the two newly attached evidence sets only (PayMongo and penetration). Unit/integration entries remain unchanged; 12 system cases remain not yet tested. Do not interpret this as all 49 cases passed.
+T19R0: Testing level || Documented cases || Passed || Failed || Not yet tested || Blocked / needs setup
+T19R1: Unit testing || 6 ||  ||  ||  || 
+T19R2: Integration testing || 7 ||  ||  ||  || 
+T19R3: System testing || 12 || 0 || 0 || 12 || 0
+T19R4: PayMongo testing || 12 || 12 || 0 || 0 || 0
+T19R5: Penetration testing || 12 || 12 || 0 || 0 || 0
+T19R6: Total || 49 || 24* || 0* || 12* || 0*
+
+===== RANGE P507 =====
+PayMongo testing evaluated the integration between FRAMS and PayMongo QR Ph payment processing. The tests covered applicable payment creation, transaction validation, payment confirmation, webhook processing, and the recording of payment results in the system. The twelve PayMongo test cases, identified as PM-01 to PM-12, are presented in Table 4.7.
+
+===== COUNT P508 =====
+Penetration and security testing used twelve controlled, non-destructive checks in the isolated FRAMS test environment. The checks covered signed-out access, wrong-password and inactive-account handling, borrower and collector role restrictions, missing security tokens, SQL-injection probes, output encoding, borrower-record ownership, collector assignment restrictions, file-upload validation, session behavior after logout, and password-reset-code controls. The results are limited to the specified cases and do not establish that the entire system is free of vulnerabilities. Detailed outcomes and screenshots are provided in Chapter IV and Figures B38–B49.
+
+===== COUNT P720 =====
+The results of unit, integration, system, PayMongo integration, and security testing are organized in Tables 4.4 to 4.8 and Appendix B. The attached PayMongo evidence (Figures B26–B37) documents 12 passed checks in the isolated test environment, including safe rejection when the isolated test key was invalid. PM-09 and PM-10 used local webhook simulations and are not evidence of an external PayMongo delivery. The attached penetration evidence (Figures B38–B49) documents 12 passed controlled security checks. The 12 system test cases remain Not Yet Tested in this report. Unit and integration testing entries are retained without changes.
+
+===== RANGE P842 =====
+The literature reviewed in Chapter II places FRAMS alongside manual credit assessment and studies of predictive scoring. FRAMS uses configured eligibility rules and does not implement the machine-learning models discussed in some of the reviewed studies. The manuscript documents six unit test cases, seven integration test cases, twelve system test cases, twelve PayMongo test cases, and twelve security test cases. These are documented cases, not proof that all forty-nine cases passed. Final testing totals and user-evaluation means must be reconciled with the executed test records, evidence, and completed questionnaires in Appendix B.
+
+===== RANGE P1002 =====
+The PayMongo evidence for PM-01 to PM-12 is attached after the main manuscript appendix as Figures B26–B37. All 12 recorded checks passed in the isolated FRAMS test environment. PM-01 and PM-02 document safe failure handling with an isolated invalid test key, not successful QR generation. PM-09 and PM-10 are local webhook simulations, not external PayMongo deliveries or live charges. Provider messages and sensitive test-key material are redacted.
+
+===== COUNT P1251 =====
+All 49 functional test cases passed, comprising 6 unit tests, 7 integration tests, 12 system tests, 12 PayMongo tests, and 12 penetration tests, with 49 passed and 0 failed. 
+
+===== RANGE P1251 =====
+All 49 functional test cases passed, comprising 6 unit tests, 7 integration tests, 12 system tests, 12 PayMongo tests, and 12 penetration tests, with 49 passed and 0 failed. 
+
+===== COUNT P1252 =====
+The summary counts in this table show the updated outcomes for PayMongo and penetration testing and the existing not-yet-tested count for system testing. The total row marked with an asterisk covers only these updated categories; the Unit and Integration rows remain as previously documented and are not recalculated here. Therefore, this table must not be read as a claim that all 49 test cases passed.
+
+===== COUNT P1368 =====
+ATTACHED PENETRATION TEST EVIDENCE — FIGURES B38–B49

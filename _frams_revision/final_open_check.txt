@@ -1,0 +1,9 @@
+FRAMS_3RDREVISIONS.docx: paras=1685 tables=31 first='Financial Risk Assessment and Micro-Lending System (FRAMS):'
+FRAMS_REVISED_MANUSCRIPT.docx: paras=1332 tables=24 first='Financial Risk Assessment and Micro-Lending System (FRAMS)'
+FRAMS_REVISION_REPORT.docx: paras=84 tables=0 first='FRAMS Revision Report'
+FRAMS_UNRESOLVED_ISSUES.docx: paras=17 tables=0 first='FRAMS Unresolved Issues'
+FRAMS_COMPARISON_REPORT.docx: paras=16 tables=0 first='FRAMS Comparison Report'
+ORIGINAL TITLE 'Financial Risk Assessment and Micro-Lending System (FRAMS):' DATE 'October 15, 2026'
+REVISED TITLE 'Financial Risk Assessment and Micro-Lending System (FRAMS)'
+ORIG 28-borrowers=5 30-borrowers=2 three-collectors=5
+REV 28-borrowers=0 30-borrowers=9 three-collectors=0

@@ -1,0 +1,489 @@
+=== METHODOLOGY 165-185 ===
+[165] Theoretical Framework
+[166] The development of the Financial Risk Assessment and Micro-Lending System (FRAMS) is anchored on theories and models related to credit risk management, information system success, and technology acceptance. These foundations provide the basis for how FRAMS manages borrower information, evaluates loan requests, monitors repayment, and supports users in performing lending-related activities.
+[167] Credit Risk and Loan Management. Credit risk management focuses on identifying and managing the possibility that a borrower may be unable to fulfill loan obligations. In microfinance, creditworthiness appraisal, loan monitoring, risk handling, and loan recovery are important components of effective loan management. Penaso and Dagang (2025) examined these areas in microfinance institutions in North
+[168] This concept is applied in FRAMS through the collection and evaluation of borrower information, income, existing obligations, requested loan amount, employment or business information, and supporting documents. The system provides an eligibility estimate based on defined lending criteria, such as the debt-to-income limit, minimum and maximum loan amount, and required employment or business duratio
+[169] DeLone and McLean Information Systems Success Model. DeLone and McLean (2003) proposed an updated Information Systems Success Model that evaluates information systems through dimensions including system quality, information quality, service quality, use, user satisfaction, and net benefits.
+[170] The model is relevant to FRAMS because the system is designed to centralize loan and borrower information and make that information available for lending operations. In FRAMS, system quality is reflected in organized loan processing and monitoring functions, while information quality is supported by maintaining consistent borrower, loan, payment, and risk-assessment records. The resulting system i
+[171] Technology Acceptance Model. Davis (1989) introduced the Technology Acceptance Model (TAM), which identifies perceived usefulness and perceived ease of use as important factors influencing users' acceptance of information technology.
+[172] This model is applicable to FRAMS because the system must be usable by the personnel responsible for processing and managing loans. FRAMS provides centralized borrower records, loan applications, payment monitoring, notifications, and reports to reduce the need for separate manual records. Its usefulness is reflected in its ability to support lending activities, while its ease of use is addressed 
+[173] 
+[174] CHAPTER III
+[175] DESIGN AND METHODOLOGY
+[176] Research Design
+[177] This study used a developmental research design to plan, develop, and refine the Financial Risk Assessment and Micro-Lending System (FRAMS). An iterative development approach was used because the lending workflow consists of related modules, including registration, loan application, eligibility assessment, agreement acceptance, loan release, payment recording, and reporting. The modules were devel
+[178] Respondents
+[179] The respondents were borrowers and personnel of RJ and RR Finance Services in Purok San Francisco, Poblacion, Sominot, Zamboanga del Sur. Purposive sampling was used because the study required feedback from people familiar with the lending operations addressed by FRAMS. The pre-development information-gathering activity and the post-development system evaluation are described separately; their res
+[180] Pre-development Data Gathering
+[181] Before coding and developing FRAMS, the researchers conducted pre-development data-gathering activities at RJ and RR Finance Services to understand the existing lending operations and identify the requirements of the proposed system. The activities involved twelve (12) participants: one (1) owner, one (1) collector, and ten (10) borrowers. These participants provided perspectives on management, co
+[182] 2. Software Evaluation Respondents
+[183] After the development of FRAMS, the system was evaluated by its intended users to assess its acceptability in terms of functionality, usability, reliability, security, and performance. The supplied User Acceptance Testing (UAT) response export contains 32 submissions. Based on the recorded user-role field, the respondents consisted of 28 borrowers, one administrator, and three collectors.
+[184] The pre-development data-gathering participants are reported separately from the post-development software evaluation respondents. The post-development evaluation results were calculated from the individual responses to the 20-item questionnaire. The supplied response spreadsheet serves as the supporting source for the calculations presented in Chapter IV and Appendix J.
+[185] Sampling Technique
+
+=== APPENDIX MARKERS ===
+[841|d=0] Conclusions
+[846|d=0] Recommendations
+[865|d=0] References
+[867|d=0] A.1 References matched to published works
+[877|d=0] PayMongo. (n.d.). PayMongo API documentation. https://developers.paymongo.com/
+[880|d=0] APPENDIX B
+[881|d=0] TEST CASE EVIDENCE AND USER ACCEPTANCE TESTING
+[882|d=0] Financial Risk Assessment and Micro-Lending System (FRAMS)
+[884|d=0] A. UNIT TESTING
+[886|d=0] Table B1
+[887|d=0] Unit Testing Test Evidence of FRAMS
+[889|d=0] Screenshot Evidence for Unit Testing
+[890|d=0] Figure B1
+[891|d=0] Evidence for UT-01: Valid Login
+[894|d=0] Figure B2 Evidence for UT-02: Incorrect Password or Inactive Account
+[901|d=0] Figure B3 Evidence for UT-03: Borrower Registration
+[903|d=0] Figure B4 Evidence for UT-04: Loan Details Exceed DTI or Loan Limits
+[908|d=0] Figure B5 Evidence for UT-05: Invalid Document Upload
+[909|d=1] Figure B6 Evidence for UT-06: Invalid Payment Amount
+[911|d=0] B. INTEGRATION TESTING
+[913|d=0] Table B2
+[914|d=0] Integration Testing Test Evidence of FRAMS
+[925|d=0] Screenshot Evidence for Integration Testing
+[926|d=0] Figure B7
+[927|d=0] Evidence for IT-01: Registration, Account Approval, and Login
+[931|d=0] Figure B8 Evidence for IT-02: Registration and Borrower Records
+[939|d=0] Figure B9
+[940|d=0] Evidence for IT-03: Borrower Records and Loan Application
+[942|d=0] Figure B10
+[955|d=0] Figure B11
+[956|d=0] Evidence for IT-05: Loan Application and Eligibility Assessment
+[957|d=1] Figure B12
+[958|d=0] Evidence for IT-06: Reports for the Payment Period
+[960|d=0] Figure B13 Evidence for IT-07: Borrower Username on the Staff Sign-In
+[965|d=0] C. SYSTEM TESTING
+[968|d=0] Screenshot Evidence for System Testing
+[969|d=0] Figure B14
+[970|d=0] Evidence for ST-01: Borrower Registration
+[972|d=0] Figure B15
+[973|d=0] Evidence for ST-02: Account Approval and Login
+[975|d=0] Figure B16
+[976|d=0] Evidence for ST-03: Loan Application Submission
+[978|d=0] Figure B17
+[979|d=0] Evidence for ST-04: Loan Application Review
+[985|d=0] Figure B18
+[986|d=0] Evidence for ST-05: Loan Agreement Acceptance
+[988|d=0] Figure B19
+[989|d=0] Evidence for ST-06: Loan Release
+[994|d=0] Figure B20
+[995|d=0] Evidence for ST-07: Cash Payment Recording
+[997|d=0] Figure B21
+[998|d=0] Evidence for ST-08: Borrower Payment History and Receipt
+[1000|d=0] Figure B22
+[1001|d=1] Evidence for ST-09: Loan and Installment Status Update
+[1009|d=0] Figure B23
+[1010|d=0] Evidence for ST-10: Collector Dashboard and Assigned Accounts
+[1018|d=0] Figure B24
+[1019|d=0] Evidence for ST-11: Administrative Reports
+[1021|d=0] Figure B25 Evidence for ST-12: Notification Management
+[1023|d=0] D. PAYMONGO TESTING
+[1025|d=0] Figure B26 — PM-01
+[1029|d=1] Figure B26 (B26_pm01_qr_rejected.png)
+[1031|d=0] Figure B27 — PM-02
+[1032|d=0] Scenario: The pending QR page is compared with the loan balance before payment.
+[1035|d=1] Figure B27 (B26_pm01_qr_rejected.png)
+[1037|d=0] Figure B28 — PM-03
+[1038|d=0] Scenario: Cash is selected on the payment form.
+[1041|d=1] Figure B28 (B28_pm03_cash_no_qr_button.png)
+[1042|d=0] Figure B29 — PM-04
+[1043|d=0] Scenario: Blank, zero, and nonnumeric QR amounts are submitted.
+[1047|d=1] Figure B29(a) (B29_pm04_zero_amount.png)
+[1051|d=0] Figure B29(b) (B29_pm04_nonnumeric.png)
+[1053|d=0] Figure B30 — PM-05
+[1054|d=0] Scenario: The QR amount is greater than the current total due.
+[1055|d=0] Expected result: The request is rejected and no QR transaction is stored.
+[1057|d=0] Figure B30 (B30_pm05_amount_too_high.png)
+[1059|d=0] Figure B31 — PM-06
+[1063|d=1] Figure B31 (B31_pm06_other_collector.png)
+[1064|d=0] Figure B32 — PM-07
+[1070|d=1] Figure B32 (B32_pm07_borrower_history.png)
+[1071|d=0] Figure B33 — PM-08
+[1075|d=1] Figure B33 (B33_pm08_unconfirmed_pending_refused.png)
+[1076|d=0] Figure B34 — PM-09
+[1077|d=0] Scenario: A test-mode simulation completes one pending QR on a disposable loan.
+[1083|d=0] Figure B34 (B34_pm09_receipt.png)
+[1085|d=0] Figure B35 — PM-10
+[1090|d=0] Figure B35 (Payments Management list screenshot)
+[1091|d=0] Figure B36 — PM-11
+[1097|d=1] Figure B36 (B36_pm11_webhook_responses.png)
+[1098|d=0] Figure B37 — PM-12
+[1105|d=0] Figure B37 (Payments Management summary and payment list screenshot)
+[1106|d=0] Table B5
+[1107|d=0] Penetration Testing Test Evidence of FRAMS
+[1109|d=0] Screenshot Evidence for Penetration Testing
+[1110|d=0] Figure B38 — PT-01
+[1115|d=0] Figure B38. Staff sign-in after opening the administrator dashboard while signed out.
+[1117|d=0] Figure B38. Borrower sign-in after opening the borrower dashboard while signed out.
+[1118|d=0] Figure B39 — PT-02
+[1119|d=0] Scenario: Sign in with a wrong password and with an inactive account.
+[1122|d=0] Status: PASS
+[1124|d=0] Figure B39. Wrong password for the active administrator.
+[1126|d=0] Figure B39. Inactive administrator. The message matches the wrong-password trial.
+[1129|d=0] Figure B40 — PT-03
+[1130|d=0] Scenario: A borrower opens the users, reports, loan-release, expenses, and payments pages.
+[1134|d=0] Figure B40. Borrower dashboard after requesting user management.
+[1136|d=0] Figure B40. Borrower payment history after requesting the staff payments page.
+[1137|d=0] Figure B41 — PT-04
+[1138|d=0] Scenario: A collector opens users, reports, borrower approval, and loan release.
+[1143|d=0] Figure B42 — PT-05
+[1149|d=0] Figure B43 — PT-06
+[1150|d=0] Scenario: Enter a quote-style probe in sign-in and in a search box.
+[1151|d=0] Expected result: Sign-in fails. Search does not reveal additional accounts, loans, or payments.
+[1154|d=0] Figure B43. Quote-style sign-in probe rejected.
+[1156|d=0] Figure B43. Quote-style user search returned no accounts.
+[1157|d=0] Figure B44 — PT-07
+[1158|d=0] Scenario: Enter a harmless markup marker in an encoded search field and display it.
+[1159|d=0] Expected result: The marker is shown as ordinary text.
+[1162|d=0] Figure B44. The markup marker remains visible as text in the search box.
+[1163|d=0] Figure B45 — PT-08
+[1164|d=0] Scenario: A borrower requests another borrower receipt address and document address.
+[1168|d=0] Figure B45. Other-borrower receipt request returned to this borrower's own payment history.
+[1170|d=0] Figure B45. Other-borrower document request. The response text is Access denied.
+[1171|d=0] Figure B46 — PT-09
+[1172|d=0] Scenario: A collector opens a client, loan, or payment assigned to another collector.
+[1173|d=0] Expected result: The unassigned record is not opened for collection.
+[1176|d=0] Figure B46. Collector A denied client 21.
+[1178|d=0] Figure B46. Collector A denied loan 30.
+[1180|d=0] Figure B46. Collector A denied payment 44.
+[1181|d=0] Figure B47 — PT-10
+[1182|d=0] Scenario: Upload a file that is not JPG, PNG, or PDF, and a file larger than 8 MB.
+[1186|d=0] Figure B47. After the invalid uploads, step 4 still shows every document as not uploaded.
+[1187|d=0] Figure B48 — PT-11
+[1188|d=0] Scenario: After signing out, reload a protected page.
+[1189|d=0] Expected result: The reloaded page redirects to the sign-in page.
+[1192|d=0] Figure B48. Protected collector dashboard reloaded after sign-out.
+[1193|d=0] Figure B49 — PT-12
+[1194|d=0] Scenario: Submit an incorrect, expired, and already used six-digit password-reset code.
+[1198|d=0] Figure B49. The reset page sends a 6-digit code and does not issue a link.
+[1200|d=0] Figure B49. The code form states that the code expires in 10 minutes.
+[1202|d=0] Figure B49. An incorrect code does not change the password.
+[1204|d=0] Figure B49. The attempt after five incorrect codes is refused.
+[1206|d=0] Figure B49. An expired code is refused.
+[1208|d=0] Figure B49. A valid code can be used once.
+[1210|d=0] Figure B49. The same code is refused after the password change.
+[1211|d=0] F. USER ACCEPTANCE TESTING
+[1217|d=0] G. UAT TALLY AND WEIGHTED-MEAN COMPUTATION
+[1219|d=0] The weighted mean was calculated using:
+[1220|d=0] WM = [f(5) × 5 + f(4) × 4 + f(3) × 3 + f(2) × 2 + f(1) × 1] / N
+[1224|d=0] The overall weighted score was calculated as follows:
+[1225|d=0] (341 × 5) + (297 × 4) + (2 × 3) = 1,705 + 1,188 + 6 = 2,899.
+[1226|d=0] The total number of individual ratings was 32 respondents × 20 statements = 640.
+[1228|d=0] H. SUMMARY OF TESTING RESULTS
+[1240|d=0] APPENDIX B
+[1241|d=0] TEST CASE EVIDENCE AND USER ACCEPTANCE TESTING
+[1242|d=0] Financial Risk Assessment and Micro-Lending System (FRAMS)
+[1244|d=0] A. UNIT TESTING
+[1246|d=0] Table B1
+[1247|d=0] Unit Testing Test Evidence of FRAMS
+[1249|d=0] Screenshot Evidence for Unit Testing
+[1250|d=0] Figure B1
+[1251|d=0] Evidence for UT-01: Valid Login
+[1254|d=0] Figure B2 Evidence for UT-02: Incorrect Password or Inactive Account
+[1261|d=0] Figure B3 Evidence for UT-03: Borrower Registration
+[1263|d=0] Figure B4 Evidence for UT-04: Loan Details Exceed DTI or Loan Limits
+[1268|d=0] Figure B5 Evidence for UT-05: Invalid Document Upload
+[1269|d=1] Figure B6 Evidence for UT-06: Invalid Payment Amount
+[1271|d=0] B. INTEGRATION TESTING
+[1273|d=0] Table B2
+[1274|d=0] Integration Testing Test Evidence of FRAMS
+[1285|d=0] Screenshot Evidence for Integration Testing
+[1286|d=0] Figure B7
+[1287|d=0] Evidence for IT-01: Registration, Account Approval, and Login
+[1291|d=0] Figure B8 Evidence for IT-02: Registration and Borrower Records
+[1298|d=0] Figure B9
+[1299|d=0] Evidence for IT-03: Borrower Records and Loan Application
+[1311|d=0] Figure B10
+[1316|d=0] Figure B11 Evidence for IT-05: Loan Application and Eligibility Assessment
+[1324|d=0] Figure B12
+[1325|d=0] Evidence for IT-06: Reports for the Payment Period
+[1327|d=0] Figure B13 Evidence for IT-07: Borrower Username on the Staff Sign-In
+[1332|d=0] C. SYSTEM TESTING
+[1335|d=0] Screenshot Evidence for System Testing
+[1336|d=0] Figure B14
+[1337|d=0] Evidence for ST-01: Borrower Registration
+[1339|d=0] Figure B15
+[1340|d=0] Evidence for ST-02: Account Approval and Login
+[1342|d=0] Figure B16
+[1343|d=0] Evidence for ST-03: Loan Application Submission
+[1345|d=0] Figure B17
+[1346|d=0] Evidence for ST-04: Loan Application Review
+[1352|d=0] Figure B18
+[1353|d=0] Evidence for ST-05: Loan Agreement Acceptance
+[1355|d=0] Figure B19
+[1356|d=0] Evidence for ST-06: Loan Release
+[1361|d=0] Figure B20
+[1362|d=0] Evidence for ST-07: Cash Payment Recording
+[1364|d=0] Figure B21
+[1365|d=0] Evidence for ST-08: Borrower Payment History and Receipt
+[1367|d=0] Figure B22
+[1368|d=1] Evidence for ST-09: Loan and Installment Status Update
+[1376|d=0] Figure B23
+[1377|d=0] Evidence for ST-10: Collector Dashboard and Assigned Accounts
+[1385|d=0] Figure B24
+[1386|d=0] Evidence for ST-11: Administrative Reports
+[1388|d=0] Figure B25 Evidence for ST-12: Notification Management
+[1390|d=0] D. PAYMONGO TESTING
+[1392|d=0] Figure B26 — PM-01
+[1396|d=1] Figure B26 (B26_pm01_qr_rejected.png)
+[1398|d=0] Figure B27 — PM-02
+[1399|d=0] Scenario: The pending QR page is compared with the loan balance before payment.
+[1402|d=1] Figure B27 (B26_pm01_qr_rejected.png)
+[1404|d=0] Figure B28 — PM-03
+[1405|d=0] Scenario: Cash is selected on the payment form.
+[1408|d=1] Figure B28 (B28_pm03_cash_no_qr_button.png)
+[1409|d=0] Figure B29 — PM-04
+[1410|d=0] Scenario: Blank, zero, and nonnumeric QR amounts are submitted.
+[1414|d=1] Figure B29(a) (B29_pm04_zero_amount.png)
+[1418|d=0] Figure B29(b) (B29_pm04_nonnumeric.png)
+[1420|d=0] Figure B30 — PM-05
+[1421|d=0] Scenario: The QR amount is greater than the current total due.
+[1422|d=0] Expected result: The request is rejected and no QR transaction is stored.
+[1424|d=0] Figure B30 (B30_pm05_amount_too_high.png)
+[1426|d=0] Figure B31 — PM-06
+[1430|d=1] Figure B31 (B31_pm06_other_collector.png)
+[1431|d=0] Figure B32 — PM-07
+[1437|d=1] Figure B32 (B32_pm07_borrower_history.png)
+[1438|d=0] Figure B33 — PM-08
+[1442|d=1] Figure B33 (B33_pm08_unconfirmed_pending_refused.png)
+[1443|d=0] Figure B34 — PM-09
+[1444|d=0] Scenario: A test-mode simulation completes one pending QR on a disposable loan.
+[1450|d=0] Figure B34 (B34_pm09_receipt.png)
+[1452|d=0] Figure B35 — PM-10
+[1457|d=0] Figure B35 (Payments Management list screenshot)
+[1458|d=0] Figure B36 — PM-11
+[1462|d=1] Figure B36 (B36_pm11_webhook_responses.png) Figure B37 — PM-12
+[1467|d=0] Figure B37 (Payments Management summary and payment list screenshot)
+[1468|d=0] Table B5
+[1469|d=0] Penetration Testing Test Evidence of FRAMS
+[1471|d=0] Screenshot Evidence for Penetration Testing
+[1472|d=0] Figure B38 — PT-01
+[1477|d=0] Figure B38. Staff sign-in after opening the administrator dashboard while signed out.
+[1479|d=0] Figure B38. Borrower sign-in after opening the borrower dashboard while signed out.
+[1480|d=0] Figure B39 — PT-02
+[1481|d=0] Scenario: Sign in with a wrong password and with an inactive account.
+[1484|d=0] Status: PASS
+[1486|d=0] Figure B39. Wrong password for the active administrator.
+[1488|d=0] Figure B39. Inactive administrator. The message matches the wrong-password trial.
+[1491|d=0] Figure B40 — PT-03
+[1492|d=0] Scenario: A borrower opens the users, reports, loan-release, expenses, and payments pages.
+[1496|d=0] Figure B40. Borrower dashboard after requesting user management.
+[1498|d=0] Figure B40. Borrower payment history after requesting the staff payments page.
+[1499|d=0] Figure B41 — PT-04
+[1500|d=0] Scenario: A collector opens users, reports, borrower approval, and loan release.
+[1505|d=0] Figure B42 — PT-05
+[1511|d=0] Figure B43 — PT-06
+[1512|d=0] Scenario: Enter a quote-style probe in sign-in and in a search box.
+[1513|d=0] Expected result: Sign-in fails. Search does not reveal additional accounts, loans, or payments.
+[1516|d=0] Figure B43. Quote-style sign-in probe rejected.
+[1518|d=0] Figure B43. Quote-style user search returned no accounts.
+[1519|d=0] Figure B44 — PT-07
+[1520|d=0] Scenario: Enter a harmless markup marker in an encoded search field and display it.
+[1521|d=0] Expected result: The marker is shown as ordinary text.
+[1524|d=0] Figure B44. The markup marker remains visible as text in the search box.
+[1525|d=0] Figure B45 — PT-08
+[1526|d=0] Scenario: A borrower requests another borrower receipt address and document address.
+[1530|d=0] Figure B45. Other-borrower receipt request returned to this borrower's own payment history.
+[1532|d=0] Figure B45. Other-borrower document request. The response text is Access denied.
+[1533|d=0] Figure B46 — PT-09
+[1534|d=0] Scenario: A collector opens a client, loan, or payment assigned to another collector.
+[1535|d=0] Expected result: The unassigned record is not opened for collection.
+[1538|d=0] Figure B46. Collector A denied client 21.
+[1540|d=0] Figure B46. Collector A denied loan 30.
+[1542|d=0] Figure B46. Collector A denied payment 44.
+[1543|d=0] Figure B47 — PT-10
+[1544|d=0] Scenario: Upload a file that is not JPG, PNG, or PDF, and a file larger than 8 MB.
+[1548|d=0] Figure B47. After the invalid uploads, step 4 still shows every document as not uploaded.
+[1549|d=0] Figure B48 — PT-11
+[1550|d=0] Scenario: After signing out, reload a protected page.
+[1551|d=0] Expected result: The reloaded page redirects to the sign-in page.
+[1554|d=0] Figure B48. Protected collector dashboard reloaded after sign-out.
+[1555|d=0] Figure B49 — PT-12
+[1556|d=0] Scenario: Submit an incorrect, expired, and already used six-digit password-reset code.
+[1560|d=0] Figure B49. The reset page sends a 6-digit code and does not issue a link.
+[1562|d=0] Figure B49. The code form states that the code expires in 10 minutes.
+[1564|d=0] Figure B49. An incorrect code does not change the password.
+[1566|d=0] Figure B49. The attempt after five incorrect codes is refused.
+[1568|d=0] Figure B49. An expired code is refused.
+[1570|d=0] Figure B49. A valid code can be used once.
+[1572|d=0] Figure B49. The same code is refused after the password change.
+[1573|d=0] F. USER ACCEPTANCE TESTING
+[1578|d=0] G. UAT TALLY AND WEIGHTED-MEAN COMPUTATION
+[1583|d=0] H. SUMMARY OF TESTING RESULTS
+[1604|d=0] APPENDIX I FRAMS USER ACCEPTANCE TESTING (UAT)
+[1605|d=0] 20-ITEM EVALUATION QUESTIONNAIRE
+[1641|d=0] APPENDIX J USER ACCEPTANCE TESTING (UAT) EVIDENCE
+[1642|d=0] Purpose and Source
+[1645|d=0] Weighted Mean Formula
+[1646|d=0] WM = Σ(f × x) / N
+[1648|d=0] Table J1
+[1649|d=0] UAT Response Frequencies and Weighted-Mean Computation
+[1653|d=0] Overall Weighted-Mean Computation
+[1655|d=0] The total weighted score was calculated as follows:
+[1656|d=0] (341 × 5) + (297 × 4) + (2 × 3) = 1,705 + 1,188 + 6 = 2,899.
+[1657|d=0] The total number of individual ratings was calculated as:
+[1658|d=0] 32 respondents × 20 statements = 640 ratings.
+[1659|d=0] The overall weighted mean was:
+[1660|d=0] 2,899 ÷ 640 = 4.5297, rounded to 4.53.
+[1662|d=0] Evidence Integrity and Record Handling
+[1676|d=0] APPENDIX K
+[1677|d=0] FINANCIAL COMPUTATION VALIDATION AND RETEST RESULTS
+
+=== TABLES ===
+T0 7x4 flags=['Khandani', '2018']
+  Area | Sources retained from the review | What those sources emphasize | What FRAMS implements
+T1 6x2 flags=[]
+  Weighted Mean Range | Verbal Interpretation
+T2 5x2 flags=[]
+  Equipment | Use
+T3 9x2 flags=[]
+  Component | Software
+T4 7x3 flags=[]
+  Component | Tool or technology | Purpose in the implemented system
+T5 20x2 flags=[]
+  Entity | Purpose
+T6 13x5 flags=[]
+  Module | Purpose | Administrator | Collector | Borrower
+T7 7x6 flags=['UT-0']
+  Test ID | Test Scenario | Expected Result | Actual Result | Status | Evidence Reference
+T8 8x6 flags=[]
+  Test ID | Test Scenario | Expected Result | Actual Result | Status | Evidence Reference
+T9 13x6 flags=[]
+  Test ID | Test Scenario | Expected Result | Actual Result | Status | Evidence Reference
+T10 13x6 flags=[]
+  Test Case ID | Description | Test Steps | Expected Result | Actual Result | Remarks
+T11 13x6 flags=[]
+  Test Case ID | Description | Test Steps | Expected Result | Actual Result | Remarks / Evidence
+T12 7x5 flags=['UT-0']
+  Testing Level | Test Cases | Passed | Failed | Remarks
+T13 7x3 flags=[]
+  Criterion | Weighted mean | Interpretation
+T14 7x6 flags=['UT-0']
+  Test ID | Test Scenario | Expected Result | Actual Result | Status | Evidence Reference
+T15 8x6 flags=[]
+  Test ID | Test Scenario | Expected Result | Actual Result | Status | Evidence Reference
+T16 13x6 flags=[]
+  Test ID | Test Scenario | Expected Result | Actual Result | Status | Evidence Reference
+T17 13x6 flags=[]
+  Test Case ID | Description | Test Steps | Expected Result | Actual Result | Remarks
+T18 13x6 flags=[]
+  Test Case ID | Description | Test Steps | Expected Result | Actual Result | Remarks / Evidence
+T19 7x9 flags=[]
+  Ape | f(5) | f(4) | f(3) | f(2) | f(1) | N | Weighted Score | Weighted mean
+T20 7x6 flags=[]
+  Testing level | Documented cases | Passed | Failed | Not yet tested | Blocked / needs setup
+T21 7x6 flags=['UT-0']
+  Test ID | Test Scenario | Expected Result | Actual Result | Status | Evidence Reference
+T22 8x6 flags=[]
+  Test ID | Test Scenario | Expected Result | Actual Result | Status | Evidence Reference
+T23 13x6 flags=[]
+  Test ID | Test Scenario | Expected Result | Actual Result | Status | Evidence Reference
+T24 13x6 flags=[]
+  Test Case ID | Description | Test Steps | Expected Result | Actual Result | Remarks
+T25 13x6 flags=[]
+  Test Case ID | Description | Test Steps | Expected Result | Actual Result | Remarks / Evidence
+T26 7x8 flags=[]
+  Criterion | f(5) | f(4) | f(3) | f(2) | f(1) | N | Weighted mean
+T27 7x6 flags=[]
+  Testing level | Documented cases | Passed | Failed | Not yet tested | Blocked / needs setup
+T28 28x11 flags=[]
+  Strongly Agree | Strongly Agree | Agree | Agree | Neutral | Neutral | Neutral | Disagree | Disagree | Strongly Disagree | Strongly Disagree
+T29 7x9 flags=[]
+  Evaluation Criterion | f(5) | f(4) | f(3) | f(2) | f(1) | N | Weighted Score | Weighted mean
+T30 11x4 flags=[]
+  Test ID | Validation area | Reported result | Evidence status
+
+=== TARGET DRAW ===
+[4] draw=0 runs=1 'Financial Risk Assessment and Micro-Lending System (FRAMS):'
+[239] draw=0 runs=3 'Figure 2 is the Level 1 data flow diagram, with processes 1.0 through 5.0. The borrower, the collector, and the administrator send data into those processes and'
+[256] draw=0 runs=1 'Figure 2 Level 1 Data Flow Diagram of FRAMS'
+[258] draw=0 runs=7 'Figure 3 is the entity-relationship diagram of FRAMS. A user account owns the borrower registration, the client record, password-reset tokens, and in-applicatio'
+[286] draw=1 runs=2 'This section presents the operational flow of FRAMS with standard flowchart symbols. An oval marks the start or end. A rectangle marks a process. A diamond mark'
+[302] draw=0 runs=1 'Figure 5.1 presents the overall operational flow of FRAMS. The process begins when a user opens the staff login or borrower login page and enters a username or '
+[303] draw=0 runs=2 '\tFigure 5.1 illustrates the overall operational flow of FRAMS. The process begins when a user opens the staff login or the borrower login and enters a username '
+[350] draw=1 runs=2 'Loan Application Flow'
+[397] draw=0 runs=1 'Figure 5.5 Financial Risk Assessment Flow'
+[399] draw=0 runs=3 'Figure 5.5 shows the eligibility estimate used during the application and again on the administrator review page. The process reads income, existing debt, the r'
+[403] draw=0 runs=5 'Figure 5.5 shows the eligibility estimate used during the application and again on the administrator review page. The process reads income, existing debt, the r'
+[458] draw=0 runs=7 'Figure 5.7 is the immediate recording path for cash, bank transfer, and e-wallet. An administrator or the assigned collector can save that payment as soon as th'
+
+=== FORMULAS ===
+[548] Formula 8. Final Due Date
+[549] FD = RD + n months
+[551] FD represents the final due date, RD is the loan release date, and n is the term in months. The final due-date rule may cause the final interval to differ from the regular interval in some schedules.
+[552] Financial Risk Assessment and Eligibility
+[553] The financial risk function produces an eligibility estimate for reviewer use. It is not an approval and does not predict default. The function reads monthly gross income or an alternative monthly income field when gross income is missing, existing debt payments, other monthly obligations, employment status, employment or business duration, requested loan amount, loan term, and interest rate. Dependents and collateral notes are stored with the application but are not variables in the numerical f
+[555] Policy values are supplied through the environment or code defaults. The defaults described for the system are a maximum DTI of 40%, minimum loan amount of ₱3,000, maximum loan amount of ₱500,000, minimum employment or business duration of three months, and a standard monthly interest rate of 5%.
+[557] Formula 9. Existing Debt-to-Income Ratio
+[558] DTI_before = (E / I) × 100
+[560] E is existing monthly debt payments plus other monthly obligations, and I am monthly gross income.
+[562] Formula 10. Proposed Debt-to-Income Ratio
+[563] DTI_after = (E + MP) / I) × 100
+[565] MP is the proposed monthly payment. The system description specifies that this payment is calculated as total payable divided by the loan term in months.
+[567] Formula 11. Proposed Monthly Payment
+[568] MP = TP / n
+[570] The proposed monthly payment is used for the monthly DTI comparison. It should not be confused with an individual weekly, daily, or semi-monthly installment.
+[572] Formula 12. Maximum Affordable New Payment
+[573] MAP = (I × (Dmax / 100)) − E
+[575] MAP is the maximum affordable new monthly payment, Dmax is the maximum DTI percentage (default 40%), I is monthly gross income, and E is existing monthly obligations.
+[577] Formula 13. Maximum Affordable Principal
+[578] Pmax = (MAP × n) / [1 + ((r / 100) × n)]
+[580] Pmax is the maximum affordable principal before applying the configured loan limits, n is the term in months, and r is the monthly interest rate expressed as a percentage. The result is limited by the configured minimum and maximum loan amounts: minimum ₱3,000 and maximum ₱500,000 by default.
+[582] The eligibility estimates assigns Not Eligible when required information is missing, proposed DTI exceeds the configured limit, or a blocking validation fails. It assigns Conditionally Eligible when the requested amount exceeds the maximum affordable amount or other policy reasons remain. It assigns Eligible when the affordability figures fall within the limits and no disqualifying policy reason remains. The application wizard blocks progression when existing debt already exceeds the limit or wh
+[583] Payment Processing, Remaining Balance, and Penalties
+[584] The system validates payments before recording them. The payment must be greater than zero. A penalty cannot exceed the amount received. The amount received cannot exceed the remaining scheduled loan balance plus the penalty still due, and the installment portion cannot exceed the remaining scheduled balance.
+[586] Formula 14. Cumulative Amount Paid
+[587] AP = Σ Aᵢ, for i = 1 to m
+[589] AP is the sum of amounts recorded as paid toward the loan, Aᵢ is the amount for transaction i, and m is the number of payment transactions included in the sum.
+[591] Formula 15. Remaining Loan Balance
+[592] RB = TP − AP
+[594] RB is the remaining scheduled loan balance, TP is the total scheduled principal-and-interest payable, and AP is the amount applied to that scheduled payable. Penalties are tracked separately and are excluded from RB. For example, if TP is ₱13,000 and the amount applied to the scheduled payable is ₱5,000, the remaining scheduled balance is ₱8,000. Any penalty included in a payment must not also be counted as an amount applied to the scheduled balance.
+[596] An installment is overdue when its due date has passed and it remains unpaid. The described implementation calculates a penalty for an overdue unpaid installment by multiplying the installment total by a rate associated with the payment frequency.
+[598] Formula 16. Penalty Per Overdue Installment
+[599] PN = IA × (p / 100)
+
+=== CH5 ===
+[807] Figure 4.10
+[808] Review of a loan application
+[810] Figure 4.11
+[811] Loan agreement
+[814] Figure 4.12
+[815] Loan release
+[817] Figure 4.13
+[818] Loan details and installment schedule
+[821] Figure 4.14
+[822] Payment recording
+[826] Figure 4.15
+[827] Penalty summary and reports
+[829] Figure 4.16
+[830] User management and notifications
+[832] The screenshots are evidence that the modules in Section 4.1.3 were built. They do not, by themselves, fill the actual-result columns in Tables 4.4 and 4.5. Chapter 5 can summarize these implementation and testing results, state the conclusions that the completed tables support, and list the recommendations that follow from the limits identified here.
+[833] CHAPTER V
+[834] SUMMARY, CONCLUSIONS, AND RECOMMENDATIONS
+[835] Summary of Findings
+[836] This study designed and developed the Financial Risk Assessment and Micro-Lending System (FRAMS) for RJ and RR Finance Services. The locally hosted web application uses PHP and MySQL to organize borrower registration, loan applications, eligibility assessment, agreements, loan release, installment schedules, payments, penalties, and administrative reports.
+[837] Borrowers can register and, after administrator approval, submit loan applications with the required supporting documents. The eligibility estimate uses declared income, existing financial obligations, the requested loan amount, the loan term, and configured lending criteria, including the debt-to-income limit. The estimate serves as a decision-support tool and does not automatically approve or reject a loan. The sys
+[838] The literature reviewed in Chapter II provides context for FRAMS through discussions of manual credit assessment, microfinance operations, and predictive scoring approaches. Unlike systems that use machine learning to predict default, FRAMS applies configured eligibility rules to assess borrower information and support the administrator's review. The system was evaluated through documented unit, integration, system, 
+[839] The User Acceptance Testing (UAT) response export contained 32 submissions, consisting of 28 borrowers, one administrator, and three collectors. The evaluation instrument contained 20 statements grouped into five criteria: functionality, usability, reliability, security, and performance. Each criterion comprised four statements, resulting in 128 individual ratings per criterion and 640 individual ratings across the e
+[840] The calculated weighted means were 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean was 4.53, interpreted as Strongly Agree under the five-point Likert scale adopted in Chapter III. These results indicate that the respondents generally expressed positive assessments of FRAMS across the five evaluation criteria.
+[841] Conclusions
+[842] FRAMS provides a centralized web-based application for recording borrower information, processing loan applications, presenting a rule-based eligibility estimate, generating installment schedules, recording payments and penalties, monitoring repayments, and preparing financial reports. These functions support the organization of lending transactions and provide information that assists authorized personnel in reviewi
+[843] The documented technical testing results indicate that the specified unit, integration, system, PayMongo-related, and penetration and security test cases were reported as passed in their documented testing environments. These findings support the operation of the features examined under the specified test conditions. However, passing the documented cases does not establish that the entire system is free of defects or
+[844] The UAT results indicate that respondents generally expressed positive assessments of FRAMS in terms of functionality, usability, reliability, security, and performance. The overall weighted mean of 4.53 falls within the Strongly Agree interpretation range. These findings support the acceptability of the system among the respondents represented in the supplied UAT response export. Nevertheless, user evaluation rating
+[845] The conclusions of this study are therefore limited to the system functions implemented, the documented technical tests, and the recorded user evaluation responses. The results should not be interpreted as evidence of capabilities or performance conditions that were not established by the available testing and evaluation records
+[846] Recommendations
+[847] Based on the system’s current scope and the limitations identified in the study, the researchers recommend the following:
+[848] SMS notifications. They may be added later if the lending office needs them and can support the cost.
+[849] Establish a database backup and recovery procedure. Schedule regular MySQL backups of the actual production database and document how authorized personnel can restore a backup. Confirm the deployed database name before using it in any instructions.
+[850] Centralize business rules in configuration. Keep the debt-to-income limit, minimum and maximum loan amounts, interest rate, and penalty rates in controlled configuration or administrator settings so approved policy changes do not require direct edits to PHP files.
+[851] Develop an administrator settings page that allows authorized personnel to update loan limits and penalty rates, with validation and an audit trail.
+[852] Improve audit visibility by recording important actions—such as account approvals, loan releases, payment edits, and role changes—in a dedicated activity log for accountability and troubleshooting.
+[865] References
+[866] Entries in A.1 follow APA 7th edition and were checked against the published work. Journal titles and volume numbers are italicized in the usual APA way. A hanging indent is used.
+[867] A.1 References matched to published works
+[868] Bazarbash, M., & Beaton, K. (2020). Filling the gap: Digital credit and financial inclusion (IMF Working Paper No. WP/20/150). International Monetary Fund. https://doi.org/10.5089/9781513552477.001
+[869] Campos, R. B., Jr. (2024). The impact of digitalization on credit risk management in microfinance institutions in Nueva Ecija, Philippines. Indian Journal of Information Sources and Services, 14(3). https://doi.org/10.51983/ijiss-2024.14.3.20

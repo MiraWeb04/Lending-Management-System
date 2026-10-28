@@ -1,0 +1,657 @@
+
+#### 840-1220 ####
+
+840|Login interface. The borrower login and the staff login are separate pages. Each verifies the account, creates the session, and opens the matching dashboard. A borrower who is not yet approved does not enter the borrower pages. A forgotten-password page can send a time-limited reset when mail is configured.
+841|Public portal and registration. The public page introduces RJ and RR Finance Services, and the loan products shown there: salary, business, emergency, and vehicle financing. Registration stores a pending account. A success page tells the applicant to wait for review. The contact form stores an inquiry that an administrator can answer.
+842|Dashboard monitoring. After login, the administrator sees the executive dashboard: total loans, active loans, amount released, amount collected, outstanding balance, and overdue loans, with charts of collections, releases, loan status, and expenses. The collector dashboard is limited to assigned clients, loans, schedules, and pending collections. The borrower dashboard summarizes that borrower's own application or loan.
+843|User, collector, and profile management. Administrators add and edit users, assign the administrator, collector, or borrower role, and set an account active or inactive. The collectors page creates, edits, activates, and deactivates collector accounts and can search by name, username, email, or employee identifier. The profile page lets the signed-in user review the account and change the password. Passwords entered on these pages are hashed before they are stored.
+844|Borrower approval and client management. The approval page lists registrations and records approval or a rejection. Approval is what allows the borrower to login, and an approval email can be sent when mail is configured. The client list supports search. Client details show the borrower, loan history, and the assigned collector. The administrator search box in the top bar opens the client list.
+845|Loan application management. An approved borrower who is allowed to apply completes five steps: personal information, employment and income, loan details, requirements, and review. Identity fields taken from registration stay locked. Address and mobile number can be updated. Required files are a valid government ID, proof of income, proof of billing, a selfie holding a valid ID, and an additional supporting document. Submission stores the application as pending review, stores the files, and saves the eligibility estimate. The administrator verifies or rejects each file and can approve the application, reject it, or ask for more documents. Remarks are stored. The borrower can open a loan-status page when a trackable application exists. Submission does not release funds.
+846|Financial risk assessment display. The estimate appears on the loan details step and again on the administrator's review of the saved application. The panel shows the status, income, existing debt, both debt-to-income figures, the requested amount, the estimated eligible amount, the maximum eligible amount, the proposed payment, the term, the interest rate, the reasons, and any documents still requested. The status labels are Eligible, Conditionally Eligible, and Not Eligible. The same disclaimer shown in the calculation is printed on the panel.
+847|Agreement, release, and loan monitoring. The administrator generates the agreement. The borrower accepts it by entering the borrower’s name or declines it. Acceptance stores the name and the date and time. Release requires an active collector. It creates a loan number in the form RJRR-LOAN, the year, and a six-digit sequence, together with the release record, the loan, and the installment rows. A release invoice can be opened. The loan list and loan details show the amount, term, frequency, status, balance, schedule, and payments. Status values used for loans include Active, Overdue, and Paid. The borrower sees only the released loan on My Loan.
+848|Payment and collection management. The payments page lists collections and records a payment for an authorized loan. The form shows the borrower, the amount already paid, and the remaining balance. The fields stored are the amount, date, collector, method, optional reference number, and penalty portion. The receipt number uses the prefix RJRR, the date, and a numeric sequence. The borrower can view that borrower's payment history and download a receipt for that borrower's own payment. The collector works from assigned accounts. When the method is bank transfer or e-wallet, that collector can start PayMongo Dynamic QR Ph. The repayment, receipt, and balance change are saved only after the webhook is verified. An unverified, expired, or mismatched QR code does not post a payment, and a verified QR Ph payment is not deleted from the list. A payment that fails the amount checked in Section 4.1.1 is rejected.
+849|Penalties, expenses, and reports. The penalty page shows the outstanding penalty and the penalty amounts collected in the selected period. A collected penalty appears when the penalty portion was entered with the payment. Expenses store description, amount, date, and category. Reports are limited to the administrator and contain six views: dashboard analytics, loan reports, payment reports, borrower reports, collector performance, and financial summary. The period may be daily, monthly, yearly, or a custom range. The current view can be exported as a PDF.
+850|Notifications. The notifications page lists messages for the signed-in user and can mark them read. The top bar shows the unread count. Events such as approval, an application decision, agreement action, and loan release create an in-application notice. Matching email functions exist for account approval and rejection, application submission and decision, agreement decision, release, payment received, and a fully paid loan. The application notice does not depend on mail delivery.
+852|Testing Strategy
+853|Testing is documented through unit, integration, system, PayMongo integration, and security test cases, with user acceptance testing reported separately. The final status of each test must be based on an actual execution record and supporting evidence. A test should be marked Passed only when its observed result matches the expected result. Failed, blocked, and not-yet-tested cases must remain separately identified until they are resolved or accurately reported as limitations.
+856|Unit Testing
+857|Unit testing examines whether a single function or page accepts valid input, rejects input that breaks its own rule, and shows or stores the intended result. The cases cover login, registration, the eligibility gate, document upload, and payment amount checks, because those rules are implemented as discrete checks.
+858|After entering a valid username and password for an Active account, the user was redirected to the correct dashboard
+859|Table 4.4
+860|Unit test cases of FRAMS
+861|Test Case ID
+862|Description
+863|Expected Result
+864|Actual Result
+865|Remarks
+866|UT-01
+867|Sign in as an administrator, a collector, or a borrower with an active account and a matching password.
+868|The session starts and the dashboard for that role opens.
+869|After entering a valid username and password for an Active account, the user was redirected to the correct dashboard (administrator, collector, or borrower).
+870|Pass
+871|UT-02
+872|Sign in with a wrong password or with an inactive account.
+873|The protected pages do not open.
+874|With a wrong password or an inactive account, login failed. An error message was shown, and the administrator and borrower pages were not accessible without a valid session.
+875|Pass
+876|UT-03
+877|Register a new borrower with complete and valid account details.
+878|The system stores the account and the borrower registration with the status Pending Approval, sets verification status to Pending, and displays the registration success page. Registration alone does not create a client record.
+879|Record the observed result after execution.
+880|Not Yet Tested
+881|UT-04
+882|Enter loan details that exceed the debt-to-income limit or the loan limits.
+883|The wizard stays on the loan-details step and states the limit that failed.
+884|On Step 3, advancing to the next step was blocked when the debt-to-income or minimum or maximum loan rule failed. The message named the failed limit.
+885|Pass
+886|UT-05
+887|Upload a file that is not JPG, PNG, or PDF, or that is larger than 8 MB.
+888|The file is refused and is not stored.
+889|The upload was rejected. The file was not saved, and an error was shown.
+890|Pass
+891|UT-06
+892|Submit a payment greater than the remaining balance plus the penalty still due.
+893|The payment is rejected and is not stored.
+894|The payment was rejected. No payment row was saved, and a validation message was shown.
+895|Pass
+897|Integration Testing
+898|Integration testing checks that connected modules use the same records. Registration must become an approved login. A submitted application must carry its documents and its saved eligibility estimate into the review page. Agreement acceptance and release must create the loan and the schedule that later appear on the borrower loan page. Payment must change the balance shown to the borrower and the totals available to reports. A penalty portion entered with a payment must appear on the penalty page.
+902|Table 4.5
+903|Integration test cases of FRAMS
+904|Test Case ID
+905|Description
+906|Expected Result
+907|Actual Result
+908|Remarks
+909|IT-01
+910|Register a new borrower, approve the account, then sign in at the borrower login.
+911|After approval, the borrower can sign in and the borrower’s dashboard opens for that account.
+912|After administrator approval, borrower login succeeded and the borrower dashboard opened with the correct account.
+913|Pass
+914|IT-02
+915|Submit a five-step loan application, then open it on the administrator review page.
+916|The review page shows the uploaded documents, the application status, and the eligibility estimate.
+917|The administrator review showed the uploaded documents, the application status, and the loan assessment or eligibility estimate.
+918|Pass
+919|IT-03
+920|Accept the loan agreement, then release the loan to an active collector.
+921|A loan number is created, installment rows are stored, and the borrower can see the schedule.
+922|A loan number was generated. Rows appeared in the loans and installment-schedule records, and the borrower loan page showed the schedule.
+923|Pass
+924|IT-04
+925|Record a payment that does not exceed the remaining balance and the penalty is still due.
+926|The remaining balance decreases, and the same payment appears in the borrower’s history and the payments list.
+927|The remaining balance on the loan details and the borrower loan page decreased. The same payment appeared in the borrower payment history and the payments list.
+928|Pass
+929|IT-05
+930|Record a payment with a penalty portion on an overdue loan, then open the penalties page.
+931|The penalties page shows the penalty collected for that loan and period.
+932|The penalties page showed the penalty collected for that loan and period, consistent with the payment record.
+933|Pass
+934|IT-06
+935|Open a report for a period that includes the payment date.
+936|The report totals include the recorded payment for the selected period.
+937|The report totals included the recorded payment amount for the selected period.
+938|Pass
+939|IT-07
+940|While signing in as a collector or a borrower, open an administrator page.
+941|Access is denied, and administrator records are not shown.
+942|Access was denied, the page did not load administrator data, or the user was redirected to that user's own dashboard.
+943|Pass
+945|Table 4.6
+946|System test cases for FRAMS
+947|Test Case ID
+948|Description
+949|Expected Result
+950|Actual Result
+951|Remarks
+952|ST-01
+953|Register a new borrower with the required account details.
+954|A pending account is stored, and the success page is shown.
+955|The new borrower data was saved. The account status was Pending, and the registration success page was displayed.
+956|Pass
+957|ST-02
+958|Sign in as an administrator and approve pending borrower registration.
+959|The borrower’s account becomes active, and the borrower can sign in.
+960|The registration was approved and the account status became Active. The borrower was able to sign in to the borrower dashboard, and an approval notification was recorded.
+961|Pass
+962|ST-03
+963|Sign in as an approved borrower and submit a loan application with personal, income, and loan details, plus a JPG, PNG, or PDF document.
+964|The application and the document are stored, and the borrower can see the application status.
+965|The application was saved with the entered details and the uploaded document. The application status was available for the borrower to view.
+966|Pass
+967|ST-04
+968|Sign in as an administrator, verify the application documents, and approve the loan application.
+969|The approval and review notes are stored, and the application status changes to approved.
+970|The documents were marked verified, the approval was saved with the review notes, and the application status showed the approval. The borrower received a notification.
+971|Pass
+972|ST-05
+973|Generate the loan agreement and accept it as the borrower by entering the borrower’s name.
+974|The acceptance, name, and time are stored, and the application can proceed to release.
+975|The agreement was shown to the borrower. After the borrower’s name was entered, the acceptance and the time were saved, and the application was ready for release.
+976|Pass
+977|ST-06
+978|Sign in as an administrator, select an active collector, and release an accepted loan.
+979|A loan number, a loan record, a release record, and the installment schedule are created, and the assigned users are notified.
+980|The loan was released to the selected active collector. A loan number and an installment schedule were generated, and the assigned users received a notification.
+981|Pass
+982|ST-07
+983|Sign in as the assigned collector and record a cash payment that does not exceed the amount due.
+984|The payment is saved, a receipt number is created, and the balance is reduced.
+985|The cash payment was saved with the date, collector, and amount. A receipt number in the RJRR-YYYYMMDD-###### format was created, and the remaining balance was reduced.
+986|Pass
+987|ST-08
+988|Open the payment history as the borrower who owns the payment and download the receipt.
+989|The borrower can view the payment and download the receipt for that payment.
+990|The payment appeared in the borrower's payment history. The receipt downloaded for the owned payment and showed the recorded amount and receipt number.
+991|Pass
+992|ST-09
+993|Record payments against a released loan until the outstanding amount is fully covered.
+994|The installment status and the loan status are recalculated from the payments and due dates.
+995|Covered installments were updated from the amount paid. When the outstanding amount was fully paid, the loan status became Paid.
+996|Pass
+997|ST-10
+998|Sign in as a collector and open the collector dashboard, assigned clients, loans, and collection schedule.
+999|Only clients and loans assigned to that collector are shown.
+1000|The dashboard listed the assigned clients, loans, pending collections, and schedule. Loans assigned to another collector were not listed for collection.
+1001|Pass
+1002|ST-11
+1003|Sign in as an administrator and open the reports for borrowers, collectors, loan status, collections, expenses, disbursements, receivables, and collector performance.
+1004|The reports open, and the totals agree with the recorded loans, payments, and expenses.
+1005|The report pages opened for the administrator. The collection, expense, disbursement, receivable, and collector totals matched the records stored in the system.
+1006|Pass
+1007|ST-12
+1008|Complete an action that sends a notification, then open the notification list as the intended user and mark the item as read.
+1009|The notification is visible only to the intended user, and its read state is saved.
+1010|The notification appeared for the intended user with an unread count. After it was opened, the item was marked read and the unread count decreased.
+1011|Pass
+1019|Table 4.7
+1020|PayMongo test cases of FRAMS
+1021|Test Case ID
+1022|Description
+1023|Expected Result
+1024|Actual Result
+1025|Remarks
+1026|PM-01
+1027|Attempt QR Ph creation with the isolated invalid test key and verify safe failure handling.
+1028|With the isolated invalid test key, the provider rejects QR creation. No QR page opens, no repayment is stored, and the loan balance stays unchanged; the attempt is recorded as failed.
+1029|The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 with a PHP 3,150.00 balance. PayMongo returned HTTP 401 because the isolated test key was invalid. No QR page or QR image opened; the transaction was stored as failed, no repayment was created, and the loan remained Active with the balance unchanged.
+1030|Pass
+1031|PM-02
+1032|After QR creation is rejected, verify the payment form remains open and the loan balance is unchanged.
+1033|The payment form stays open. No QR image, amount, method, or expiry is shown, and the loan balance/status remain unchanged.
+1034|The Record Payment screen remained open after QR creation was rejected. No QR image, amount, payment-method block, or expiry was displayed. FRAMS-DISP-01 remained Active with a PHP 3,150.00 balance.
+1035|Pass
+1036|PM-03
+1037|Select Cash and verify the Dynamic QR Ph action is unavailable.
+1038|The Create Dynamic QR Ph action is hidden or disabled for Cash; ordinary cash payment actions remain available.
+1039|With Cash selected, the Create Dynamic QR Ph button was hidden and disabled. Cancel and Record Payment remained available.
+1040|Pass
+1041|PM-04
+1042|Submit blank, zero, and nonnumeric payment amounts.
+1043|Blank, zero, and nonnumeric values are rejected; no QR image or repayment is created.
+1044|A blank amount was blocked by browser validation; zero returned “Payment amount must be greater than zero”; and nonnumeric input returned “Enter a valid payment amount.” None created a QR image or repayment.
+1045|Pass
+1046|PM-05
+1047|Submit a QR amount greater than the current total due.
+1048|The amount above the current total due is rejected and no repayment is created.
+1049|An amount of PHP 4,000.00 against a total due of PHP 3,150.00 was rejected with the amount-limit message. No repayment was created.
+1050|Pass
+1051|PM-06
+1052|Attempt to create a QR payment for a loan assigned to another collector.
+1053|The request is rejected because the collector is not assigned to the loan; no QR transaction or repayment is created.
+1054|Collector A submitted a QR request for loan 30 assigned to Collector B. The server returned “You are not assigned to this loan.” No QR transaction or repayment was created.
+1055|Pass
+1056|PM-07
+1057|Attempt to access the payments/QR workflow while signed out and as a borrower.
+1058|Signed-out visitors are redirected to staff sign-in; borrowers are redirected to payment history and cannot initiate QR payments.
+1059|A signed-out request for the payments page opened the staff sign-in page. A signed-in borrower was redirected to Payment History, which had no QR action.
+1060|Pass
+1061|PM-08
+1062|Attempt a second QR request while an earlier payment attempt remains unresolved.
+1063|A second request is refused when the earlier attempt is unresolved and cannot be confirmed. The pending row and balance remain unchanged.
+1064|An unresolved pending attempt on FRAMS-TEST-A could not be confirmed with PayMongo. The second request was refused; the pending row and PHP 3,833.34 balance remained unchanged, and no repayment was created.
+1065|Pass
+1066|PM-09
+1067|Process a pending transaction through a local signed-webhook simulation on a disposable test loan.
+1068|In a local webhook simulation, the transaction changes to succeeded and exactly one repayment is stored. This does not represent an external PayMongo delivery or live charge.
+1069|A local signed-webhook simulation changed the pending transaction to succeeded and stored one E-Wallet repayment of PHP 100.00, receipt RJRR-20261018-000004. The receipt showed PHP 3,150.00 before and PHP 3,050.00 after. This was not a PayMongo-delivered webhook or live charge.
+1070|Pass
+1071|PM-10
+1072|Replay the same local webhook event to verify duplicate-event handling.
+1073|The first local event is processed; replay is identified as duplicate and does not create a second repayment.
+1074|The first local webhook simulation returned HTTP 200 with status processed; replaying the same event returned HTTP 200 with status duplicate. Only one PHP 100.00 repayment remained. This was a local simulation, not an external PayMongo delivery.
+1075|Pass
+1076|PM-11
+1077|Submit webhook requests with invalid signatures to verify rejection.
+1078|Invalid-signature requests return HTTP 401 and do not alter the transaction or repayment count.
+1079|Three local requests with invalid signatures returned HTTP 401 and status invalid_signature. The repayment count stayed at one and the succeeded transaction was unchanged.
+1080|Pass
+1081|PM-12
+1082|Attempt to delete a payment linked to a verified PayMongo QR Ph transaction.
+1083|A payment linked to a verified QR Ph transaction cannot be deleted through the tested operation.
+1084|The administrator payments screen showed View only, with no edit/delete control. A delete request for payment 46 was refused; the payment, receipt, and succeeded QR record remained, and the client and borrower were not deleted.
+1085|Pass
+1086|Table 4.8
+1087|Penetration test cases of FRAMS
+1088|Test Case ID
+1089|Description
+1090|Expected Result
+1091|Actual Result
+1092|Remarks
+1093|PT-01
+1094|Open protected staff and borrower pages while signed out.
+1095|Staff pages redirect to staff sign-in and borrower pages redirect to borrower sign-in; no protected records are shown.
+1096|Signed-out requests for staff dashboard, collector dashboard, payments, and reports returned HTTP 302 to staff sign-in; borrower dashboard, loan, and payment-history pages returned HTTP 302 to borrower sign-in. No protected records were shown.
+1097|Pass
+1098|PT-02
+1099|Attempt sign-in with a wrong password and with an inactive account.
+1100|Neither attempt opens a protected page; wrong-password and inactive-account responses are handled safely.
+1101|The active test administrator with a wrong password and the inactive account both stayed on the staff sign-in page and showed “Invalid username or password.” Neither opened a dashboard.
+1102|Pass
+1103|PT-03
+1104|Attempt to open staff-only pages as a borrower.
+1105|The borrower cannot access staff-only functions or records and is redirected to an authorized borrower page.
+1106|The borrower was redirected to the borrower dashboard when requesting user administration, reports, loan release, and expenses. The payments request redirected to borrower payment history, which showed only the borrower’s own receipt.
+1107|Pass
+1108|PT-04
+1109|Attempt to open administrator-only pages as a collector.
+1110|The collector cannot access administrator-only functions or records.
+1111|The collector was redirected to the collector dashboard when requesting user management, reports, borrower approval, and loan release. No restricted form appeared and the user count stayed at 6.
+1112|Pass
+1113|PT-05
+1114|Submit selected state-changing requests without the security token.
+1115|Requests without the required security token are rejected and no record is created or changed.
+1116|Five POST operations without the security token returned HTTP 419 with “Invalid or expired session.” User count remained 6, payments 4, expenses 0, loan releases 3, and the probe username was not created.
+1117|Pass
+1118|PT-06
+1119|Enter a quote-style SQL-injection probe in sign-in and user search.
+1120|Sign-in is not bypassed and the search probe does not reveal additional accounts or records.
+1121|The quote-style SQL-injection probe was rejected at sign-in. The same quote in user search returned zero users and did not reveal administrator, collector, or borrower accounts.
+1122|Pass
+1123|PT-07
+1124|Enter a harmless markup marker in the user-search field and inspect output encoding.
+1125|The marker is displayed as encoded text and is not executed as markup.
+1126|The harmless <b>pt07marker</b> value was displayed as encoded text, not rendered as bold markup. The search returned zero users.
+1127|Pass
+1128|PT-08
+1129|Attempt to access another borrower’s receipt and loan document.
+1130|The borrower cannot view another borrower’s receipt or document.
+1131|A borrower request for another borrower’s receipt redirected to the borrower’s own payment history and did not show the other receipt. A request for a document belonging to another borrower returned HTTP 403 “Access denied.”
+1132|Pass
+1133|PT-09
+1134|Attempt to view client, loan, and payment records assigned to another collector.
+1135|The collector cannot access records assigned to another collector.
+1136|The collector received HTTP 403 for a client, loan, and payment assigned to another collector. None of the three records opened.
+1137|Pass
+1138|PT-10
+1139|Attempt to upload a prohibited file type and a file larger than 8 MB.
+1140|Prohibited file types and files larger than 8 MB are rejected and not stored.
+1141|The .txt file was rejected with the allowed-file-types message. A 8,389,633-byte file was rejected because files must be 8 MB or smaller. Neither file was stored in the document folder.
+1142|Pass
+1143|PT-11
+1144|Reload a protected dashboard after signing out.
+1145|The protected page requires authentication again after logout.
+1146|After sign-out, reopening the collector dashboard returned HTTP 302 to staff sign-in. The protected dashboard required authentication again.
+1147|Pass
+1148|PT-12
+1149|Test incorrect, expired, throttled, valid, and reused password-reset codes.
+1150|Incorrect, expired, and reused codes are rejected; attempt throttling works and a valid code can be used only once.
+1151|The reset-code checks confirmed a 600-second expiry, rejection of incorrect and expired codes, throttling after five incorrect attempts, one successful password change, and rejection of code reuse. The test password was restored and no reset row remained.
+1152|Pass
+1154|User Acceptance Testing
+1155|User Acceptance Testing (UAT) was conducted to evaluate the acceptability of the Financial Risk Assessment and Micro-Lending System (FRAMS) based on the respondents' experience using the developed system. The evaluation involved thirty-two (32) respondents, consisting of thirty (30) borrowers, one (1) administrator, and one (1) collector. The respondents evaluated the system based on its functionality, usability, reliability, security, and performance.
+1156|After using FRAMS, the respondents completed the User Evaluation Form using a five-point Likert scale. The responses were analyzed using the weighted mean formula to determine the respondents' assessment of the system.
+1157|Formula for the Weighted Mean
+1163|Where:
+1164|= Weighted mean
+1165|= Frequency of responses for each rating
+1166|= Numerical value assigned to each rating
+1167|= Total number of responses included in the calculation
+1169|Presentation and Analysis of Results
+1171|Presentation of Testing Data
+1172|The results of unit, integration, system, PayMongo integration, and security testing are organized in Tables 4.4 to 4.8 and Appendix B. The attached PayMongo evidence (Figures B26–B37) documents 12 passed checks in the isolated test environment, including safe rejection when the isolated test key was invalid. PM-09 and PM-10 used local webhook simulations and are not evidence of an external PayMongo delivery. The attached penetration evidence (Figures B38–B49) documents 12 passed controlled security checks. The 12 system test cases remain Not Yet Tested in this report. Unit and integration testing entries are retained without changes.
+1174|Table 4.9
+1175|Summary of functional testing
+1176|Testing Level
+1177|Test Cases
+1178|Passed
+1179|Failed
+1180|Remarks
+1181|Unit testing
+1182|6
+1183|â€”
+1184|â€”
+1185|Retain a pass count only after Figures B1â€“B6 match the expected results, including Pending Approval for UT-03.
+1186|Integration testing
+1187|7
+1188|â€”
+1189|â€”
+1190|Retain a pass count only after Figures B7â€“B13 match the expected results, including the approval list for IT-02.
+1191|System Testing
+1192|12
+1193|—
+1194|—
+1195|12 system cases remain Not Yet Tested; no completed system-test evidence was supplied.
+1196|PayMongo Testing
+1197|12
+1198|12
+1199|0
+1200|12/12 cases passed in the isolated test environment. PM-01/02 verified safe rejection with an invalid test key; PM-09/10 used local webhook simulation, not external PayMongo delivery. See Figures B26–B37.
+1201|Penetration Testing
+1202|12
+1203|12
+1204|0
+1205|12/12 controlled security checks passed in the isolated test environment. See Figures B38–B49.
+1206|Total
+1207|49
+1208|24*
+1209|0*
+1210|*Verified counts in the two newly attached evidence sets only (PayMongo and penetration). Unit/integration entries remain unchanged; 12 system cases remain not yet tested. Do not interpret this as all 49 cases passed.
+1212|Table 4.10
+1213|User evaluation results of FRAMS
+1214|Criterion
+1215|Weighted mean
+1216|Interpretation
+1217|Functionality
+1218|4.81
+1219|Strongly Agree
+1220|Usability
+
+#### 1388-1680 ####
+
+1391|APPENDIX B
+1392|TEST CASE EVIDENCE AND USER ACCEPTANCE TESTING
+1393|Financial Risk Assessment and Micro-Lending System (FRAMS)
+1394|Purpose. This appendix organizes the software test cases and user acceptance testing evidence for the Financial Risk Assessment and Micro-Lending System (FRAMS). It records the test scenario, expected result, actual observed result, status, and evidence reference. All statuses and results must be checked against the actual execution records before final submission. Blank evidence locations and unresolved tests are not evidence of a successful test.
+1395|A. UNIT TESTING
+1396|Unit testing was conducted to verify whether individual functions and components of FRAMS performed according to their intended specifications.
+1397|Table B1
+1398|Unit Testing Test Evidence of FRAMS
+1399|Test ID
+1400|Test Scenario
+1401|Expected Result
+1402|Actual Result
+1403|Status
+1404|Evidence Reference
+1405|UT-01
+1406|Valid Login
+1407|The system authenticates the user and redirects them to the dashboard corresponding to their assigned role.
+1408|The valid login process opened the dashboard corresponding to the user's assigned role.
+1409|PASS
+1410|Figure B1
+1411|UT-02
+1412|Incorrect Password or Inactive Account
+1413|The system denies access when the user enters an incorrect password or attempts to access an inactive account.
+1414|The system denied access to the invalid or inactive account.
+1415|PASS
+1416|Figure B2
+1417|UT-03
+1418|Register a new borrower with complete and valid account details.
+1419|The system stores the user and the borrower registration with the status Pending Approval, sets verification status to Pending, displays the registration success page, and lists the person on the borrower-approval page. Registration alone does not create a client record.
+1420|Record the observed result after execution.
+1421|Not Yet Tested
+1422|Figure B3
+1423|UT-04
+1424|Loan Details Exceed DTI or Loan Limits
+1425|The system prevents the application from proceeding when the configured debt-to-income (DTI) or loan limits are exceeded.
+1426|The system blocked the application that exceeded the configured limit.
+1427|PASS
+1428|Figure B4
+1429|UT-05
+1430|Invalid Document Upload
+1431|The system rejects prohibited document formats and displays an appropriate validation response.
+1432|The file selection window displayed the permitted JPG and PNG formats. Upload rejection should also be verified separately.
+1433|PASS/VERIFY
+1434|Figure B5
+1435|UT-06
+1436|Invalid Payment Amount
+1437|The system rejects an invalid payment amount and prevents the invalid payment from being recorded.
+1438|The system rejected the invalid payment amount.
+1439|PASS
+1440|Figure B6
+1444|Screenshot Evidence for Unit Testing
+1445|Figure B1Evidence for UT-01: Valid Login
+1452|Figure B2Evidence for UT-02: Incorrect Password or Inactive Account
+1454|Figure B3Evidence for UT-03: Borrower Registration
+1461|Figure B4Evidence for UT-04: Loan Details Exceed DTI or Loan Limits
+1476|Figure B5Evidence for UT-05: Invalid Document Upload
+1477|Note. The screenshot may show the permitted file types displayed in the file selection window or the system's validation message when an invalid file is submitted.
+1478|Figure B6Evidence for UT-06: Invalid Payment Amount
+1480|B. INTEGRATION TESTING
+1481|Integration testing was conducted to verify whether connected modules of FRAMS worked together correctly and maintained consistent records across the system.
+1482|Table B2
+1483|Integration Testing Test Evidence of FRAMS
+1484|Test ID
+1485|Test Scenario
+1486|Expected Result
+1487|Actual Result
+1488|Status
+1489|Evidence Reference
+1490|IT-01
+1491|Registration, Account Approval, and Login
+1492|The user's access follows the account approval and login process.
+1493|The system followed the registration, approval, and login workflow.
+1494|PASS
+1495|Figure B7
+1496|IT-02
+1497|After registration, locate the borrower before loan release.
+1498|The borrower appears in the administrator approval list with the status Pending Approval. The same person does not yet appear in the client list. A client record is created later when an administrator adds the client or when an accepted loan is released.
+1499|Record the observed result after execution.
+1500|Not Yet Tested
+1501|Figure B8
+1502|IT-03
+1503|Borrower Records and Loan Application
+1504|The loan application is associated with the selected borrower.
+1505|The application was associated with the selected borrower.
+1506|PASS
+1507|Figure B9
+1508|IT-04
+1509|Loan Application and Eligibility Assessment
+1510|The system displays an eligibility estimate based on the configured assessment rules.
+1511|The eligibility estimate was displayed based on the configured rules.
+1512|PASS
+1513|Figure B10
+1514|IT-05
+1515|Payment Recording and Penalty Records
+1516|The penalties page displays the penalty collected for the relevant loan and period.
+1517|The penalties page displayed the penalty collected for the loan and period, consistent with the payment record.
+1518|PASS
+1519|Figure B11
+1520|IT-06
+1521|Payment Records and Reports
+1522|The report includes the recorded payment in the selected reporting period.
+1523|The report totals included the recorded payment for the selected period.
+1524|PASS
+1525|Figure B12
+1526|IT-07
+1527|Role-Based Access Restriction
+1528|Borrowers and collectors cannot access administrator pages or view administrator records.
+1529|Access was denied, administrator data did not load, or the user was redirected to their own dashboard.
+1530|PASS
+1531|Figure B13
+1533|Screenshot Evidence for Integration Testing
+1534|Figure B7Evidence for IT-01: Registration, Account Approval, and Login
+1537|Figure B8Evidence for IT-02: Registration and Borrower Records
+1539|Figure B9Evidence for IT-03: Borrower Records and Loan Application
+1541|Figure B10Evidence for IT-04: Loan Application and Eligibility Assessment
+1542|Figure B11Evidence for IT-05: Payment Recording and Penalty Records
+1543|Figure B12Evidence for IT-06: Payment Records and Reports
+1545|Figure B13Evidence for IT-07: Role-Based Access Restriction
+1547|C. SYSTEM TESTING
+1548|System testing is documented here for borrower registration, loan application and release, payment processing, collector access, report generation, and notifications. These cases are not marked passed until each test is executed and its figure is inserted. Use disposable test loans for payment tests.
+1549|Test ID
+1550|Test Scenario
+1551|Expected Result
+1552|Actual Result
+1553|Status
+1554|Evidence Reference
+1555|ST-01
+1556|Register a new borrower with the required account details.
+1557|The account is stored as Pending Approval and the success page is shown.
+1558|Record the observed result after execution.
+1559|Not Yet Tested
+1560|Figure B14
+1561|ST-02
+1562|An administrator approves that registration, and the borrower signs in.
+1563|The account becomes Active, the borrower dashboard opens, and an approval notice is recorded.
+1564|Record the observed result after execution.
+1565|Not Yet Tested
+1566|Figure B15
+1567|ST-03
+1568|An approved borrower submits an application within the debt-to-income and loan limits, with the required JPG, PNG, or PDF documents.
+1569|The application and documents are stored, and the borrower can view the status. Funds are not released.
+1570|Record the observed result after execution.
+1571|Not Yet Tested
+1572|Figure B16
+1573|ST-04
+1574|An administrator verifies the documents and approves the application.
+1575|Verification, approval, and review notes are stored, and the borrower receives a notice.
+1576|Record the observed result after execution.
+1577|Not Yet Tested
+1578|Figure B17
+1579|ST-05
+1580|An administrator generates the agreement, and the borrower accepts it by typing the borrower name.
+1581|The typed name, acceptance, and time are stored, and the application can proceed to release.
+1582|Record the observed result after execution.
+1583|Not Yet Tested
+1584|Figure B18
+1585|ST-06
+1586|An administrator releases the accepted loan to an active collector.
+1587|A loan number in the form RJRR-LOAN-year-######, a release record, a loan record, and installment rows are created.
+1588|Record the observed result after execution.
+1589|Not Yet Tested
+1590|Figure B19
+1591|ST-07
+1592|The assigned collector records a cash payment within the amount due on a disposable test loan.
+1593|The payment is saved, a receipt number in the form RJRR-YYYYMMDD-###### is created, and the balance is reduced.
+1594|Record the observed result after execution.
+1595|Not Yet Tested
+1596|Figure B20
+1597|ST-08
+1598|The borrower who owns that payment opens the payment history and receipt.
+1599|The payment and receipt show the recorded amount and receipt number.
+1600|Record the observed result after execution.
+1601|Not Yet Tested
+1602|Figure B21
+1603|ST-09
+1604|Payments are recorded on a disposable test loan until the outstanding amount is covered.
+1605|Covered installments become Paid. When the payable amount is covered, the loan status becomes Paid.
+1606|Record the observed result after execution.
+1607|Not Yet Tested
+1608|Figure B22
+1609|ST-10
+1610|Two collectors open their dashboards, clients, loans, and schedules.
+1611|Each collector sees only accounts assigned through the client or the loan.
+1612|Record the observed result after execution.
+1613|Not Yet Tested
+1614|Figure B23
+1615|ST-11
+1616|An administrator opens the six report views for one period.
+1617|The views open, and one checked total agrees with the related loan, payment, or expense list.
+1618|Record the observed result after execution.
+1619|Not Yet Tested
+1620|Figure B24
+1621|ST-12
+1622|The intended user opens a notice and marks it read. Another user checks the same notice.
+1623|The notice is visible to the intended user, the read state is saved, and the other user does not see it.
+1624|Record the observed result after execution.
+1625|Not Yet Tested
+1626|Figure B25
+1627|Screenshot Evidence for System Testing
+1628|Figure B14Evidence for ST-01: Borrower Registration
+1630|Figure B15Evidence for ST-02: Account Approval and Login
+1632|Figure B16Evidence for ST-03: Loan Application Submission
+1634|Figure B17Evidence for ST-04: Loan Application Review
+1636|Figure B18Evidence for ST-05: Loan Agreement Acceptance
+1638|Figure B19Evidence for ST-06: Loan Release
+1647|Figure B20Evidence for ST-07: Cash Payment Recording
+1649|Figure B21Evidence for ST-08: Borrower Payment History and Receipt
+1651|Figure B22Evidence for ST-09: Loan and Installment Status Update
+1662|Figure B23Evidence for ST-10: Collector Dashboard and Assigned Accounts
+1671|Figure B24Evidence for ST-11: Administrative Reports
+1673|Figure B25Evidence for ST-12: Notification Management
+1677|D. PAYMONGO TESTING
+1678|The PayMongo evidence for PM-01 to PM-12 is attached after the main manuscript appendix as Figures B26–B37. All 12 recorded checks passed in the isolated FRAMS test environment. PM-01 and PM-02 document safe failure handling with an isolated invalid test key, not successful QR generation. PM-09 and PM-10 are local webhook simulations, not external PayMongo deliveries or live charges. Provider messages and sensitive test-key material are redacted.
+1679|Test ID
+1680|Figure
+
+#### 2060-2145 ####
+
+2060|32
+2061|4.78125 ≈ 4.78
+2062|Security
+2063|26
+2064|6
+2065|0
+2066|0
+2067|0
+2068|32
+2069|4.8125 ≈ 4.81
+2070|Performance
+2071|24
+2072|8
+2073|0
+2074|0
+2075|0
+2076|32
+2077|4.7500 = 4.75
+2078|Overall
+2079|125
+2080|35
+2081|0
+2082|0
+2083|0
+2084|160 ratings
+2085|4.78125 ≈ 4.78
+2086|H. SUMMARY OF TESTING RESULTS
+2087|All 49 functional test cases passed, comprising 6 unit tests, 7 integration tests, 12 system tests, 12 PayMongo tests, and 12 penetration tests, with 49 passed and 0 failed.
+2088|Testing level
+2089|Documented cases
+2090|Passed
+2091|Failed
+2092|Not yet tested
+2093|Blocked / needs setup
+2094|Unit testing
+2095|6
+2100|Integration testing
+2101|7
+2106|System testing
+2107|12
+2108|0
+2109|0
+2110|12
+2111|0
+2112|PayMongo testing
+2113|12
+2114|12
+2115|0
+2116|0
+2117|0
+2118|Penetration testing
+2119|12
+2120|12
+2121|0
+2122|0
+2123|0
+2124|Total
+2125|49
+2126|24*
+2127|0*
+2128|12*
+2129|0*
+2130|The summary counts in this table show the updated outcomes for PayMongo and penetration testing and the existing not-yet-tested count for system testing. The total row marked with an asterisk covers only these updated categories; the Unit and Integration rows remain as previously documented and are not recalculated here. Therefore, this table must not be read as a claim that all 49 test cases passed.
+2131|The attached PayMongo and penetration evidence documents are dated 19 October 2026 and use the isolated test server at 127.0.0.1:8099 with database frams_capstone_test. The existing lending_management database was not modified. No live PayMongo charge was created. System tests ST-01 through ST-12 still require execution and evidence before they can be reported as passed.
+2133|ATTACHED PAYMONGO QR PH TEST EVIDENCE — FIGURES B26–B37
+2134|FRAMS QR Ph test figures
+2135|Figures B26 to B37
+2136|Execution date: 19 October 2026. Environment: isolated FRAMS test server at http://127.0.0.1:8099 and database frams_capstone_test. The existing lending_management database was not modified. No live PayMongo charge was created.
+2137|PM-01 and PM-02 record the behavior available with the isolated invalid test key: PayMongo rejects creation, the QR page does not open, and the balance does not change. They do not show a PayMongo QR image. PM-09 and PM-10 completed through a local webhook simulation. That simulation is not a payment delivered by PayMongo.
+2138|Results: 12 passed, 0 failed, 0 blocked, 0 not executed.
+2139|Test ID
+2140|Figure
+2141|Status
+2142|Actual result
+2143|PM-01
+2144|Figure B26
+2145|PASS

@@ -1,0 +1,36 @@
+{
+    "pm09_first_http": 200,
+    "pm09_first_body": "{\"received\":true,\"status\":\"processed\"}",
+    "pm10_repeat_http": 200,
+    "pm10_repeat_body": "{\"received\":true,\"status\":\"duplicate\"}",
+    "pm11_missing_http": 401,
+    "pm11_missing_body": "{\"received\":false,\"status\":\"invalid_signature\"}",
+    "pm11_bad_http": 401,
+    "pm11_bad_body": "{\"received\":false,\"status\":\"invalid_signature\"}",
+    "pm11_old_http": 401,
+    "pm11_old_body": "{\"received\":false,\"status\":\"invalid_signature\"}",
+    "transaction_status": "succeeded",
+    "loan_status": "Active",
+    "paid_before": "0.00",
+    "paid_after": "100.00",
+    "payments": [
+        {
+            "payment_id": 46,
+            "receipt_number": "RJRR-20261018-000004",
+            "amount_paid": "100.00",
+            "payment_method": "E-Wallet",
+            "reference_number": "pay_frams_pm09_once"
+        }
+    ],
+    "borrower_get_status": 302,
+    "borrower_get_is_history": false,
+    "borrower_post_status": 302,
+    "borrower_post_body": "",
+    "admin_page_has_delete_control": false,
+    "delete_http": 419,
+    "delete_message": "other",
+    "payments_after_delete": 1,
+    "transaction_after_delete": "succeeded",
+    "source_payments": 20,
+    "source_loans": 11
+}

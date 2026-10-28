@@ -1,0 +1,14 @@
+[
+    {
+        "id": "F-001",
+        "category": "Unit Testing",
+        "component": "calculateLoanInterestBreakdown",
+        "description": "A zero or negative loan term is coerced to one month, so the calculator charges one month of interest instead of rejecting the duration.",
+        "severity": "Low",
+        "evidence": "01_Unit_Testing/logs/cli_test_execution.log",
+        "reproduction": "Call calculateLoanInterestBreakdown(10000, 5, 0). Observed total interest 500.00 and total payable 10500.00.",
+        "recommendation": "Reject a term less than 1 at the calculator and at the application form before interest is stored.",
+        "retest": "Not retested. Application code was not changed.",
+        "demonstrated": "Yes"
+    }
+]

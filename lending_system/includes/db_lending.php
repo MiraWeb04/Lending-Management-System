@@ -211,13 +211,15 @@ function generatePaymentReceiptNumber() {
 function updateLoanStatusForLoan($loanId) {
     global $conn;
 
-    $loanStmt = executeQuery('SELECT total_payable, due_date FROM loans WHERE loan_id = ? LIMIT 1', [$loanId]);
+    $loanStmt = $conn->prepare('SELECT total_payable, due_date FROM loans WHERE loan_id = ? LIMIT 1');
+    $loanStmt->execute([(int)$loanId]);
     $loan = $loanStmt->fetch(PDO::FETCH_ASSOC);
     if (!$loan) {
         return;
     }
 
-    $paidStmt = executeQuery('SELECT COALESCE(SUM(amount_paid), 0) AS total_paid FROM payments WHERE loan_id = ?', [$loanId]);
+    $paidStmt = $conn->prepare('SELECT COALESCE(SUM(amount_paid), 0) AS total_paid FROM payments WHERE loan_id = ?');
+    $paidStmt->execute([(int)$loanId]);
     $totalPaid = (float)($paidStmt->fetch()['total_paid'] ?? 0);
     $totalPayable = (float)$loan['total_payable'];
     $dueDate = $loan['due_date'];
@@ -226,13 +228,14 @@ function updateLoanStatusForLoan($loanId) {
     if ($totalPaid >= $totalPayable && $totalPayable > 0) {
         $status = 'Paid';
     } else {
-        $releaseId = (int)(executeQuery('SELECT release_id FROM loans WHERE loan_id = ? LIMIT 1', [$loanId])->fetchColumn() ?? 0);
+        $releaseStmt = $conn->prepare('SELECT release_id FROM loans WHERE loan_id = ? LIMIT 1');
+        $releaseStmt->execute([(int)$loanId]);
+        $releaseId = (int)($releaseStmt->fetchColumn() ?? 0);
         $overdueInstallments = 0;
         if ($releaseId > 0) {
-            $overdueInstallments = (int)(executeQuery(
-                'SELECT COUNT(*) FROM loan_payment_schedules WHERE release_id = ? AND status = ?',
-                [$releaseId, 'Overdue']
-            )->fetchColumn() ?? 0);
+            $overdueStmt = $conn->prepare('SELECT COUNT(*) FROM loan_payment_schedules WHERE release_id = ? AND status = ?');
+            $overdueStmt->execute([$releaseId, 'Overdue']);
+            $overdueInstallments = (int)($overdueStmt->fetchColumn() ?? 0);
         }
 
         if ($overdueInstallments > 0 || (strtotime((string)$dueDate) < strtotime(date('Y-m-d')) && $totalPaid < $totalPayable)) {
@@ -240,26 +243,31 @@ function updateLoanStatusForLoan($loanId) {
         }
     }
 
-    executeQuery('UPDATE loans SET status = ? WHERE loan_id = ?', [$status, $loanId]);
+    $statusUpdate = $conn->prepare('UPDATE loans SET status = ? WHERE loan_id = ?');
+    $statusUpdate->execute([$status, (int)$loanId]);
 }
 
 function recalculateLoanPaymentSchedule($loanId) {
     global $conn;
 
-    $loanStmt = executeQuery('SELECT release_id FROM loans WHERE loan_id = ? LIMIT 1', [$loanId]);
+    $loanStmt = $conn->prepare('SELECT release_id FROM loans WHERE loan_id = ? LIMIT 1');
+    $loanStmt->execute([(int)$loanId]);
     $loan = $loanStmt->fetch(PDO::FETCH_ASSOC);
     if (!$loan || empty($loan['release_id'])) {
         return;
     }
 
     $releaseId = (int)$loan['release_id'];
-    $paidStmt = executeQuery('SELECT COALESCE(SUM(amount_paid), 0) AS total_paid FROM payments WHERE loan_id = ?', [$loanId]);
+    $paidStmt = $conn->prepare('SELECT COALESCE(SUM(amount_paid), 0) AS total_paid FROM payments WHERE loan_id = ?');
+    $paidStmt->execute([(int)$loanId]);
     $remainingPaid = (float)($paidStmt->fetch()['total_paid'] ?? 0);
 
-    $scheduleStmt = executeQuery('SELECT id, total_amount_due, due_date, status FROM loan_payment_schedules WHERE release_id = ? ORDER BY installment_number ASC', [$releaseId]);
+    $scheduleStmt = $conn->prepare('SELECT id, total_amount_due, due_date, status FROM loan_payment_schedules WHERE release_id = ? ORDER BY installment_number ASC');
+    $scheduleStmt->execute([$releaseId]);
     $scheduleRows = $scheduleStmt->fetchAll(PDO::FETCH_ASSOC);
     $runningPaid = $remainingPaid;
     $today = date('Y-m-d');
+    $statusUpdate = $conn->prepare('UPDATE loan_payment_schedules SET status = ? WHERE id = ?');
 
     foreach ($scheduleRows as $schedule) {
         $expectedAmount = (float)$schedule['total_amount_due'];
@@ -283,7 +291,7 @@ function recalculateLoanPaymentSchedule($loanId) {
         }
 
         if ($newStatus !== $schedule['status']) {
-            executeQuery('UPDATE loan_payment_schedules SET status = ? WHERE id = ?', [$newStatus, $schedule['id']]);
+            $statusUpdate->execute([$newStatus, (int)$schedule['id']]);
         }
     }
 }
@@ -424,6 +432,10 @@ function recordPaymentTransaction($loanId, $paymentDate, $amountPaid, $collector
     if ($ownsTransaction) {
         ensurePaymentReceiptColumns();
     }
+    if ($paymongoTransactionId === null && !$conn->inTransaction()) {
+        require_once __DIR__ . '/paymongo_qrph_webhook.php';
+        lendingPrepareLoanForManualPaymentRecording((int)$loanId);
+    }
     $loanRow = null;
     $paymentId = null;
     if ($ownsTransaction) {
@@ -441,13 +453,12 @@ function recordPaymentTransaction($loanId, $paymentDate, $amountPaid, $collector
             lendingAssertNoOpenPaymongoQrphTransaction($conn, (int)$loanId, (int)$paymongoTransactionId);
         }
 
-        $penaltyPaid = max(0.0, round((float)$penaltyPaid, 2));
         $remarksText = trim((string)($remarks ?? ''));
         $remarksText = $remarksText !== '' ? $remarksText : null;
-        validatePaymentAmounts($loanId, (float)$amountPaid, $penaltyPaid);
-        $penaltyDueNow = (float)(calculateLoanBalanceSummary($loanId)['penalty_due'] ?? 0);
-        $penaltyPaid = min($penaltyPaid, $penaltyDueNow);
-        $installmentPaid = max(0.0, round((float)$amountPaid - $penaltyPaid, 2));
+        $validatedAmounts = validatePaymentAmounts($loanId, $amountPaid, $penaltyPaid);
+        $amountPaid = $validatedAmounts['total_received'];
+        $penaltyPaid = $validatedAmounts['penalty_paid'];
+        $installmentPaid = $validatedAmounts['loan_payment'];
         $interestPaid = allocatePaymentInterestPortion($loanId, $installmentPaid);
 
         $receiptNumber = null;
@@ -489,7 +500,7 @@ function recordPaymentTransaction($loanId, $paymentDate, $amountPaid, $collector
                 "UPDATE paymongo_qrph_transactions
                  SET status = 'succeeded', provider_status = 'succeeded', provider_payment_id = ?,
                      payment_id = ?, paid_at = NOW(), updated_at = NOW()
-                 WHERE id = ? AND status = 'pending'"
+                 WHERE id = ? AND status IN ('pending', 'expired', 'failed')"
             );
             $paidUpdate->execute([(string)$providerPaymentId, $paymentId, (int)$paymongoTransactionId]);
             if ($paidUpdate->rowCount() !== 1) {
@@ -497,8 +508,8 @@ function recordPaymentTransaction($loanId, $paymentDate, $amountPaid, $collector
             }
         }
 
-        updateLoanStatusForLoan($loanId);
         recalculateLoanPaymentSchedule($loanId);
+        updateLoanStatusForLoan($loanId);
 
         $loanRow = executeQuery(
             'SELECT l.loan_id, l.loan_number, l.total_payable, l.status, c.user_id AS borrower_user_id, c.collector_id AS collector_user_id, CONCAT_WS(" ", c.first_name, c.last_name) AS borrower_name
@@ -558,6 +569,60 @@ function recordPaymentTransaction($loanId, $paymentDate, $amountPaid, $collector
             $conn->rollBack();
         }
         throw $e;
+    }
+}
+
+function deletePaymentTransaction(int $paymentId, int $loanId): void
+{
+    global $conn;
+
+    if ($paymentId <= 0 || $loanId <= 0) {
+        throw new InvalidArgumentException('Select a valid payment and loan before deleting a payment.');
+    }
+
+    require_once __DIR__ . '/paymongo_qrph.php';
+
+    $ownsTransaction = !$conn->inTransaction();
+    if ($ownsTransaction) {
+        $conn->beginTransaction();
+    }
+
+    try {
+        $loanLock = $conn->prepare('SELECT loan_id FROM loans WHERE loan_id = ? LIMIT 1 FOR UPDATE');
+        $loanLock->execute([$loanId]);
+        if (!$loanLock->fetchColumn()) {
+            throw new InvalidArgumentException('The selected loan does not exist.');
+        }
+
+        $paymentLock = $conn->prepare(
+            'SELECT payment_id FROM payments WHERE payment_id = ? AND loan_id = ? LIMIT 1 FOR UPDATE'
+        );
+        $paymentLock->execute([$paymentId, $loanId]);
+        if (!$paymentLock->fetchColumn()) {
+            throw new InvalidArgumentException('Payment was not found for the selected loan.');
+        }
+
+        if (lendingPaymentIsLinkedToPaymongoQrph($paymentId)) {
+            throw new RuntimeException('A payment linked to a PayMongo QR Ph transaction cannot be deleted.');
+        }
+
+        $delete = $conn->prepare('DELETE FROM payments WHERE payment_id = ? AND loan_id = ?');
+        $delete->execute([$paymentId, $loanId]);
+        if ($delete->rowCount() !== 1) {
+            throw new RuntimeException('The payment was not deleted because it changed during processing.');
+        }
+
+        recalculateLoanPaymentSchedule($loanId);
+        updateLoanStatusForLoan($loanId);
+
+        if ($ownsTransaction) {
+            $conn->commit();
+        }
+    } catch (Throwable $exception) {
+        if ($ownsTransaction && $conn->inTransaction()) {
+            $conn->rollBack();
+        }
+        throw $exception;
     }
 }
 

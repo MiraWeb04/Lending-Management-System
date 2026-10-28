@@ -1,0 +1,57 @@
+PRESENTATION END: The results of unit, integration, system, PayMongo integration, and security testing are organized in Tables 4.4 to 4.8 and Appendix B. The attached PayMongo evidence (Figures B26–B37) documents 12 passed checks in the isolated test environment, including safe rejection when the isolated test key was invalid. PM-09 and PM-10 used local webhook simulations and are not evidence of an external PayMongo delivery. The attached penetration evidence (Figures B38–B49) documents 12 passed controlled security checks. Unit testing passed in 6 of 6 cases, integration testing passed in 7 of 7 cases, and system testing passed in 12 of 12 cases.
+
+UPDATED Figure B10
+
+UPDATED Figure B11
+
+UPDATED Figure B12
+
+UPDATED Figure B13
+
+UT-03 :: UT-03 || Register a new borrower with complete and valid account details. || The borrower is listed on Borrower Approval with verification status Pending and account status Pending Approval. || Borrower #34, Honey Jane Comaling, appeared on Borrower Approval with verification status Pending and account status Pending Approval. || Pass
+
+UT-05 :: UT-05 || On the requirements step, select JPG, PNG, and PDF files for the required documents. || The requirements step accepts the selected JPG, PNG, and PDF files and shows each file as selected. || Step 4 showed a PDF, a JPG, and a PNG selected for the government ID, proof of income, proof of billing, and selfie. Each card was marked selected and labeled JPG, PNG, or PDF. || Pass
+
+IT-04 :: IT-04 || Record a cash payment within the amount due, then open the borrower loan overview. || The payment is saved, the covered installment is marked Paid, and the remaining balance decreases while the loan stays Active. || Receipt RJRR-20261018-000001 recorded cash of ₱7,666.67. Installment 1 was marked Paid, and loan RJRR-LOAN-2026-900009 stayed Active with ₱15,333.33 remaining. || Pass
+
+IT-05 :: IT-05 || Open the administrator review of a submitted application and read the eligibility estimate. || The review shows the eligibility result, the requested amount, the maximum eligible amount, and the debt-to-income figure. || Application #33 for Honey Jane Comaling showed Eligible, ₱20,000.00 requested, ₱39,130.43 maximum eligible, estimated eligible ₱20,000.00, and DTI after loan of 25.33% against the 40.0% policy maximum. || Pass
+
+IT-07 :: IT-07 || Attempt staff sign-in with the borrower username. || The staff console does not open and no administrator records are shown. || Staff sign-in for the username honey stayed on the sign-in page and showed “Invalid username or password.” No administrator records were shown. || Pass
+
+ST-09 :: ST-09 || Open the loan after a partial payment that covers the first installment. || The covered installment is marked Paid, later installments remain Upcoming, and the loan stays Active while a balance remains. || Installment 1 of ₱7,666.67 was marked Paid. Installments 2 and 3 remained Upcoming. Loan RJRR-LOAN-2026-900009 stayed Active, with ₱7,666.67 paid and ₱15,333.33 remaining. || Pass
+
+ST-11 :: ST-11 || An administrator opens the six report views for one period. || The six report views open for the selected period. || Reports & Analytics opened for October 2026 with Dashboard Analytics, Loan Reports, Payment Reports, Borrower Reports, Collector Performance, and Financial Summary. Dashboard Analytics showed 12 borrowers, 3 active loans, 0 overdue, and collections of ₱371,718.67. || Pass
+
+PM-01 :: PM-01 || Attempt QR Ph creation with the isolated invalid test key and verify safe failure handling. || With the isolated invalid test key, the provider rejects QR creation. No QR page opens, no repayment is stored, and the loan balance stays unchanged; the attempt is recorded as failed. || The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 with a PHP 3,150.00 balance. PayMongo returned HTTP 401 because the isolated test key was invalid. No QR page or QR image opened; the transaction was stored as failed, no repayment was created, and the loan remained Active with the balance unchanged. || Pass
+
+PT-10 :: PT-10 || Attempt to upload a prohibited file type and a file larger than 8 MB. || Prohibited file types and files larger than 8 MB are rejected and not stored. || The .txt file was rejected with the allowed-file-types message. A 8,389,633-byte file was rejected because files must be 8 MB or smaller. Neither file was stored in the document folder. || Pass
+
+UT-03 :: UT-03 || Register a new borrower with complete and valid account details. || The borrower is listed on Borrower Approval with verification status Pending and account status Pending Approval. || Borrower #34, Honey Jane Comaling, appeared on Borrower Approval with verification status Pending and account status Pending Approval. || PASS || Figure B3
+
+UT-05 :: UT-05 || Valid JPG, PNG, and PDF selection || The requirements step accepts the selected JPG, PNG, and PDF files and shows each file as selected. || Step 4 showed a PDF, a JPG, and a PNG selected for the government ID, proof of income, proof of billing, and selfie. Each card was marked selected and labeled JPG, PNG, or PDF. || PASS || Figure B5
+
+IT-04 :: IT-04 || Payment recording and remaining balance || The payment is saved, the covered installment is marked Paid, and the remaining balance decreases while the loan stays Active. || Receipt RJRR-20261018-000001 recorded cash of ₱7,666.67. Installment 1 was marked Paid, and loan RJRR-LOAN-2026-900009 stayed Active with ₱15,333.33 remaining. || PASS || Figure B22
+
+IT-05 :: IT-05 || Loan Application and Eligibility Assessment || The review shows the eligibility result, the requested amount, the maximum eligible amount, and the debt-to-income figure. || Application #33 for Honey Jane Comaling showed Eligible, ₱20,000.00 requested, ₱39,130.43 maximum eligible, estimated eligible ₱20,000.00, and DTI after loan of 25.33% against the 40.0% policy maximum. || PASS || Figure B11
+
+IT-07 :: IT-07 || Borrower username on the staff sign-in || The staff console does not open and no administrator records are shown. || Staff sign-in for the username honey stayed on the sign-in page and showed “Invalid username or password.” No administrator records were shown. || PASS || Figure B13
+
+ST-09 :: ST-09 || Open the loan after a partial payment that covers the first installment. || The covered installment is marked Paid, later installments remain Upcoming, and the loan stays Active while a balance remains. || Installment 1 of ₱7,666.67 was marked Paid. Installments 2 and 3 remained Upcoming. Loan RJRR-LOAN-2026-900009 stayed Active, with ₱7,666.67 paid and ₱15,333.33 remaining. || PASS || Figure B22
+
+ST-11 :: ST-11 || An administrator opens the six report views for one period. || The six report views open for the selected period. || Reports & Analytics opened for October 2026 with Dashboard Analytics, Loan Reports, Payment Reports, Borrower Reports, Collector Performance, and Financial Summary. Dashboard Analytics showed 12 borrowers, 3 active loans, 0 overdue, and collections of ₱371,718.67. || PASS || Figure B24
+
+PM-01 :: PM-01 || Figure B26 || PASS || The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 while the balance was PHP 3,150.00. PayMongo returned HTTP 401 and rejected the isolated test key. The QR page did not open. The stored transaction status was failed, and it had no QR image. No repayment was created and the loan stayed Active. The provider text was redacted in the screenshot because it echoed part of the test key.
+
+PT-10 :: PT-10 || Figure B47 || PASS || On loan-application step 4, pt10-probe.txt was checked and rejected with "Allowed file types: JPG, PNG, PDF." A file of 8,389,633 bytes was rejected with "File must be 8 MB or smaller." Neither file was written to the document folder. The wizard does not keep that sentence on screen: it stays on step 4 and shows "Required documents missing," with every document still marked "Not uploaded yet."
+
+PM-01 :: PM-01 || Figure B26 || PASS || The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 while the balance was PHP 3,150.00. PayMongo returned HTTP 401 and rejected the isolated test key. The QR page did not open. The stored transaction status was failed, and it had no QR image. No repayment was created and the loan stayed Active. The provider text was redacted in the screenshot because it echoed part of the test key.
+
+PT-10 :: PT-10 || Figure B47 || PASS || On loan-application step 4, pt10-probe.txt was checked and rejected with "Allowed file types: JPG, PNG, PDF." A file of 8,389,633 bytes was rejected with "File must be 8 MB or smaller." Neither file was written to the document folder. The wizard does not keep that sentence on screen: it stays on step 4 and shows "Required documents missing," with every document still marked "Not uploaded yet."
+
+PARA The results of unit, integration, system, PayMongo integration, and security testing are organized in Tables 4.4 to 4.8 and Appendix B. The attached PayMongo evidence (Figures B26–B37) documents 12 passed checks in the isolated test environment, including safe rejection when the isolated test key was invalid. PM-09 and PM-10 used local webhook simulations and are not evidence of an external PayMongo delivery. The attached penetration evidence (Figures B38–B49) documents 12 passed controlled security checks. Unit testing passed in 6 of 6 cases, integration testing passed in 7 of 7 cases, and sy
+
+PARA Figure B10
+Evidence for IT-04: Payment Recording and Remaining Balance. The paid installment and remaining balance are shown in Figure B22.
+
+PARA Figure B11
+Evidence for IT-05: Loan Application and Eligibility Assessment

@@ -1,0 +1,77 @@
+paras=1336 tables=24
+needle 32: 19
+needle 30 borrowers: 9
+needle 20 questionnaire: 5
+needle 640: 12
+needle 4.53: 7
+needle 48: 8
+
+=== REFS ===
+[871] References
+[872] The following references are presented in APA 7th edition format.
+[873] Bazarbash, M., & Beaton, K. (2020). Filling the gap: Digital credit and financial inclusion (IMF Working Paper No. WP/20/150). International Monetary Fund. https://doi.org/10.5089/9781513552477.001
+[874] BlueOrchard. (2025, February 3). Microfinance outlook for 2025. https://www.blueorchard.com/microfinance-outlook-for-2025/
+[875] Campos, R. B., Jr. (2024). The impact of digitalization on credit risk management in microfinance institutions in Nueva Ecija, Philippines. Indian Journal of Information Sources and Services, 14(3). https://doi.org/10.51
+[876] Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. MIS Quarterly, 13(3), 319–340. https://doi.org/10.2307/249008
+[877] DeLone, W. H., & McLean, E. R. (2003). The DeLone and McLean model of information systems success: A ten-year update. Journal of Management Information Systems, 19(4), 9–30. https://doi.org/10.1080/07421222.2003.11045748
+[878] Estrellado, G. E. (2024). Financial inclusion of lending institutions on sustainability of micro-businesses. United International Journal for Research & Technology, 5(7). https://uijrt.com/paper/financial-inclusion-lendi
+[879] International Organization for Standardization. (2011). Systems and software engineering—Systems and software Quality Requirements and Evaluation (SQuaRE)—System and software quality models (ISO/IEC 25010:2011).
+[880] Juventud, W. M., Matigas, E. A. O., Himongala, J., Galla, M. R., & Abiol, M. J. D. (2023). Perceived credit risk of micro finance loans among micro-enterprises business in Población Iligan City. International Journal of 
+[881] Khandani, A. E., Kim, A. J., & Lo, A. W. (2010). Consumer credit-risk models via machine-learning algorithms. Journal of Banking & Finance, 34(11), 2767–2787. https://doi.org/10.1016/j.jbankfin.2010.06.001
+[882] Mina, J. C. (2024). The credit risk management practices of lending companies in Nueva Ecija: Basis for risk mitigating plan. International Journal of Advanced and Applied Sciences, 11(9), 134–142. https://doi.org/10.218
+[883] PayMongo. (n.d.). PayMongo API documentation. https://developers.paymongo.com/
+[884] Penaso, C. P., & Dagang, A. L. (2025). Loan management practices as key drivers for the operation efficiency of microfinance institutions in Northern Mindanao, Philippines. International Journal of Research and Scientifi
+[885] Ramirez, J. G. (2024). Establishment of gross loan portfolio risk-return questionnaire: Reliability and validity structure. Mindoro Journal of Social Sciences and Development Studies, 1(2), 18–26. https://journal.omsc.ed
+[886] Santos, A. R. (2023). The rise of digital payments: Transforming the financial landscape in the Philippines. International Journal of Applied Engineering and Technology, 5(2), 22–27. https://romanpub.com/resources/ijaet%
+ref_entries_guess=14
+
+T21 27x7
+R0: ['No.', 'Evaluation Statement', 'Strongly Agree', 'Agree', 'Neutral', 'Disagree', 'Strongly Disagree']
+R1: ['', '', '5', '4', '3', '2', '1']
+R2: ['A. Functionality', 'A. Functionality', 'A. Functionality', 'A. Functionality', 'A. Functionality', 'A. Functionality', 'A. Functionality']
+R3: ['1', 'FRAMS allows authorized users to log in and access functions appropriate to their assigned roles.', '☐', '☐', '☐', '☐', '☐']
+R4: ['2', 'FRAMS allows borrowers to submit the information required for loan applications.', '☐', '☐', '☐', '☐', '☐']
+R5: ['3', 'FRAMS calculates loan interest and repayment amounts according to the system’s implemented formula.', '☐', '☐', '☐', '☐', '☐']
+R6: ['4', 'FRAMS allows authorized personnel to record and monitor loan payments.', '☐', '☐', '☐', '☐', '☐']
+R7: ['B. Usability', 'B. Usability', 'B. Usability', 'B. Usability', 'B. Usability', 'B. Usability', 'B. Usability']
+R8: ['5', 'The FRAMS interface is organized and easy to understand.', '☐', '☐', '☐', '☐', '☐']
+R9: ['6', 'Menus and navigation help me find the functions needed for my role.', '☐', '☐', '☐', '☐', '☐']
+R10: ['7', 'Forms provide understandable instructions or validation messages when needed.', '☐', '☐', '☐', '☐', '☐']
+R11: ['8', 'I can complete the tasks relevant to my role without unnecessary difficulty.', '☐', '☐', '☐', '☐', '☐']
+R12: ['C. Reliability', 'C. Reliability', 'C. Reliability', 'C. Reliability', 'C. Reliability', 'C. Reliability', 'C. Reliability']
+R13: ['9', 'FRAMS saves borrower, loan, and payment records consistently.', '☐', '☐', '☐', '☐', '☐']
+R14: ['10', 'Loan balances and installment schedules reflect the recorded transactions.', '☐', '☐', '☐', '☐', '☐']
+R15: ['11', 'FRAMS provides consistent information when I revisit a record or report.', '☐', '☐', '☐', '☐', '☐']
+R16: ['12', 'The system handles routine operations without unexpected interruption during my use.', '☐', '☐', '☐', '☐', '☐']
+R17: ['D. Security', 'D. Security', 'D. Security', 'D. Security', 'D. Security', 'D. Security', 'D. Security']
+R18: ['13', 'FRAMS restricts pages and records according to the user’s assigned role.', '☐', '☐', '☐', '☐', '☐']
+R19: ['14', 'I can access only the information and functions permitted for my account.', '☐', '☐', '☐', '☐', '☐']
+R20: ['15', 'The system requires authentication before protected pages can be accessed.', '☐', '☐', '☐', '☐', '☐']
+R21: ['16', 'FRAMS provides appropriate protection for borrower and loan information during normal use.', '☐', '☐', '☐', '☐', '☐']
+R22: ['E. Performance', 'E. Performance', 'E. Performance', 'E. Performance', 'E. Performance', 'E. Performance', 'E. Performance']
+R23: ['17', 'FRAMS loads the pages needed for my tasks within a reasonable time.', '☐', '☐', '☐', '☐', '☐']
+R24: ['18', 'The system processes routine forms and transactions within a reasonable time.', '☐', '☐', '☐', '☐', '☐']
+R25: ['19', 'FRAMS displays reports and loan information without excessive delay.', '☐', '☐', '☐', '☐', '☐']
+R26: ['20', 'The system remains responsive while I perform normal tasks.', '☐', '☐', '☐', '☐', '☐']
+statement_count=20
+statements_match=True
+
+T13
+Criterion | Weighted mean | Interpretation
+Functionality | 4.56 | Strongly Agree
+Usability | 4.54 | Strongly Agree
+Reliability | 4.56 | Strongly Agree
+Security | 4.46 | Strongly Agree
+Performance | 4.52 | Strongly Agree
+Overall Mean | 4.53 | Strongly Agree
+
+T12 last row: Total | 48 | 48 | 0 | 48 listed official test cases passed: 6 unit, 7 integration, 12 system, 11 PayMo
+
+LendStack (2025) leftover=0
+LendStack (n.d.)=1
+Santos, A. R. in refs=True
+BlueOrchard. (2025=True
+B32 borrower_history leftover=0
+Figure B32 staff sign-in=True
+T10 PM-07 remarks: PASSED for the unauthenticated-access check supported by Figure B32 (staff sign-in). Borrower-history restriction is recorded in the test log but is not independently shown by the remaining embedded i
+T17 PM-07 remarks: PASSED for the unauthenticated-access check supported by Figure B32 (staff sign-in). Borrower-history restriction is recorded in the test log but is not independently shown by the remaining embedded i

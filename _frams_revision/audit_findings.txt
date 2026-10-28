@@ -1,0 +1,277 @@
+MANUSCRIPT C:\Users\HomePC\Downloads\FRAMS\FRAMS_REVISED_MANUSCRIPT_FINAL.docx
+PARAS 1332 TABLES 24
+
+=== UAT RECALC ===
+respondents 32 roles {'Borrower': 30, 'Administrator': 1, 'Collector': 1}
+item ratings 640
+freq {5: 341, 4: 297, 3: 2} total 640
+weighted_score 2899 overall 4.529687 rounded 4.53
+Functionality: mean=4.562500 round2=4.56 f={5: 72, 4: 56} n=128
+Usability: mean=4.539062 round2=4.54 f={4: 57, 5: 70, 3: 1} n=128
+Reliability: mean=4.562500 round2=4.56 f={5: 72, 4: 56} n=128
+Security: mean=4.460938 round2=4.46 f={5: 59, 4: 69} n=128
+Performance: mean=4.523438 round2=4.52 f={5: 68, 4: 59, 3: 1} n=128
+
+=== TABLE HEADS ===
+T0 7x4 flags=[]
+  Area | Sources retained from the revi | What those sources emphasize | What FRAMS implements
+T1 6x2 flags=[]
+  Weighted Mean Range | Verbal Interpretation
+T2 5x2 flags=[]
+  Equipment | Use
+T3 9x2 flags=[]
+  Component | Software
+T4 7x3 flags=[]
+  Component | Tool or technology | Purpose in the implemented sys
+T5 20x2 flags=['webhook', 'Check with PayMongo', 'Payment Intent', 'polling']
+  Entity | Purpose
+T6 13x5 flags=[]
+  Module | Purpose | Administrator | Collector | Borrower
+T7 7x6 flags=[]
+  Test ID | Test Scenario | Expected Result | Actual Result | Status | Evidence Reference
+T8 8x6 flags=[]
+  Test ID | Test Scenario | Expected Result | Actual Result | Status | Evidence Reference
+T9 13x6 flags=[]
+  Test ID | Test Scenario | Expected Result | Actual Result | Status | Evidence Reference
+T10 12x6 flags=['Check with PayMongo', 'Payment Intent', 'live PayMongo', 'polling']
+  Test Case ID | Description | Test Steps | Expected Result | Actual Result | Remarks
+T11 13x6 flags=['48']
+  Test Case ID | Description | Test Steps | Expected Result | Actual Result | Remarks / Evidence
+T12 7x5 flags=['Check with PayMongo', 'polling', '11 PayMongo', '48']
+  Testing Level | Test Cases | Passed | Failed | Remarks
+T13 7x3 flags=['4\\.53', '4\\.56', '4\\.54', '4\\.46', '4\\.52']
+  Criterion | Weighted mean | Interpretation
+T14 7x6 flags=[]
+  Test ID | Test Scenario | Expected Result | Actual Result | Status | Evidence Reference
+T15 8x6 flags=[]
+  Test ID | Test Scenario | Expected Result | Actual Result | Status | Evidence Reference
+T16 13x6 flags=[]
+  Test ID | Test Scenario | Expected Result | Actual Result | Status | Evidence Reference
+T17 12x6 flags=['Check with PayMongo', 'Payment Intent', 'live PayMongo', 'polling']
+  Test Case ID | Description | Test Steps | Expected Result | Actual Result | Remarks
+T18 13x6 flags=['48']
+  Test Case ID | Description | Test Steps | Expected Result | Actual Result | Remarks / Evidence
+T19 7x9 flags=['4\\.53', '4\\.56', '4\\.46', '4\\.52', '640', '341', '297']
+  Criterion  | f(5) | f(4) | f(3) | f(2) | f(1) | N | Weighted Score  | Weighted mean
+T20 7x6 flags=['48']
+  Testing level | Documented cases | Passed | Failed | Not yet tested | Blocked / needs setup
+T21 28x11 flags=[]
+  Strongly Agree | Strongly Agree | Agree | Agree | Neutral | Neutral | Neutral | Disagree | Disagree | Strongly Disagree | Strongly Disagree
+T22 7x9 flags=['4\\.53', '4\\.56', '4\\.46', '4\\.52', '640', '341', '297']
+  Evaluation Criterion  | f(5) | f(4) | f(3) | f(2) | f(1) | N | Weighted Score  | Weighted mean
+T23 11x4 flags=[]
+  Test ID | Validation area | Reported result | Evidence status
+
+=== NEEDLE HITS ===
+
+## webhook (3)
+  [282] paymongo_qrph_webhook_events. This table exists in the operational schema and stores provider event rows when they are present. It is not part of the selected payment-confirmation workflow or of the official PayMongo evaluation scope. In th
+  [1329] Declared relationships. The dump contains one foreign key: paymongo_qrph_webhook_events.transaction_id references paymongo_qrph_transactions.id with ON DELETE SET NULL. Relationships among users, clients, loans, releases, schedules, and pay
+  [1330] Required tables in the dump: users, clients, borrower_applications, loan_applications, loan_application_documents, loan_application_reviews, loan_agreements, loan_releases, loan_release_notifications, loans, loan_payment_schedules, payments
+
+## PM-11 (1)
+  [700] PM-09 and PM-10 document receipt contents and the listing of a recorded E-Wallet repayment in the isolated test environment. They confirm payment recording and receipt access for that stored record. They do not demonstrate Payment Intent po
+
+## 30 borrowers (9)
+  [186] After the development of FRAMS, the system was evaluated by its intended users to assess its acceptability in terms of functionality, usability, reliability, security, and performance. The supplied User Acceptance Testing (UAT) response exp
+  [190] The post-development evaluation dataset contains 32 submissions, consisting of 30 borrowers, one administrator, and one collector. These respondents were selected using purposive sampling because they represented intended users with relevan
+  [218] Descriptive statistics were used to analyze the respondents' evaluations of the Financial Risk Assessment and Micro-Lending System (FRAMS). The evaluation covered five criteria: functionality, usability, reliability, security, and performan
+  [682] User Acceptance Testing (UAT) evaluated the acceptability of the Financial Risk Assessment and Micro-Lending System (FRAMS) based on respondents’ experience using the developed system. The supplied workbook, FRAMS UAT Responses (1).xlsx, co
+  [840] The User Acceptance Testing (UAT) response export contained 32 submissions, consisting of 30 borrowers, one administrator, and one collector. The evaluation instrument contained 20 statements grouped into five criteria: functionality, usabi
+  [848] In relation to the sixth specific objective, 32 intended users evaluated FRAMS. The supplied workbook contains 30 borrowers, one administrator, and one collector, each of whom answered 20 questionnaire items. The overall weighted mean was 4
+  [1216] The supplied User Acceptance Testing (UAT) response export contains 32 submissions, consisting of 30 borrowers, one administrator, and one collector. The 20-item evaluation questionnaire covered five criteria: functionality, usability, reli
+  [1220] The administered 20-item questionnaire is documented in Appendix I. The completed item-level answers and the recorded user-role field are retained in the supplied workbook. The respondent distribution used throughout this manuscript is 30 b
+  [1284] The response export contains 32 submissions, consisting of 30 borrowers, one administrator, and one collector. The questionnaire contains 20 statements grouped into five criteria, with four statements assigned to each criterion. Therefore, 
+
+## 4\.53 (7)
+  [708] The verbal interpretation follows the five-point Likert scale adopted in Chapter III, in which a weighted mean of 4.21–5.00 is interpreted as Strongly Agree. Based on the individual questionnaire responses, functionality received 72 Strongl
+  [710] Across all 20 questionnaire statements, the response totals were 341 Strongly Agree ratings, 297 Agree ratings, two Neutral ratings, and no Disagree or Strongly Disagree ratings. The total weighted score was 2,899 across 640 individual rati
+  [841] The calculated weighted means were 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean was 4.53, interpreted as Strongly Agree under the five-point Likert 
+  [848] In relation to the sixth specific objective, 32 intended users evaluated FRAMS. The supplied workbook contains 30 borrowers, one administrator, and one collector, each of whom answered 20 questionnaire items. The overall weighted mean was 4
+  [1217] The corrected criterion-level weighted means are 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean across 640 individual ratings was 4.53, interpreted as
+  [1231] Therefore, the overall weighted mean was 2,899 ÷ 640 = 4.5297, rounded to 4.53 and interpreted as Strongly Agree.
+  [1300] 2,899 ÷ 640 = 4.5297, rounded to 4.53.
+
+## 4\.56 (5)
+  [708] The verbal interpretation follows the five-point Likert scale adopted in Chapter III, in which a weighted mean of 4.21–5.00 is interpreted as Strongly Agree. Based on the individual questionnaire responses, functionality received 72 Strongl
+  [717] Functionality. Functionality obtained a weighted mean of 4.56, interpreted as Strongly Agree. This result reflects respondents' ratings of the system functions relevant to their roles, including borrower management, loan processing, and pay
+  [719] Reliability. Reliability received a weighted mean of 4.56, interpreted as Strongly Agree. This result represents the respondents' perceptions of the consistency of system operations and recorded information. It should be considered together
+  [841] The calculated weighted means were 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean was 4.53, interpreted as Strongly Agree under the five-point Likert 
+  [1217] The corrected criterion-level weighted means are 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean across 640 individual ratings was 4.53, interpreted as
+
+## 4\.54 (4)
+  [708] The verbal interpretation follows the five-point Likert scale adopted in Chapter III, in which a weighted mean of 4.21–5.00 is interpreted as Strongly Agree. Based on the individual questionnaire responses, functionality received 72 Strongl
+  [718] Usability. Usability obtained a weighted mean of 4.54, interpreted as Strongly Agree. The result reflects respondents' perceptions of the interface, navigation, form instructions, and ease of completing tasks relevant to their roles.
+  [841] The calculated weighted means were 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean was 4.53, interpreted as Strongly Agree under the five-point Likert 
+  [1217] The corrected criterion-level weighted means are 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean across 640 individual ratings was 4.53, interpreted as
+
+## 4\.46 (4)
+  [708] The verbal interpretation follows the five-point Likert scale adopted in Chapter III, in which a weighted mean of 4.21–5.00 is interpreted as Strongly Agree. Based on the individual questionnaire responses, functionality received 72 Strongl
+  [720] Security. Security received a weighted mean of 4.46, interpreted as Strongly Agree. This result represents respondents' perceptions of the security-related features they evaluated. It does not establish that every potential security vulnera
+  [841] The calculated weighted means were 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean was 4.53, interpreted as Strongly Agree under the five-point Likert 
+  [1217] The corrected criterion-level weighted means are 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean across 640 individual ratings was 4.53, interpreted as
+
+## 4\.52 (7)
+  [708] The verbal interpretation follows the five-point Likert scale adopted in Chapter III, in which a weighted mean of 4.21–5.00 is interpreted as Strongly Agree. Based on the individual questionnaire responses, functionality received 72 Strongl
+  [710] Across all 20 questionnaire statements, the response totals were 341 Strongly Agree ratings, 297 Agree ratings, two Neutral ratings, and no Disagree or Strongly Disagree ratings. The total weighted score was 2,899 across 640 individual rati
+  [723] Performance. Performance received a weighted mean of 4.52, interpreted as Strongly Agree. This result reflects respondents' perceived performance during their use of FRAMS. It does not constitute a measured response-time benchmark or eviden
+  [841] The calculated weighted means were 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean was 4.53, interpreted as Strongly Agree under the five-point Likert 
+  [1217] The corrected criterion-level weighted means are 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean across 640 individual ratings was 4.53, interpreted as
+  [1231] Therefore, the overall weighted mean was 2,899 ÷ 640 = 4.5297, rounded to 4.53 and interpreted as Strongly Agree.
+  [1300] 2,899 ÷ 640 = 4.5297, rounded to 4.53.
+
+## Check with PayMongo (20)
+  [32] In addition to payments recorded at the lending office, FRAMS includes PayMongo Dynamic QR Ph. A collector starts the code for an assigned loan when the method is bank transfer or e-wallet. The borrower pays by scanning that code. The QR im
+  [69] The system includes PayMongo Dynamic QR Ph for supported non-cash collection transactions. According to the selected implementation, an authorized collector initiates a QR payment for an assigned loan. The corresponding repayment is recorde
+  [110] PayMongo Dynamic QR Ph. A collector-initiated QR payment for bank transfer or e-wallet. The repayment is recorded after PayMongo reports a succeeded Payment Intent for the matching amount, through status polling on the open QR page or throu
+  [232] Payments and penalties. The system records a payment with amount, date, method, collector, optional reference, and a penalty portion. It rejects a payment that exceeds the remaining balance plus the penalty still due. It recomputes the bala
+  [242] Figure 2 is the Level 1 data flow diagram, with processes 1.0 through 5.0. The borrower, the collector, and the administrator send data into those processes and receive the records that belong to their role. Process 4.0 is a payment recorde
+  [282] paymongo_qrph_webhook_events. This table exists in the operational schema and stores provider event rows when they are present. It is not part of the selected payment-confirmation workflow or of the official PayMongo evaluation scope. In th
+  [459] Figure 5.7 is the immediate recording path for cash, bank transfer, and e-wallet. An administrator or the assigned collector can save that payment as soon as the amount is valid. PayMongo Dynamic QR Ph waits for later confirmation. The Crea
+  [492] PayMongo QR Ph testing evaluated the integration between FRAMS and PayMongo's QR Ph payment processing. The tests covered QR code creation attempts, payment amount validation, cash-versus-QR controls, collector assignment restrictions, borr
+  [493] The testing evidence distinguishes provider rejection caused by an isolated invalid test key from successful QR code creation. The official PayMongo evaluation scope contains 11 test cases, PM-01 to PM-10 and PM-12, presented in Table 4.7, 
+  [505] FRAMS was implemented as a browser-based application for a local Apache, PHP, and MySQL environment. The documented local setup is XAMPP, with the application placed under the web server document root. Authorized users open the pages in a w
+  [644] Payment and collection management. The payments page lists collections and records a payment for an authorized loan. The form shows the borrower, the amount already paid, and the remaining balance. The fields stored are the amount, date, co
+  [699] The official PayMongo QR Ph testing documentation includes 11 test cases, PM-01 to PM-10 and PM-12, supported by the screenshots and recorded results in Figures B26–B35 and B37. These tests evaluated safe handling of rejected QR creation re
+
+## Payment Intent (22)
+  [32] In addition to payments recorded at the lending office, FRAMS includes PayMongo Dynamic QR Ph. A collector starts the code for an assigned loan when the method is bank transfer or e-wallet. The borrower pays by scanning that code. The QR im
+  [69] The system includes PayMongo Dynamic QR Ph for supported non-cash collection transactions. According to the selected implementation, an authorized collector initiates a QR payment for an assigned loan. The corresponding repayment is recorde
+  [110] PayMongo Dynamic QR Ph. A collector-initiated QR payment for bank transfer or e-wallet. The repayment is recorded after PayMongo reports a succeeded Payment Intent for the matching amount, through status polling on the open QR page or throu
+  [232] Payments and penalties. The system records a payment with amount, date, method, collector, optional reference, and a penalty portion. It rejects a payment that exceeds the remaining balance plus the penalty still due. It recomputes the bala
+  [242] Figure 2 is the Level 1 data flow diagram, with processes 1.0 through 5.0. The borrower, the collector, and the administrator send data into those processes and receive the records that belong to their role. Process 4.0 is a payment recorde
+  [282] paymongo_qrph_webhook_events. This table exists in the operational schema and stores provider event rows when they are present. It is not part of the selected payment-confirmation workflow or of the official PayMongo evaluation scope. In th
+  [459] Figure 5.7 is the immediate recording path for cash, bank transfer, and e-wallet. An administrator or the assigned collector can save that payment as soon as the amount is valid. PayMongo Dynamic QR Ph waits for later confirmation. The Crea
+  [492] PayMongo QR Ph testing evaluated the integration between FRAMS and PayMongo's QR Ph payment processing. The tests covered QR code creation attempts, payment amount validation, cash-versus-QR controls, collector assignment restrictions, borr
+  [493] The testing evidence distinguishes provider rejection caused by an isolated invalid test key from successful QR code creation. The official PayMongo evaluation scope contains 11 test cases, PM-01 to PM-10 and PM-12, presented in Table 4.7, 
+  [505] FRAMS was implemented as a browser-based application for a local Apache, PHP, and MySQL environment. The documented local setup is XAMPP, with the application placed under the web server document root. Authorized users open the pages in a w
+  [644] Payment and collection management. The payments page lists collections and records a payment for an authorized loan. The form shows the borrower, the amount already paid, and the remaining balance. The fields stored are the amount, date, co
+  [699] The official PayMongo QR Ph testing documentation includes 11 test cases, PM-01 to PM-10 and PM-12, supported by the screenshots and recorded results in Figures B26–B35 and B37. These tests evaluated safe handling of rejected QR creation re
+
+## live PayMongo (7)
+  [493] The testing evidence distinguishes provider rejection caused by an isolated invalid test key from successful QR code creation. The official PayMongo evaluation scope contains 11 test cases, PM-01 to PM-10 and PM-12, presented in Table 4.7, 
+  [700] PM-09 and PM-10 document receipt contents and the listing of a recorded E-Wallet repayment in the isolated test environment. They confirm payment recording and receipt access for that stored record. They do not demonstrate Payment Intent po
+  [849] The documented technical tests support the specific cases examined in their documented environments. Passing those cases does not establish that the entire system is free of defects. The documented PayMongo cases do not independently demons
+  [1028] The official PayMongo evidence for PM-01 to PM-10 and PM-12 is attached as Figures B26–B35 and B37. The test descriptions and results below are aligned to the behaviors shown in the supplied evidence. PM-01 and PM-02 document safe failure h
+  [1083] Actual result: The receipt showed RJRR-20261018-000004, E-Wallet, PHP 100.00 paid, PHP 3,150.00 before payment, and PHP 3,050.00 remaining. This check confirms receipt contents for a stored record in the isolated test environment. It does n
+  [1235] The PayMongo and penetration/security evidence uses an isolated test server at 127.0.0.1:8099 and the frams_capstone_test database. The existing lending_management database was not modified, and no live PayMongo charge was created. PM-01 do
+  [1324] Interpretation and limitation. The supplied report describes the earlier defects and records the corresponding corrections and retest outcomes. The manuscript should not rely on the earlier six-failure summary as the current status without 
+
+## polling (17)
+  [110] PayMongo Dynamic QR Ph. A collector-initiated QR payment for bank transfer or e-wallet. The repayment is recorded after PayMongo reports a succeeded Payment Intent for the matching amount, through status polling on the open QR page or throu
+  [232] Payments and penalties. The system records a payment with amount, date, method, collector, optional reference, and a penalty portion. It rejects a payment that exceeds the remaining balance plus the penalty still due. It recomputes the bala
+  [282] paymongo_qrph_webhook_events. This table exists in the operational schema and stores provider event rows when they are present. It is not part of the selected payment-confirmation workflow or of the official PayMongo evaluation scope. In th
+  [492] PayMongo QR Ph testing evaluated the integration between FRAMS and PayMongo's QR Ph payment processing. The tests covered QR code creation attempts, payment amount validation, cash-versus-QR controls, collector assignment restrictions, borr
+  [493] The testing evidence distinguishes provider rejection caused by an isolated invalid test key from successful QR code creation. The official PayMongo evaluation scope contains 11 test cases, PM-01 to PM-10 and PM-12, presented in Table 4.7, 
+  [644] Payment and collection management. The payments page lists collections and records a payment for an authorized loan. The form shows the borrower, the amount already paid, and the remaining balance. The fields stored are the amount, date, co
+  [699] The official PayMongo QR Ph testing documentation includes 11 test cases, PM-01 to PM-10 and PM-12, supported by the screenshots and recorded results in Figures B26–B35 and B37. These tests evaluated safe handling of rejected QR creation re
+  [700] PM-09 and PM-10 document receipt contents and the listing of a recorded E-Wallet repayment in the isolated test environment. They confirm payment recording and receipt access for that stored record. They do not demonstrate Payment Intent po
+  [716] The analysis of findings relates the implemented features and documented testing results of FRAMS to the objectives stated in Chapter I. It examines borrower and loan information management, the financial eligibility estimate, payment monit
+  [838] Borrowers can register and, after administrator approval, submit loan applications with the required supporting documents. The eligibility estimate uses declared income, existing financial obligations, the requested loan amount, the loan te
+  [845] In relation to the third specific objective, FRAMS supports interest computation, installment schedules, loan agreement acceptance, collector assignment, loan release, payment recording, penalty computation, and repayment monitoring. PayMon
+  [849] The documented technical tests support the specific cases examined in their documented environments. Passing those cases does not establish that the entire system is free of defects. The documented PayMongo cases do not independently demons
+
+## FRAMS differ (1)
+  [147] The gap that FRAMS addresses is the absence of one web-based record that registers the borrower, stores the application and documents, applies a stated eligibility rule, releases the loan with a schedule, and tracks payments and penalties f
+
+## 11 PayMongo (2)
+  [839] The literature reviewed in Chapter II provides context for FRAMS through discussions of manual credit assessment, microfinance operations, and predictive scoring approaches. Unlike systems that use machine learning to predict default, FRAMS
+  [1233] The documented official functional test-case summary contains 48 cases: six unit tests, seven integration tests, twelve system tests, 11 PayMongo-related tests, and twelve penetration/security tests. The recorded official case summary repor
+
+## 48 (6)
+  [839] The literature reviewed in Chapter II provides context for FRAMS through discussions of manual credit assessment, microfinance operations, and predictive scoring approaches. Unlike systems that use machine learning to predict default, FRAMS
+  [875] DeLone, W. H., & McLean, E. R. (2003). The DeLone and McLean model of information systems success: A ten-year update. Journal of Management Information Systems, 19(4), 9–30. https://doi.org/10.1080/07421222.2003.11045748
+  [1191] Figure B48 — PT-11
+  [1196] Figure B48. Protected collector dashboard reloaded after sign-out.
+  [1233] The documented official functional test-case summary contains 48 cases: six unit tests, seven integration tests, twelve system tests, 11 PayMongo-related tests, and twelve penetration/security tests. The recorded official case summary repor
+  [1234] The 48-case summary above remains the count of documented official cases listed in the test tables. A separate financial-computation and agreement-validation report records 53 test executions across three groups: 28 financial-computation ch
+
+## 640 (11)
+  [222] Each of the five criteria contained four statements answered by 32 respondents, producing 128 individual ratings per criterion. The overall evaluation included 640 individual ratings, calculated as 32 respondents multiplied by 20 questionna
+  [710] Across all 20 questionnaire statements, the response totals were 341 Strongly Agree ratings, 297 Agree ratings, two Neutral ratings, and no Disagree or Strongly Disagree ratings. The total weighted score was 2,899 across 640 individual rati
+  [840] The User Acceptance Testing (UAT) response export contained 32 submissions, consisting of 30 borrowers, one administrator, and one collector. The evaluation instrument contained 20 statements grouped into five criteria: functionality, usabi
+  [1217] The corrected criterion-level weighted means are 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean across 640 individual ratings was 4.53, interpreted as
+  [1222] The table below summarizes the response frequencies calculated from the supplied UAT response export. Each criterion includes four questionnaire statements answered by 32 respondents, producing 128 individual ratings per criterion. The over
+  [1227] Note. The overall totals aggregate the response ratings across all 20 statements. Each criterion-level mean is based on 128 individual ratings, while the overall mean is based on 640 individual ratings.
+  [1230] The total number of individual ratings was 32 respondents × 20 statements = 640.
+  [1231] Therefore, the overall weighted mean was 2,899 ÷ 640 = 4.5297, rounded to 4.53 and interpreted as Strongly Agree.
+  [1284] The response export contains 32 submissions, consisting of 30 borrowers, one administrator, and one collector. The questionnaire contains 20 statements grouped into five criteria, with four statements assigned to each criterion. Therefore, 
+  [1298] 32 respondents × 20 statements = 640 ratings.
+  [1300] 2,899 ÷ 640 = 4.5297, rounded to 4.53.
+
+## 341 (4)
+  [710] Across all 20 questionnaire statements, the response totals were 341 Strongly Agree ratings, 297 Agree ratings, two Neutral ratings, and no Disagree or Strongly Disagree ratings. The total weighted score was 2,899 across 640 individual rati
+  [1229] (341 × 5) + (297 × 4) + (2 × 3) = 1,705 + 1,188 + 6 = 2,899.
+  [1294] The response export contained 341 Strongly Agree ratings, 297 Agree ratings, two Neutral ratings, and no Disagree or Strongly Disagree ratings across all 20 statements.
+  [1296] (341 × 5) + (297 × 4) + (2 × 3) = 1,705 + 1,188 + 6 = 2,899.
+
+## 297 (6)
+  [710] Across all 20 questionnaire statements, the response totals were 341 Strongly Agree ratings, 297 Agree ratings, two Neutral ratings, and no Disagree or Strongly Disagree ratings. The total weighted score was 2,899 across 640 individual rati
+  [1229] (341 × 5) + (297 × 4) + (2 × 3) = 1,705 + 1,188 + 6 = 2,899.
+  [1231] Therefore, the overall weighted mean was 2,899 ÷ 640 = 4.5297, rounded to 4.53 and interpreted as Strongly Agree.
+  [1294] The response export contained 341 Strongly Agree ratings, 297 Agree ratings, two Neutral ratings, and no Disagree or Strongly Disagree ratings across all 20 statements.
+  [1296] (341 × 5) + (297 × 4) + (2 × 3) = 1,705 + 1,188 + 6 = 2,899.
+  [1300] 2,899 ÷ 640 = 4.5297, rounded to 4.53.
+
+=== FRONT / OBJECTIVES ===
+[4] Financial Risk Assessment and Micro-Lending System (FRAMS)
+[6] A Capstone Project Presented to the Faculty of
+[7] College Department of
+[8] West Prime Horizon Institute, Inc.
+[9] Pagadian City
+[11] In Partial Fulfilment
+[12] of the Requirements in Capstone Project
+[13] for the Degree of Bachelor of Science in Information Technology
+[14] Academic Year 2025-2026
+[16] by:
+[17] Cabaraban, John Lloyd M.
+[18] Mandawe, Mark Rexben S.
+[19] Andulog, Joann R.
+[20] Luy, Angel Ann S.
+[22] Mr. Antonio Llagas Jr.
+[23] Adviser
+[24] October 23, 2026
+[25] CHAPTER I
+[26] INTRODUCTION
+[27] Background of Study
+[28] Many lending offices maintain borrower files, loan computations, and payment records using paper-based documents or separate spreadsheets. This practice makes it difficult to access and monitor essential information in o
+[29] Credit risk in micro-lending involves more than determining whether an individual qualifies for a loan. Local studies of lending institutions indicate that lending officers continue to rely on borrower interviews, busine
+[30] The system developed in this study is the Financial Risk Assessment and Micro-Lending System (FRAMS) for RJ and RR Finance Services, located at Purok San Francisco, Poblacion, Sominot, Zamboanga del Sur. The system regis
+[32] In addition to payments recorded at the lending office, FRAMS includes PayMongo Dynamic QR Ph. A collector starts the code for an assigned loan when the method is bank transfer or e-wallet. The borrower pays by scanning 
+[34] Therefore, this study focuses on developing a practical web-based system that integrates borrower management, loan application processing, eligibility assessment, loan approval, loan release, online and recorded payments
+[36] Statement of the Problem
+[37] The lending institution, RJ and RR Finance Services, faces challenges in managing borrower information, processing loan applications, monitoring repayments, and assessing borrower eligibility using manual records and sep
+[38] To address these concerns, the study aims to develop the Financial Risk Assessment and Micro-Lending System (FRAMS), a web-based application designed to centralize borrower records, support loan processing and eligibilit
+[40] Specifically, the study seeks to answer the following questions:
+[42] How can FRAMS improve the management of borrower information and loan applications?
+[44] How can FRAMS assist in assessing borrower eligibility using declared income, existing financial obligations, requested loan amount, loan term, and configured lending criteria without treating the assessment as an automa
+[46] How can FRAMS facilitate the monitoring of loan repayments, outstanding balances, installment schedules, and overdue accounts?
+[48] How can FRAMS support the delivery of notifications concerning loan application decisions, agreement acceptance, loan releases, and payment transactions?
+[50] How can FRAMS generate financial reports that support the monitoring of lending transactions and management decision-making?
+[52] How acceptable is the developed system in terms of functionality, usability, reliability, security, and performance based on the evaluation of its intended users?
+[53] Objectives of the Study
+[54] The general objective of this study is to design, develop, and evaluate a secure web-based Financial Risk Assessment and Micro-Lending System (FRAMS) for RJ and RR Finance Services to support borrower management, loan pr
+[55] Specifically, the study aims to:
+[56] Develop a borrower management module that supports borrower registration, administrator approval, client record management, online loan applications, and supporting document submission and review.
+[57] Implement a rule-based eligibility assessment that evaluates borrower information, declared income, existing financial obligations, requested loan amount, loan term, and configured lending criteria to assist the administ
+[58] Develop loan processing and repayment monitoring functions that support interest computation, installment schedule generation, loan agreement acceptance, collector assignment, loan release, payment recording, penalty com
+[59] Implement notifications for relevant loan application decisions, agreement updates, loan releases, and payment transactions, consistent with the notification functions available in the developed system.
+[60] Develop financial reporting functions that support the monitoring of loan releases, collections, outstanding balances, overdue accounts, and other relevant lending transactions.
+[61] Evaluate the developed system in terms of functionality, usability, reliability, security, and performance using the evaluation instrument and verified responses of the intended users.
+[63] Scope and Delimitations
+[64] This study covers the design, development, and evaluation of the Financial Risk Assessment and Micro-Lending System (FRAMS) for RJ and RR Finance Services, located at Purok San Francisco, Poblacion, Sominot, Zamboanga de
+[65] The system is intended for three primary user roles: administrator, collector, and borrower. Borrowers can register, submit loan applications, and provide the required supporting documents. Administrators manage borrower
+[66] FRAMS provides a rule-based eligibility estimate using borrower information, declared monthly income, existing financial obligations, employment or business duration, requested loan amount, loan term, and the configured 
+[67] The loan-amount field on the application form uses an HTML minimum of PHP 1,000 so that the browser can reject nonnumeric or negative entry. The eligibility function, however, still applies the configured policy minimum 
+[68] The eligibility estimate serves as a decision-support tool and does not automatically approve or reject a loan. The final approval decision remains under the administrator's authority. Dependents and collateral notes may
+[69] The system includes PayMongo Dynamic QR Ph for supported non-cash collection transactions. According to the selected implementation, an authorized collector initiates a QR payment for an assigned loan. The corresponding 
+[70] The study does not include credit bureau integration, SMS integration, loan restructuring, deposits, savings, or investment accounts. Although the system records relevant lending transactions, this study does not establi
+[71] The evaluation of FRAMS is limited to the respondents, evaluation instruments, testing procedures, and evidence documented in Chapter III and Chapter IV. The conclusions are therefore based on the verified implementation
+[72] Significance of Study
+[73] Lending office. FRAMS gives RJ and RR Finance Services one application for applications, eligibility review, release, collection, and reports, in place of disconnected files.
+[74] Administrators. The system supports approval of borrowers, review of documents, release of loans, assignment of collectors, and reading of dashboards and period reports.
+[75] Collectors. The system limits collection work to assigned clients and loans and provides the schedule and payment form for those accounts.
+[76] Borrowers. An approved borrower can apply, upload requirements, accept or decline the agreement, and view the loan, the schedule, and the payment history.
+[77] Educational institutions. The project may be used in teaching systems analysis, database design, and web development.
+[78] Future researchers. The study may be a reference for later work on micro-lending systems and rule-based eligibility estimates.
+[79] The researchers. The project provides practice in analysis, web development, database design, and the implementation of a lending workflow.

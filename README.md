@@ -185,7 +185,9 @@ GET payments_lending.php?action=fetch_loan&loan_id=<id>
 GET payments_lending.php?action=qrph_status&transaction_id=<id>
 ```
 
-The first returns loan details when the current user is authorized. The second returns only the current status of a QR Ph transaction and is restricted to staff authorized for its loan. PayMongo confirmation is handled by `paymongo_webhook_lending.php`; browser redirects and elapsed local expiry timers do not record repayments.
+The first returns loan details when the current user is authorized. The second is limited to an administrator, or to a collector assigned to that loan. While the QR page is open and the transaction is still pending, the page calls this endpoint immediately and then every five seconds. Each call retrieves that Payment Intent from PayMongo on the server. A repayment is posted only when the existing checks succeed: amount, currency, mode, Payment Intent status `succeeded`, and a nested paid QR Ph payment with a provider payment ID. The browser does not submit a paid status. Generating a QR code, a local expiry timer, or a report that an e-wallet was charged does not record a repayment.
+
+Nothing in the application reconciles pending QR payments in the background. If the QR page is closed first, a payment that already succeeded at PayMongo stays pending in FRAMS until an authorized staff member uses **Check with PayMongo** on the payments page, reopens that QR page, or runs the single-transaction command below.
 
 ## 9. Installation and Setup
 
@@ -236,27 +238,33 @@ php lending_system/tools/sync_loan_status_cli.php
 
 The repository does not contain verified default administrator credentials. Create or provision an active administrator account in the database through the project’s established data-management process; do not rely on the unsupported `admin/admin123` values from older documentation.
 
-### PayMongo QR Ph test-mode setup
+### PayMongo QR Ph
 
-PayMongo is restricted to test mode by this integration. Configure `PAYMONGO_SECRET_KEY`, `PAYMONGO_PUBLIC_KEY`, `PAYMONGO_MODE=test`, and `PAYMONGO_WEBHOOK_SECRET` in the server-side `.env` file. Obtain the webhook signing secret for the test-mode endpoint from PayMongo; do not put credentials in PHP, JavaScript, HTML, or source control.
+Configure `PAYMONGO_SECRET_KEY`, `PAYMONGO_PUBLIC_KEY`, and `PAYMONGO_MODE` (`test` or `live`) in the server-side `.env` file. Those three settings are what QR creation and payment-status checking use. Use `sk_test_` / `pk_test_` with `PAYMONGO_MODE=test` for development (PayMongo test simulation URL on the QR page; do not scan test QR codes with a real e-wallet app). Use `sk_live_` / `pk_live_` with `PAYMONGO_MODE=live` only when the PayMongo account is activated for live QR Ph. Optional `PAYMONGO_LIVE_MAX_AMOUNT=1` caps live QR Ph amounts during go-live testing. Do not put credentials in PHP, JavaScript, HTML, or source control.
 
-Before applying the database changes, take and verify a backup of the existing database. Apply `database/migrations/20261014_create_paymongo_qrph_transactions.sql`, then `database/migrations/20261014_add_paymongo_qrph_webhooks.sql`, using the project’s MariaDB migration procedure. If a DDL statement fails, inspect the schema for partial changes before retrying; MariaDB DDL may commit each statement independently. These migrations add QR transaction/audit structures and a nullable payment link; they are not run automatically by the application.
+QR creation runs from this XAMPP site. PayMongo does not need a public URL to issue the QR. After the QR page opens, FRAMS polls `GET /v1/payment_intents/{id}` from the server immediately and every five seconds while that page stays open and the row is pending. The repayment, receipt, and loan balance update run only after `lendingPaymongoQrphInterpretIntent()` accepts the retrieved intent. A mismatch of amount, currency, or mode stays `review_required` and does not post. There is no background job that polls PayMongo for every pending row.
 
-Configure a test-mode PayMongo webhook to reach:
+If staff close the QR page before a successful check, a charge that already succeeded at PayMongo can remain `pending` in `paymongo_qrph_transactions`. The loan balance stays unchanged until one of these happens:
 
-```text
-https://<public-test-host>/lending_system/paymongo_webhook_lending.php
-```
-
-Subscribe to the documented `payment.paid`, `payment.failed`, and `qrph.expired` events. For local testing, use a temporary HTTPS tunnel and configure its URL in PayMongo. The handler only posts repayments for verified, matching `payment.paid` events. The current official webhook event reference does not provide a `qrph.expired` resource example or matching identifier, so that event is audited without changing local transaction status. A QR whose displayed expiry time has passed therefore remains unresolved; do not create a replacement QR or record a manual payment for that loan. Staff must reconcile an ambiguous attempt against the PayMongo dashboard before any manual database intervention.
-
-Run the local helper checks with:
+1. An administrator, or a collector assigned to that loan, opens Payments and clicks **Check with PayMongo** on that pending row. That button checks only the selected transaction. It uses the same `lendingReconcilePaymongoQrphTransaction()` function as the QR page. It does not trust a status typed in the browser.
+2. Staff reopen `payments_lending.php?qrph=<transaction_id>`. The existing five-second poll starts again.
+3. Someone runs the CLI for that one transaction ID, from this machine:
 
 ```text
-C:\xampp\php\php.exe lending_system\tools\paymongo_webhook_smoke_test.php
+C:\xampp\php\php.exe lending_system\tools\paymongo_qrph_list_open_cli.php
+C:\xampp\php\php.exe lending_system\tools\paymongo_qrph_list_open_cli.php <loan_id>
+C:\xampp\php\php.exe lending_system\tools\paymongo_qrph_reconcile_cli.php <transaction_id>
 ```
 
-These checks do not contact PayMongo or post repayments. Follow PayMongo’s current test-mode QR instructions when exercising provider behavior; do not use a production key or scan a test QR with real funds.
+`paymongo_qrph_list_open_cli.php` prints up to 50 `pending` and `review_required` rows as JSON. An optional loan ID filters the list. It does not call PayMongo and does not change rows. `paymongo_qrph_reconcile_cli.php` requires one numeric transaction ID and calls `lendingReconcilePaymongoQrphTransaction()` for that row only. Both scripts answer HTTP 404 when they are not run from the command line. Neither script loops over every pending payment by itself.
+
+Before applying the database changes, take and verify a backup of the existing database. Apply `database/migrations/20261014_create_paymongo_qrph_transactions.sql`, then `database/migrations/20261014_add_paymongo_qrph_webhooks.sql`, using the project’s MariaDB migration procedure. If a DDL statement fails, inspect the schema for partial changes before retrying; MariaDB DDL may commit each statement independently. These files add the QR transaction table, the payment link, and related columns. They are not run automatically by the application. Applying them does not register an outside notification address and is not a setup step for payment confirmation.
+
+While a pending QR page is open, the status check also marks the row expired only when the QR was issued, the stored validity window has passed, and the retrieved Payment Intent is unpaid. A browser timer alone never expires a transaction or posts a repayment. A failed QR creation does not stay pending, so it does not block the next attempt. An amount, currency, mode, or borrower mismatch stays in `review_required` and does not post a repayment.
+
+Administrators and collectors can start a Dynamic QR Ph payment from the same payment collection form (E-Wallet or Bank Transfer). Collectors remain limited to assigned loans; administrators may initiate QR collection for any active loan. The same assignment rule applies to **Check with PayMongo**. Cash and manual recording on the payment form are unchanged. Bank Transfer and E-Wallet on the loan details page are still manual ledger entries; they do not create a PayMongo QR.
+
+Follow PayMongo’s current test-mode QR instructions when exercising provider behavior; do not use a production key or scan a test QR with real funds. Successful QR creation and a completed live or test-mode wallet payment were not part of the local checks recorded for this README.
 
 ## 10. How to Use
 

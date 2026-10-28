@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Captured webhook responses</title>
+<style>
+body { font-family: Arial, sans-serif; margin: 32px; color: #1f2937; }
+h1 { font-size: 22px; }
+p { max-width: 760px; }
+table { border-collapse: collapse; width: 760px; }
+th, td { border: 1px solid #d1d5db; padding: 8px 10px; text-align: left; }
+th { background: #1f4e79; color: white; }
+code { font-family: Consolas, monospace; }
+</style>
+</head>
+<body>
+<h1>Local webhook responses</h1>
+<p>These are the HTTP responses returned by the isolated FRAMS endpoint paymongo_webhook_lending.php. They are not deliveries from PayMongo.</p>
+<table>
+<tr><th>Check</th><th>HTTP</th><th>Response body</th></tr>
+<tr><td>Valid current test-mode signature, first delivery</td><td>200</td><td><code>{"received":true,"status":"processed"}</code></td></tr>
+<tr><td>Same event delivered again</td><td>200</td><td><code>{"received":true,"status":"duplicate"}</code></td></tr>
+<tr><td>No signature</td><td>401</td><td><code>{"received":false,"status":"invalid_signature"}</code></td></tr>
+<tr><td>Incorrect signature</td><td>401</td><td><code>{"received":false,"status":"invalid_signature"}</code></td></tr>
+<tr><td>Timestamp older than five minutes</td><td>401</td><td><code>{"received":false,"status":"invalid_signature"}</code></td></tr>
+</table>
+</body>
+</html>

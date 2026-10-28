@@ -634,21 +634,106 @@ function reportPdfEscape(string $text): string
     return str_replace(['\\', '(', ')'], ['\\\\', '\\(', '\\)'], $ascii);
 }
 
-function reportPdfFormatCell(mixed $value): string
+function reportPdfNormalizeMoneyText(string $text): string
 {
-    if (is_int($value) || is_float($value)) {
-        return 'PHP ' . number_format((float)$value, 2);
+    return str_replace(["\u{20B1}", '₱'], 'PHP ', $text);
+}
+
+function reportPdfValueAlreadyFormatted(string $text): bool
+{
+    return $text !== ''
+        && (str_contains($text, 'PHP')
+            || str_contains($text, '₱')
+            || str_contains($text, "\u{20B1}")
+            || str_contains($text, '%'));
+}
+
+function reportPdfHeaderKind(string $header): string
+{
+    $header = strtolower(trim($header));
+    if ($header === '') {
+        return 'text';
     }
-    if (is_string($value) && is_numeric($value) && !preg_match('/^\d{4}-\d{2}-\d{2}/', $value)) {
+
+    $moneyHints = [
+        'php', 'amount', 'collected', 'principal', 'payable', 'outstanding',
+        'borrowed', 'collection', 'expense', 'expenses', 'net', 'revenue',
+        'disburs', 'balance',
+    ];
+    foreach ($moneyHints as $hint) {
+        if (str_contains($header, $hint)) {
+            return 'money';
+        }
+    }
+
+    $countHints = ['count', 'payments', 'loans', 'borrowers', 'active', 'overdue'];
+    foreach ($countHints as $hint) {
+        if ($header === $hint || str_contains($header, $hint)) {
+            return 'count';
+        }
+    }
+
+    return 'text';
+}
+
+function reportPdfFormatCount(mixed $value): string
+{
+    if (is_numeric($value) && !preg_match('/^\d{4}-\d{2}-\d{2}/', (string)$value)) {
+        return number_format((int)round((float)$value));
+    }
+
+    $text = trim((string)$value);
+    return $text === '' ? '0' : $text;
+}
+
+function reportPdfFormatMoney(mixed $value): string
+{
+    if (is_numeric($value) && !preg_match('/^\d{4}-\d{2}-\d{2}/', (string)$value)) {
         return 'PHP ' . number_format((float)$value, 2);
     }
 
     $text = trim((string)$value);
     if ($text === '') {
-        return '-';
+        return 'PHP 0.00';
     }
 
-    return str_replace(["\u{20B1}", '₱'], 'PHP ', $text);
+    return reportPdfNormalizeMoneyText($text);
+}
+
+function reportPdfFormatCell(mixed $value, string $kind = 'text'): string
+{
+    $text = trim((string)$value);
+    if ($text === '') {
+        return $kind === 'count' ? '0' : '-';
+    }
+    if (reportPdfValueAlreadyFormatted($text)) {
+        return reportPdfNormalizeMoneyText($text);
+    }
+
+    return match ($kind) {
+        'money' => reportPdfFormatMoney($value),
+        'count' => reportPdfFormatCount($value),
+        default => $text,
+    };
+}
+
+function reportPdfFormatMetricValue(mixed $value): string
+{
+    $text = trim((string)$value);
+    if ($text === '') {
+        return '-';
+    }
+    if (reportPdfValueAlreadyFormatted($text)) {
+        return reportPdfNormalizeMoneyText($text);
+    }
+    if (preg_match('/^-?\d+$/', $text) === 1) {
+        return number_format((int)$text);
+    }
+    if (is_numeric($text) && preg_match('/^\d{4}-\d{2}-\d{2}/', $text) !== 1) {
+        return reportPdfFormatMoney($text);
+    }
+
+    return $text;
 }
 
 function reportPdfTruncate(string $text, int $maxLen): string
@@ -934,7 +1019,7 @@ final class LendingReportPdfBuilder
                 $this->strokeRect($x, $rowBottom, $tileWidth, $tileHeight);
                 $this->drawText(reportPdfTruncate((string)($tile['label'] ?? ''), 20), $x + 8, $rowTop - 14, 8, true);
                 $this->drawText(
-                    reportPdfTruncate(reportPdfFormatCell($tile['value'] ?? ''), 18),
+                    reportPdfTruncate(reportPdfFormatMetricValue($tile['value'] ?? ''), 22),
                     $x + 8,
                     $rowTop - 32,
                     11,
@@ -1011,8 +1096,10 @@ final class LendingReportPdfBuilder
                 $this->drawVerticalLine($x, $bottom, $top);
             }
 
+            $columnKinds = [];
             $x = self::CONTENT_LEFT;
             for ($i = 0; $i < $columnCount; $i++) {
+                $columnKinds[$i] = reportPdfHeaderKind($headers[$i] ?? '');
                 $this->drawText(reportPdfTruncate($headers[$i], 22), $x + 6, $top - 13, 9, true);
                 $x += $columnWidths[$i];
             }
@@ -1023,7 +1110,7 @@ final class LendingReportPdfBuilder
                 $cells = array_values(is_array($row) ? $row : []);
                 $x = self::CONTENT_LEFT;
                 for ($i = 0; $i < $columnCount; $i++) {
-                    $cell = reportPdfFormatCell($cells[$i] ?? '');
+                    $cell = reportPdfFormatCell($cells[$i] ?? '', $columnKinds[$i] ?? 'text');
                     $this->drawText(reportPdfTruncate($cell, 22), $x + 6, $currentTop - 11, 8, false);
                     $x += $columnWidths[$i];
                 }

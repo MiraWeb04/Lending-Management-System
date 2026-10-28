@@ -1,0 +1,64 @@
+paras 1332 tables 24
+[834] CHAPTER V
+[835] SUMMARY, CONCLUSIONS, AND RECOMMENDATIONS
+[836] Summary of Findings
+[837] This study designed and developed the Financial Risk Assessment and Micro-Lending System (FRAMS) for RJ and RR Finance Services. The locally hosted web application uses PHP and MySQL to organize borrower registration, loan applications, eligibility assessment, agreements, loan release, installment s
+[838] Borrowers can register and, after administrator approval, submit loan applications with the required supporting documents. The eligibility estimate uses declared income, existing financial obligations, the requested loan amount, the loan term, and configured lending criteria, including the debt-to-i
+[839] The literature reviewed in Chapter II provides context for FRAMS through discussions of manual credit assessment, microfinance operations, and predictive scoring approaches. Unlike systems that use machine learning to predict default, FRAMS applies configured eligibility rules to assess borrower inf
+[840] The User Acceptance Testing (UAT) response export contained 32 submissions, consisting of 30 borrowers, one administrator, and one collector. The evaluation instrument contained 20 statements grouped into five criteria: functionality, usability, reliability, security, and performance. Each criterion
+[841] The calculated weighted means were 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean was 4.53, interpreted as Strongly Agree under the five-point Likert scale adopted in Chapter III. These results indicate that th
+[842] Conclusions
+[843] In relation to the first specific objective, FRAMS provides a borrower management module that supports registration, administrator approval, client records, online loan applications, and supporting document submission and review.
+[844] In relation to the second specific objective, FRAMS computes a rule-based eligibility estimate from declared income, existing obligations, requested amount, loan term, and configured limits. The estimate is a decision-support result and does not automatically approve or reject a loan.
+[845] In relation to the third specific objective, FRAMS supports interest computation, installment schedules, loan agreement acceptance, collector assignment, loan release, payment recording, penalty computation, and repayment monitoring. PayMongo QR Ph repayments are recorded after Payment Intent confir
+[846] In relation to the fourth specific objective, FRAMS sends in-application notifications for relevant application decisions, agreement updates, loan releases, and payment transactions, consistent with the notification functions available in the developed system.
+[847] In relation to the fifth specific objective, FRAMS generates financial reports that support monitoring of loan releases, collections, outstanding balances, overdue accounts, and related lending transactions.
+[848] In relation to the sixth specific objective, 32 intended users evaluated FRAMS. The supplied workbook contains 30 borrowers, one administrator, and one collector, each of whom answered 20 questionnaire items. The overall weighted mean was 4.53, interpreted as Strongly Agree. These ratings are user p
+[849] The documented technical tests support the specific cases examined in their documented environments. Passing those cases does not establish that the entire system is free of defects. Local PayMongo simulations do not independently demonstrate a successful external PayMongo charge or a provider-deliv
+[850] The conclusions of this study are therefore limited to the system functions implemented, the documented technical tests, and the recorded user evaluation responses.
+[851] Recommendations
+[852] Based on the system’s current scope and the limitations identified in the study, the researchers recommend the following, in order of priority.
+[853] 1. Establish a database backup and recovery procedure. Schedule regular MySQL backups of the production database and document how authorized personnel can restore a backup. Confirm the deployed database name before using it in any restore instructions.
+[854] 2. Improve auditability by recording important actions—such as account approvals, loan releases, payment edits, and role changes—in a dedicated activity log.
+[855] 3. Protect financial integrity by retaining the implemented payment-validation rules, Payment Intent confirmation for QR Ph collections, and the restriction against deleting a payment that is linked to a PayMongo QR Ph transaction. Reconcile pending QR attempts that remain open after the QR page is 
+[856] 4. Keep the debt-to-income limit, minimum and maximum loan amounts, interest rate, and penalty rates in controlled configuration so approved policy changes do not require undocumented edits to application files.
+[857] 5. Develop an administrator settings page, in a later enhancement, that allows authorized personnel to update loan limits and penalty rates, with validation and an audit trail. This page is not part of the current implementation.
+[858] 6. SMS notifications may be added later if the lending office needs them and can support the cost. They are not implemented in the current system.
+[859] 
+[860] 
+[861] 
+[862] 
+[863] 
+[864] 
+[865] 
+[866] 
+[867] 
+[868] 
+[869] 
+[870] References
+[871] The following references are presented in APA 7th edition format.
+[872] Bazarbash, M., & Beaton, K. (2020). Filling the gap: Digital credit and financial inclusion (IMF Working Paper No. WP/20/150). International Monetary Fund. https://doi.org/10.5089/9781513552477.001
+
+=== NEEDLES ===
+'28 borrowers': paras []
+'three collectors': paras []
+'I am monthly': paras []
+'Khandani et al. (2018)': paras []
+'Figure L1': paras []
+'subject to confirmation': paras []
+'A.1': paras []
+'October 15': paras []
+'eligibility estimates assigns': paras []
+'FRAMS differ from': paras []
+'one rating per respondent': paras []
+'4.81 for functionality': paras []
+'installation script that creates every table was not found': paras [625]
+
+=== APPENDIX L ===
+[1325] APPENDIX L
+[1327] This appendix supplies the reproducible database documentation requested for the operational FRAMS database. A structure-only dump of lending_management, without table-row data and without credentials, is saved as FRAMS_APPENDIX_L_Database_Schema.sql. The dump was generated from the local MariaDB instance used by the implemented system.
+[1328] Installation procedure. Create an empty MySQL or MariaDB database named lending_management, or another name supplied in the application configuration. Import FRAMS_APPENDIX_L_Database_Schema.sql. Configure the host, database name, user, and password in the application environment. Place the application under the web server document root and open the staff or borrower login. After import, some feat
+
+=== BOUNDARY ===
+[67] The loan-amount field on the application form uses an HTML minimum of PHP 1,000 so that the browser can reject nonnumeric or negative entry. The eligibility function, however, still applies the configured policy minimum of PHP 3,000 and blocks a requested amount below that limit. Appendix K, Figure K1, shows the frontend numeric-entry message and should not be read as a change to the policy minimu
+[584] When available payment capacity is zero or negative, the maximum affordable new payment is stored as zero, the maximum principal is zero, and the estimate is Not Eligible because that principal is below the minimum loan amount. If proposed debt-to-income and the principal limit both fail, both reasons are recorded, and the stored status is Not Eligible; the debt-to-income failure is applied first 

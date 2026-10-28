@@ -1,0 +1,179 @@
+C:\Users\HomePC\Downloads\FRAMS\FRAMS_REVISED_MANUSCRIPT_FINAL.docx
+
+===== T1 6x2 =====
+R0: Weighted Mean Range || Verbal Interpretation
+R1: 4.21–5.00 || Strongly Agree
+R2: 3.41–4.20 || Agree
+R3: 2.61–3.40 || Neutral
+R4: 1.81–2.60 || Disagree
+R5: 1.00–1.80 || Strongly Disagree
+
+===== T7 7x6 =====
+R0: Test ID || Test Scenario || Expected Result || Actual Result || Status || Evidence Reference
+R1: UT-01 || Valid Login || The system authenticates the user and redirects them to the dashboard corresponding to their assigned role. || The valid login process opened the dashboard corresponding to the user's assigned role. || PASS || Figure B1
+R2: UT-02 || Incorrect Password or Inactive Account || The system denies access when the user enters an incorrect password or attempts to access an inactive account. || The system denied access to the invalid or inactive account. || PASS || Figure B2
+R3: UT-03 || Register a new borrower with complete and valid account details. || The borrower is listed on Borrower Approval with verification status Pending and account status Pending Approval. || Borrower #34, Honey Jane Comaling, appeared on Borrower Approval with verification status Pending and account status Pending Approval. || PASS || Figure B3
+R4: UT-04 || Loan Details Exceed DTI or Loan Limits || The system prevents the application from proceeding when the configured debt-to-income (DTI) or loan limits are exceeded. || The system blocked the application that exceeded the configured limit. || PASS || Figure B4
+R5: UT-05 || Valid JPG, PNG, and PDF selection || The requirements step accepts the selected JPG, PNG, and PDF files and shows each file as selected. || Step 4 showed a PDF, a JPG, and a PNG selected for the government ID, proof of income, proof of billing, and selfie. Each card was marked selected and labeled JPG, PNG, or PDF. || PASS || Figure B5
+R6: UT-06 || Invalid Payment Amount || The payment is rejected and is not stored. || The Record Payment page for loan RJRR-LOAN-2026-900008 showed “Payment amount cannot exceed the total amount due of ₱5,749.00 (balance + penalties).” The excess payment was not saved. || PASS || Figure B6
+
+===== T10 12x6 =====
+R0: Test Case ID || Description || Test Steps || Expected Result || Actual Result || Remarks
+R1: PM-01 || Verify safe handling when PayMongo rejects QR Ph creation. || 1. Open Record Payment. 2. Select FRAMS-DISP-01 and E-Wallet. 3. Submit the request and inspect the response. || If QR creation is rejected, FRAMS should show an error, display no QR code, and create no repayment. || PayMongo returned HTTP 401 for the isolated test key. The QR page did not open, no QR image was displayed, no repayment was created, and the loan remained Active. || PASSED — Figure B26 shows the rejected request and the safe-failure screen.
+R2: PM-02 || Verify the payment form after QR generation fails. || 1. Attempt E-Wallet QR creation for FRAMS-DISP-01. 2. Inspect the page after the failed request. || The form should remain available without QR details, and the loan balance should remain unchanged. || The Record Payment screen remained open without a QR image, QR amount, QR method block, or expiry. The displayed remaining balance stayed at PHP 3,150.00. || PASSED — Figure B27 shows the form after the failed QR request.
+R3: PM-03 || Verify QR creation controls when Cash is selected. || 1. Open Record Payment. 2. Select Cash. 3. Inspect the available actions. || The Create Dynamic QR Ph action should not be available for Cash payments. || With Cash selected, the Create Dynamic QR Ph button was hidden or disabled, while Cancel and Record Payment remained available. || PASSED — Figure B28 shows the Cash selection and available actions.
+R4: PM-04 || Verify validation of blank, zero, and nonnumeric payment amounts. || 1. Submit a blank amount. 2. Submit zero. 3. Submit a nonnumeric value. 4. Inspect each validation response. || Blank input should trigger required-field validation; zero and nonnumeric amounts should be rejected with validation messages. || Blank input was stopped by browser validation. Zero returned “Payment amount must be greater than zero.” The nonnumeric value returned “Enter a valid payment amount.” || PASSED — Figure B29(a) and B29(b) show zero and nonnumeric validation. The blank-input result is recorded in the test result.
+R5: PM-05 || Verify rejection of an amount exceeding the current total due. || 1. Open Record Payment for FRAMS-DISP-01. 2. Enter an amount greater than PHP 3,150.00. 3. Submit and inspect the response. || FRAMS should reject an amount greater than the current total amount due. || FRAMS displayed “Payment cannot exceed the current total amount due of ₱3,150.00.” || PASSED — Figure B30 shows the excessive-amount validation message.
+R6: PM-06 || Verify collector assignment restrictions for payment requests. || 1. Sign in as a collector. 2. Attempt a payment request for a loan assigned to another collector. 3. Inspect the response. || FRAMS should reject a collector’s request for a loan not assigned to that collector. || FRAMS displayed “You are not assigned to this loan.” The loan was not available in the displayed selection. || PASSED — Figure B31 shows the loan-assignment restriction message.
+R7: PM-07 || Verify authentication restrictions on the staff payment area. || 1. Sign out. 2. Attempt to open the protected staff payments page. 3. Observe the page shown. || An unauthenticated visitor should be redirected to the staff sign-in page. || The staff sign-in page was displayed. The supplied evidence documents the signed-out redirection; it does not independently show borrower role restrictions. || PASSED — Figure B32 supports the unauthenticated-access check shown in the evidence.
+R8: PM-08 || Verify handling of an unresolved prior QR Ph attempt. || 1. Open Record Payment for FRAMS-TEST-A. 2. Select E-Wallet. 3. Attempt another QR Ph request while the earlier attempt cannot be confirmed. 4. Inspect the response and displayed balance. || FRAMS should refuse a new attempt when the previous QR Ph transaction cannot be confirmed. || FRAMS displayed “The previous PayMongo QR Ph attempt could not be confirmed with PayMongo. Try again in a moment or open the QR status page first.” The displayed balance was PHP 3,833.34. || PASSED — Figure B33 shows the blocked attempt and error message.
+R9: PM-09 || Verify the receipt details for a recorded E-Wallet repayment. || 1. Open the receipt for the recorded repayment. 2. Check receipt number, payment method, amount, and balances. || The receipt should display the recorded repayment details and the balance after payment. || The receipt showed RJRR-20261018-000004, E-Wallet, PHP 100.00 paid, PHP 3,150.00 before payment, and PHP 3,050.00 remaining. The recorded event was generated through a local simulation, not a live Pay || PASSED — Figure B34 supports receipt display and repayment details; it does not prove receipt of live funds by PayMongo.
+R10: PM-10 || Verify that a recorded repayment appears in Payments Management. || 1. Open Payments Management. 2. Locate the displayed E-Wallet payment. 3. Check the payment ID, borrower, loan ID, amount, method, reference, and collector. || The payment list should display the recorded payment and its visible transaction details. || The screenshot showed Payment ID 46 for Synthetic Borrower A, Loan ID 31, PHP 100.00, E-Wallet, reference `pay_frams_pm09_once`, and FRAMS Test Collector. || PASSED — Figure B35 supports display of the payment record only; it does not demonstrate Payment Intent polling or staff-initiated Check with PayMongo.
+R11: PM-12 || Verify that the Payments Management page displays payment summaries and payment entries. || 1. Open Payments Management. 2. Review the selected period and summary cards. 3. Inspect the visible payment list and its transaction entry. || The page should display the selected reporting period, payment summary information, and recorded payment entries. || The screenshot showed October 2026, collected and all-time collection totals of PHP 10,516.66, four payments for the period, and Payment ID 46 for PHP 100.00 in the list. || PASSED — Figure B37 supports the displayed summary cards and payment list; it does not test payment deletion restrictions.
+
+===== T12 7x5 =====
+R0: Testing Level || Test Cases || Passed || Failed || Remarks
+R1: Unit testing || 6 || 6 || 0 || All 6 unit cases passed. Figures B1–B6 match the expected results, including Pending Approval for UT-03.
+R2: Integration testing || 7 || 7 || 0 || All 7 integration cases passed. Figures B7–B13 match the expected results, including the approval list for IT-02.
+R3: System Testing || 12 || 12 || 0 || All 12 system cases passed. Figures B14–B25 match the expected results.
+R4: PayMongo Testing || 11 || 11 || 0 || 11/11 official cases passed in the isolated test environment. PM-01/02 verified safe rejection with an invalid test key. PM-09/10 document receipt and payment-list display for a stored record. The for
+R5: Penetration Testing || 12 || 12 || 0 || 12/12 controlled security checks passed in the isolated test environment. See Figures B38–B49.
+R6: Total || 48 || 48 || 0 || 48 listed official test cases passed: 6 unit, 7 integration, 12 system, 11 PayMongo-related, and 12 penetration/security cases. Figure B36 is excluded from the official PayMongo count.
+
+===== T13 7x3 =====
+R0: Criterion || Weighted mean || Interpretation
+R1: Functionality || 4.56 || Strongly Agree
+R2: Usability || 4.54 /  || Strongly Agree
+R3: Reliability || 4.56 /  || Strongly Agree
+R4: Security || 4.46 /  || Strongly Agree
+R5: Performance || 4.52 /  || Strongly Agree
+R6: Overall Mean || 4.53 /  || Strongly Agree
+
+===== T19 7x9 =====
+R0: Criterion /  || f(5) || f(4) || f(3) || f(2) || f(1) || N || Weighted Score /  || Weighted mean
+R1: Functionality || 72 || 56 || 0 || 0 || 0 || 128 || 584 || 4.5625
+R2: Usability || 70 || 57 || 1 || 0 || 0 || 128 || 581 || 4.5391
+R3: Reliability || 72 || 56 || 0 || 0 || 0 || 128 || 584 || 4.5625
+R4: Security || 59 || 69 || 0 || 0 || 0 || 128 || 571 || 4.4609
+R5: Performance || 68 || 59 || 1 || 0 || 0 || 128 || 579 || 4.5234
+R6: Overall || 341 || 297 || 2 || 0 || 0 || 640 || 2,899 || 4.5297
+
+===== T20 7x6 =====
+R0: Testing level || Documented cases || Passed || Failed || Not yet tested || Blocked / needs setup
+R1: Unit testing || 6 || 6 || 0 || 0 || 0
+R2: Integration testing || 7 || 7 || 0 || 0 || 0
+R3: System testing || 12 || 12 || 0 || 0 || 0
+R4: PayMongo testing || 11 || 11 || 0 || 0 || 0
+R5: Penetration testing || 12 || 12 || 0 || 0 || 0
+R6: Total || 48 || 48 || 0 || 0 || 0
+
+===== T22 7x9 =====
+R0: Evaluation Criterion /  || f(5) || f(4) || f(3) || f(2) || f(1) || N || Weighted Score /  || Weighted mean
+R1: Functionality || 72 || 56 || 0 || 0 || 0 || 128 || 584 || 4.5625
+R2: Usability || 70 || 57 || 1 || 0 || 0 || 128 || 581 || 4.5391
+R3: Reliability || 72 || 56 || 0 || 0 || 0 || 128 || 584 || 4.5625
+R4: Security || 59 || 69 || 0 || 0 || 0 || 128 || 571 || 4.4609
+R5: Performance || 68 || 59 || 1 || 0 || 0 || 128 || 579 || 4.5234
+R6: Overall || 341 || 297 || 2 || 0 || 0 || 640 || 2,899 || 4.5297
+
+===== T23 11x4 =====
+R0: Test ID || Validation area || Reported result || Evidence status
+R1: FC-01a–c || Flat-interest calculation || Expected and actual centavo values matched. || Passed in supplied automated report
+R2: FC-02a || Monthly installment schedule || Installments total 11,500.00; final installment 3,833.34. || Passed in supplied automated report
+R3: FC-02b || Weekly installment schedule || Installments total 11,500.00. || Passed in supplied automated report
+R4: FC-02c || Public calculator consistency || Flat-interest quote aligned with loan engine; 100,000.00 over 12 months shows regular installment 13,333.33, final installment 13,333.37, total payable 160,000.00. || Passed in supplied automated report; report notes browser evidence separately
+R5: FC-03–05c || Partial payment, penalty split, centavo allocation || Partial balance and penalty allocation matched expected values; monthly and weekly schedules total 11,500.00. || Passed in supplied automated report
+R6: FC-06a–c || DTI boundary || 40.00% and 38.67% were Eligible; 41.33% was Not Eligible. || Passed in supplied automated report
+R7: FC-07a–e / FC-08 || Affordability and requested principal limits || DTI-safe principal respected; requests above affordability were not treated as eligible; maximum principal capped at 500,000.00. || Passed in supplied automated report
+R8: FC-09 / FC-10a–b || Payment balance and payment validation || Partial and multiple payments updated balance; exact payoff set loan status to Paid; zero, negative, and over-limit payments were rejected. || Passed in supplied automated report
+R9: FC-10c–f || Invalid principal and loan term || Negative principal, zero-month term, and negative term rejected at calculation boundary; zero principal remains zero payable. || Passed in supplied automated report
+R10: FC-11 || Portfolio outstanding balance || Outstanding balance reflects total payable less recorded scheduled payments; paid loans show zero. || Passed in supplied automated report
+
+=== T21 first 3 rows ===
+28x11
+R0: ['Strongly Agree', 'Strongly Agree', 'Agree', 'Agree', 'Neutral', 'Neutral', 'Neutral', 'Disagree', 'Disagree', 'Strongly Disagree', 'Strongly Disagree']
+R1: ['5', '5', '4', '4', '3', '3', '3', '2', '2', '1', '1']
+R2: ['No.', 'Evaluation Statement', 'Evaluation Statement', 'SA (5)', 'SA (5)', 'A (4)', 'N (3)', 'N (3)', 'D (2)', 'D (2)', 'SD (1)']
+
+=== OBJECTIVES / SOP / CONCLUSIONS ===
+[27] Background of Study
+[36] Statement of the Problem
+[40] Specifically, the study seeks to answer the following questions:
+[42] How can FRAMS improve the management of borrower information and loan applications?
+[44] How can FRAMS assist in assessing borrower eligibility using declared income, existing financial obligations, requested loan amount, loan term, and configured lending criteria without treating the assessment as an automatic loan approval?
+[46] How can FRAMS facilitate the monitoring of loan repayments, outstanding balances, installment schedules, and overdue accounts?
+[48] How can FRAMS support the delivery of notifications concerning loan application decisions, agreement acceptance, loan releases, and payment transactions?
+[50] How can FRAMS generate financial reports that support the monitoring of lending transactions and management decision-making?
+[53] Objectives of the Study
+[55] Specifically, the study aims to:
+[56] Develop a borrower management module that supports borrower registration, administrator approval, client record management, online loan applications, and supporting document submission and review.
+[57] Implement a rule-based eligibility assessment that evaluates borrower information, declared income, existing financial obligations, requested loan amount, loan term, and configured lending criteria to assist the administrator in reviewing loan applications.
+[58] Develop loan processing and repayment monitoring functions that support interest computation, installment schedule generation, loan agreement acceptance, collector assignment, loan release, payment recording, penalty computation, and monitoring of outstanding balances.
+[59] Implement notifications for relevant loan application decisions, agreement updates, loan releases, and payment transactions, consistent with the notification functions available in the developed system.
+[60] Develop financial reporting functions that support the monitoring of loan releases, collections, outstanding balances, overdue accounts, and other relevant lending transactions.
+[61] Evaluate the developed system in terms of functionality, usability, reliability, security, and performance using the evaluation instrument and verified responses of the intended users.
+[63] Scope and Delimitations
+[724] In relation to the problem stated in Chapter I, FRAMS centralizes borrower registration, loan requests, eligibility estimates, agreements, released loans, installment schedules, and payment records in one database. Collectors access assigned accounts, while administrators manage approval, release, expenses, penalties, and reports. The estimate supp
+[834] CHAPTER V
+[836] Summary of Findings
+[842] Conclusions
+[843] In relation to the first specific objective, FRAMS provides a borrower management module that supports registration, administrator approval, client records, online loan applications, and supporting document submission and review.
+[844] In relation to the second specific objective, FRAMS computes a rule-based eligibility estimate from declared income, existing obligations, requested amount, loan term, and configured limits. The estimate is a decision-support result and does not automatically approve or reject a loan.
+[845] In relation to the third specific objective, FRAMS supports interest computation, installment schedules, loan agreement acceptance, collector assignment, loan release, payment recording, penalty computation, and repayment monitoring. PayMongo QR Ph repayments are recorded after Payment Intent confirmation through status polling on the open QR page 
+[846] In relation to the fourth specific objective, FRAMS sends in-application notifications for relevant application decisions, agreement updates, loan releases, and payment transactions, consistent with the notification functions available in the developed system.
+[847] In relation to the fifth specific objective, FRAMS generates financial reports that support monitoring of loan releases, collections, outstanding balances, overdue accounts, and related lending transactions.
+[848] In relation to the sixth specific objective, 32 intended users evaluated FRAMS. The supplied workbook contains 30 borrowers, one administrator, and one collector, each of whom answered 20 questionnaire items. The overall weighted mean was 4.53, interpreted as Strongly Agree. These ratings are user perceptions of acceptability and are not independen
+[851] Recommendations
+
+=== T7 unit IDs ===
+Test ID | Test Scenario | Status | Evidence Reference
+UT-01 | Valid Login | PASS | Figure B1
+UT-02 | Incorrect Password or Inactive Account | PASS | Figure B2
+UT-03 | Register a new borrower with complete and valid account details. | PASS | Figure B3
+UT-04 | Loan Details Exceed DTI or Loan Limits | PASS | Figure B4
+UT-05 | Valid JPG, PNG, and PDF selection | PASS | Figure B5
+UT-06 | Invalid Payment Amount | PASS | Figure B6
+
+=== CITATIONS vs REFS ===
+sample cites count 22
+  Batista and Montero (2020)
+  Bazarbash and Beaton (2020)
+  BlueOrchard (2025)
+  Campos (2024)
+  Chen and Li (2023)
+  Chen et al. (2021)
+  Davis (1989)
+  DeLone and McLean (2003)
+  Estrellado (2024)
+  Frost et al. (2024)
+  Ghosh et al. (2023)
+  Juszczak et al. (2022)
+  Juventud et al. (2023)
+  Khandani et al. (2010)
+  Kou et al. (2022)
+  LendStack (2025)
+  Lopez and Martinez (2024)
+  Mina (2024)
+  Penaso and Dagang (2025)
+  Rahman and Hasan (2025)
+  Ramirez (2024)
+  Santos (2023)
+
+=== REFS START ===
+[130] Bazarbash and Beaton (2020) examined fintech micro-lending in emerging economies and discussed how automated scoring and alternative data, including transaction-related information, may support financ
+[132] Ghosh et al. (2023) discussed predictive analytics for identifying potential delinquency in microfinance. Chen and Li (2023) examined artificial-intelligence approaches that reassess risk during the l
+[134] Taken together, the foreign literature describes approaches that may inform future development but are outside the current FRAMS implementation. The present study focuses on a locally hosted web appli
+[135] Related Studies
+[136] Local Studies
+[137] Santos (2023) discussed changes in the Philippine financial landscape associated with digital payments and mobile banking and highlighted the relevance of online access to financial services. This wor
+[138] The Iligan City study by Juventud et al. (2023) is also relevant as an empirical local study because it examines perceived credit risk among micro-enterprise owners. Its discussion of limited credit h
+[139] Ramirez (2024) developed and validated a tool for assessing risk and return in the gross loan portfolio of microfinance institutions in Occidental Mindoro, illustrating the role of structured informat
+[140] Foreign Studies
+[141] LendStack (2025) and BlueOrchard (2025) are cited in the original draft for discussion of cloud-based lending platforms and infrastructure costs. These sources are treated here as industry-oriented ba
+[142] Khandani et al. (2010) examined machine-learning models for consumer credit-risk assessment. Batista and Montero (2020) discussed a Brazilian digital micro-lending platform that combined automated sco
+[143] The foreign studies also highlight the value of monitoring loans after release. In FRAMS, post-release monitoring is implemented through installment status, payment history, overdue-penalty records, a
+[144] Synthesis
+[145] The local literature shows that microfinance lenders already practice credit checking, but much of it is manual, interview-based, and limited by the lack of a formal credit history (Mina, 2024; Juvent
+[146] The foreign literature and studies go further. They describe machine learning, alternative data, and continuous reassessment (Kou et al., 2022; Bazarbash & Beaton, 2020; Ghosh et al., 2023; Chen & Li,
+[147] The gap that FRAMS addresses is the absence of one web-based record that registers the borrower, stores the application and documents, applies a stated eligibility rule, releases the loan with a sched
+[150] Table 1 Comparison of the reviewed focus and the FRAMS implementation

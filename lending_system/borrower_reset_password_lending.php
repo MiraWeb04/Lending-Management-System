@@ -15,6 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'Please enter and confirm your new password.';
     } elseif ($password !== $password2) {
         $error = 'Passwords do not match.';
+    } elseif (($passwordError = lendingValidatePassword($password)) !== '') {
+        $error = $passwordError;
     } else {
         $user = resetUserPasswordByToken($token, $password);
         if ($user) {
@@ -65,8 +67,9 @@ $validUser = $token !== '' ? getUserByResetToken($token) : false;
                         <label class="form-label" for="password">New Password</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-key"></i></span>
-                            <input type="password" id="password" name="password" class="form-control" required>
+                            <input type="password" id="password" name="password" class="form-control" <?php echo lendingPasswordInputAttributes(); ?> required>
                         </div>
+                        <?php echo lendingPasswordHintHtml(); ?>
                     </div>
 
                     <div class="mb-3">

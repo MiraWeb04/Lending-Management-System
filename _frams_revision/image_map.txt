@@ -1,0 +1,161 @@
+=== FIELDS / TOC ===
+TOC count in body xml: 0
+w:instrText count in body xml: 0
+List of Tables count in body xml: 0
+List of Figures count in body xml: 0
+TABLE OF CONTENTS count in body xml: 0
+
+=== ISO / PayMongo paras ===
+[69] The system includes PayMongo Dynamic QR Ph for supported non-cash collection transactions. According to the selected implementation, an authorized collector initiates a QR payment for an assigned loan. The corresponding repayment is recorded after the Payment Intent status is confirmed as succeeded 
+[877] International Organization for Standardization. (2011). Systems and software engineering—Systems and software Quality Requirements and Evaluation (SQuaRE)—System and software quality models (ISO/IEC 25010:2011).
+[881] PayMongo. (n.d.). PayMongo API documentation. https://developers.paymongo.com/
+
+PAGE w=21.00 h=29.70 L=3.81 R=2.54
+
+=== SAVED IMAGES NEAR CAPTIONS ===
+(898, 'Figure B2\nEvidence for UT-02: Incorrect Password or Inactive Account', 'p0898_rId45.png', 273706)
+(907, 'Figure B4\nEvidence for UT-04: Loan Details Exceed DTI or Loan Limits', 'p0907_rId47.png', 204244)
+(913, 'Figure B6\nEvidence for UT-06: Invalid Payment Amount', 'p0913_rId49.png', 86571)
+(935, 'Figure B8\nEvidence for IT-02: Registration and Borrower Records', 'p0935_rId53.png', 394753)
+(946, 'Figure B10', 'p0946_rId54.png', 180475)
+(961, 'Figure B12', 'p0961_rId58.png', 231233)
+(964, 'Figure B13\nEvidence for IT-07: Borrower Username on the Staff Sign-In', 'p0964_rId59.png', 262481)
+(976, 'Figure B15', 'p0976_rId61.png', 58313)
+(979, 'Figure B16', 'p0979_rId62.png', 166993)
+(982, 'Figure B17', 'p0982_rId63.png', 178625)
+(992, 'Figure B19', 'p0992_rId65.png', 139619)
+(1001, 'Figure B21', 'p1001_rId55.png', 115389)
+(1004, 'Figure B22', 'p1004_rId67.png', 189052)
+(1005, 'Evidence for ST-09: Loan and Installment Status Update', 'p1005_rId56.png', 309511)
+(1033, 'Figure B26 (B26_pm01_qr_rejected.png)', 'p1033_rId71.png', 428131)
+(1045, 'Figure B28 (B28_pm03_cash_no_qr_button.png)', 'p1045_rId72.png', 221436)
+(1051, 'Figure B29(a) (B29_pm04_zero_amount.png)', 'p1051_rId74.png', 468722)
+(1057, 'Figure B30 — PM-05', 'p1057_rId75.png', 466333)
+(1063, 'Figure B31 — PM-06', 'p1063_rId76.png', 473065)
+(1067, 'Figure B31 (B31_pm06_other_collector.png)', 'p1067_rId77.png', 373403)
+(1074, 'Figure B32 (B32_pm07_borrower_history.png)', 'p1074_rId78.png', 852907)
+(1079, 'Figure B33 (B33_pm08_unconfirmed_pending_refused.png)', 'p1079_rId79.png', 485461)
+(1089, 'Figure B35 — PM-10', 'p1089_rId80.png', 329251)
+(1101, 'Figure B36 (excluded from official PayMongo scope)', 'p1101_rId81.png', 128521)
+(1119, 'Figure B38. Staff sign-in after opening the administrator dashboard while signed out.', 'p1119_rId82.png', 851811)
+(1121, 'Figure B38. Borrower sign-in after opening the borrower dashboard while signed out.', 'p1121_rId83.png', 1247367)
+(1128, 'Figure B39. Wrong password for the active administrator.', 'p1128_rId84.png', 908486)
+(1130, 'Figure B39. Inactive administrator. The message matches the wrong-password trial.', 'p1130_rId85.png', 908601)
+(1138, 'Figure B40. Borrower dashboard after requesting user management.', 'p1138_rId86.png', 588164)
+(1140, 'Figure B40. Borrower payment history after requesting the staff payments page.', 'p1140_rId87.png', 316665)
+(1146, 'Figure B41. Collector dashboard after requesting user management. Reports, borrower approval, and lo', 'p1146_rId88.png', 513315)
+(1152, 'Figure B42. Registration submitted without the security token. The other four posts returned to this', 'p1152_rId89.png', 32592)
+(1158, 'Figure B43. Quote-style sign-in probe rejected.', 'p1158_rId90.png', 909251)
+(1160, 'Figure B43. Quote-style user search returned no accounts.', 'p1160_rId91.png', 242503)
+(1166, 'Figure B44. The markup marker remains visible as text in the search box.', 'p1166_rId92.png', 245406)
+(1174, 'Figure B45. Other-borrower document request. The response text is Access denied.', 'p1174_rId93.png', 17173)
+(1180, 'Figure B46. Collector A denied client 21.', 'p1180_rId94.png', 34734)
+(1182, 'Figure B46. Collector A denied loan 30.', 'p1182_rId95.png', 34559)
+(1184, 'Figure B46. Collector A denied payment 44.', 'p1184_rId96.png', 23804)
+(1190, 'Figure B47. After the invalid uploads, step 4 still shows every document as not uploaded.', 'p1190_rId97.png', 442094)
+(1196, 'Figure B48. Protected collector dashboard reloaded after sign-out.', 'p1196_rId98.png', 852141)
+(1202, 'Figure B49. The reset page sends a 6-digit code and does not issue a link.', 'p1202_rId99.png', 1224359)
+(1204, 'Figure B49. The code form states that the code expires in 10 minutes.', 'p1204_rId100.png', 1233636)
+(1206, 'Figure B49. An incorrect code does not change the password.', 'p1206_rId101.png', 1273866)
+(1208, 'Figure B49. The attempt after five incorrect codes is refused.', 'p1208_rId102.png', 1254537)
+(1210, 'Figure B49. An expired code is refused.', 'p1210_rId103.png', 1262299)
+(1212, 'Figure B49. A valid code can be used once.', 'p1212_rId104.png', 1219229)
+
+=== B26-B37 NEIGHBORHOOD ===
+[1020] draw=0 rids=[] 
+[1021] draw=0 rids=[] 
+[1022] draw=0 rids=[] Figure B24
+[1023] draw=0 rids=[] Evidence for ST-11: Administrative Reports
+[1024] draw=1 rids=['rId59'] 
+[1025] draw=0 rids=[] Figure B25
+Evidence for ST-12: Notification Management
+[1026] draw=1 rids=['rId70'] 
+[1027] draw=0 rids=[] D. PAYMONGO TESTING
+[1028] draw=0 rids=[] The official PayMongo evidence for PM-01 to PM-10 and PM-12 is attached as Figures B26–B35 and B37. The test descriptions and results below are aligned to the b
+[1029] draw=0 rids=[] Figure B26 — PM-01
+[1030] draw=0 rids=[] Scenario: The assigned collector creates a QR Ph payment for a valid amount on a disposable unpaid loan.
+[1031] draw=0 rids=[] Expected result: With the isolated invalid test key, PayMongo rejects QR creation. No QR page opens, no repayment is stored, and the loan balance stays unchange
+[1032] draw=0 rids=[] Actual result: The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 while the balance was PHP 3,150.00. PayMongo returned HTTP 401 and rejected the 
+[1033] draw=1 rids=['rId71'] Figure B26 (B26_pm01_qr_rejected.png)
+[1034] draw=0 rids=[] 
+[1035] draw=0 rids=[] Figure B27 — PM-02
+[1036] draw=0 rids=[] Scenario: The pending QR page is compared with the loan balance before payment.
+[1037] draw=0 rids=[] Expected result: When QR creation is rejected, the payment form stays open. No QR, QR amount, method, or expiry is shown. The balance and loan status stay uncha
+[1038] draw=0 rids=[] Actual result: The same screen as Figure B26 stayed on Record Payment. No QR image, QR amount, method block, or expiry was displayed. FRAMS-DISP-01 remained Act
+[1039] draw=1 rids=['rId71'] Figure B27 (B26_pm01_qr_rejected.png)
+[1040] draw=0 rids=[] 
+[1041] draw=0 rids=[] Figure B28 — PM-03
+[1042] draw=0 rids=[] Scenario: Cash is selected on the payment form.
+[1043] draw=0 rids=[] Expected result: Create Dynamic QR Ph stays hidden. The ordinary cash payment action remains available.
+[1044] draw=0 rids=[] Actual result: With Cash selected, the Create Dynamic QR Ph button was hidden and disabled. Cancel and Record Payment remained available. The loan and amount se
+[1045] draw=1 rids=['rId72'] Figure B28 (B28_pm03_cash_no_qr_button.png)
+[1046] draw=0 rids=[] Figure B29 — PM-04
+[1047] draw=0 rids=[] Scenario: Blank, zero, and nonnumeric QR amounts are submitted.
+[1048] draw=0 rids=[] Expected result: No QR transaction is stored. A blank amount is stopped by the required field. Zero is rejected because the amount must be greater than zero. A 
+[1049] draw=1 rids=['rId73'] Actual result: Blank was stopped in the browser with "Please fill out this field." Zero reached the server and returned "Payment amount must be greater than zer
+[1050] draw=0 rids=[] 
+[1051] draw=1 rids=['rId74'] Figure B29(a) (B29_pm04_zero_amount.png)
+[1052] draw=0 rids=[] 
+[1053] draw=0 rids=[] 
+[1054] draw=0 rids=[] 
+[1055] draw=0 rids=[] Figure B29(b) (B29_pm04_nonnumeric.png)
+[1056] draw=1 rids=['rId75'] 
+[1057] draw=0 rids=[] Figure B30 — PM-05
+[1058] draw=0 rids=[] Scenario: The QR amount is greater than the current total due.
+[1059] draw=0 rids=[] Expected result: The request is rejected and no QR transaction is stored.
+[1060] draw=0 rids=[] Actual result: An amount of 4000.00 against a total due of PHP 3,150.00 was rejected: "Payment cannot exceed the current total amount due of PHP 3,150.00." No r
+[1061] draw=0 rids=[] Figure B30 (B30_pm05_amount_too_high.png)
+[1062] draw=1 rids=['rId76'] 
+[1063] draw=0 rids=[] Figure B31 — PM-06
+[1064] draw=0 rids=[] Scenario: A test collector submits a QR Ph request for a disposable loan assigned to another collector.
+[1065] draw=0 rids=[] Expected result: The server rejects the request. No pending QR transaction and no repayment are created.
+[1066] draw=0 rids=[] Actual result: Collector A submitted loan 30, which is assigned to Collector B. The server responded, "You are not assigned to this loan." The loan was not in C
+[1067] draw=1 rids=['rId77'] Figure B31 (B31_pm06_other_collector.png)
+[1068] draw=0 rids=[] Figure B32 — PM-07
+[1069] draw=0 rids=[] Scenario: A signed-out visitor opens the payments page, and a borrower attempts to meet the collector QR request.
+[1070] draw=0 rids=[] Expected result: The visitor is redirected to the staff sign-in page. The borrower is redirected to payment history and cannot start a QR payment.
+[1071] draw=0 rids=[] Actual result: A signed-out request for the payments page opened the staff sign-in page. The signed-in borrower was redirected to Payment History. That page has
+[1072] draw=0 rids=[] 
+[1073] draw=0 rids=[] 
+[1074] draw=1 rids=['rId78'] Figure B32 (B32_pm07_borrower_history.png)
+[1075] draw=0 rids=[] Figure B33 — PM-08
+[1076] draw=0 rids=[] Scenario: A second QR Ph request is created while an earlier attempt for the same loan is unresolved.
+[1077] draw=0 rids=[] Expected result: A second request is refused when a pending QR has not expired and PayMongo cannot confirm it.
+[1078] draw=0 rids=[] Actual result: An unresolved pending attempt on FRAMS-TEST-A could not be confirmed with PayMongo. The second request was refused: "The previous PayMongo QR Ph 
+[1079] draw=1 rids=['rId79'] Figure B33 (B33_pm08_unconfirmed_pending_refused.png)
+[1080] draw=0 rids=[] Figure B34 — PM-09
+[1081] draw=0 rids=[] Scenario: An authorized user opens the receipt for a recorded E-Wallet repayment in the isolated test environment.
+[1082] draw=0 rids=[] Expected result: The receipt should display the recorded repayment details and the remaining balance after payment.
+[1083] draw=0 rids=[] Actual result: The receipt showed RJRR-20261018-000004, E-Wallet, PHP 100.00 paid, PHP 3,150.00 before payment, and PHP 3,050.00 remaining. This check confirms 
+[1084] draw=0 rids=[] 
+[1085] draw=0 rids=[] 
+[1086] draw=0 rids=[] 
+[1087] draw=0 rids=[] Figure B34 (B34_pm09_receipt.png)
+[1088] draw=1 rids=['rId80'] 
+[1089] draw=0 rids=[] Figure B35 — PM-10
+[1090] draw=0 rids=[] Scenario: An authorized staff member reviews the Payments Management page to verify that a recorded E-Wallet repayment appears in the payment list.
+[1091] draw=0 rids=[] Expected result: The payment list should display the recorded repayment with its visible payment ID, date, borrower, loan ID, amount, payment method, reference 
+[1092] draw=0 rids=[] Actual result: The Payments Management screenshot displayed Payment ID 46 for Synthetic Borrower A, Loan ID 31, an amount of PHP 100.00, E-Wallet as the payment
+[1093] draw=0 rids=[] 
+[1094] draw=0 rids=[] Figure B35 (Payments Management list screenshot)
+[1095] draw=0 rids=[] Figure B36 — excluded from official PayMongo scope
+[1096] draw=0 rids=[] Scope note: Figure B36 is excluded from the official PayMongo evaluation. It shows local endpoint responses and is not a Payment Intent polling test, not a staf
+[1097] draw=0 rids=[] This figure is not counted in Table 4.7.
+[1098] draw=0 rids=[] The screenshot is retained in the appendix file only so that the excluded evidence is not silently discarded. It is not treated as a passed official test case.
+[1099] draw=0 rids=[] 
+[1100] draw=0 rids=[] 
+[1101] draw=1 rids=['rId81'] Figure B36 (excluded from official PayMongo scope)
+[1102] draw=0 rids=[] Figure B37 — PM-12
+[1103] draw=0 rids=[] Scenario: An authorized staff member views the Payments Management page and reviews the displayed payment summaries and recorded payment entries.
+[1104] draw=0 rids=[] Expected result: The page should display the selected reporting period, payment summary information, and recorded payment entries.
+[1105] draw=0 rids=[] Actual result: The screenshot showed October 2026, collected and all-time collection totals of PHP 10,516.66, four payments for the period, and Payment ID 46 fo
+[1106] draw=0 rids=[] Remarks: The screenshot supports the display of summary cards and payment entries; it does not test payment deletion restrictions.
+[1107] draw=0 rids=[] 
+[1108] draw=0 rids=[] 
+[1109] draw=0 rids=[] Figure B37 (Payments Management summary and payment list screenshot)
+[1110] draw=0 rids=[] Table B5
+[1111] draw=0 rids=[] Penetration Testing Test Evidence of FRAMS
+[1112] draw=0 rids=[] 
+[1113] draw=0 rids=[] Screenshot Evidence for Penetration Testing
+[1114] draw=0 rids=[] Figure B38 — PT-01
+[1115] draw=0 rids=[] Scenario: Open the administrator dashboard, collector dashboard, payments, reports, and borrower pages while signed out.

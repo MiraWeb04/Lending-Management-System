@@ -152,15 +152,7 @@ $messageType = $_SESSION['loan_release_type'] ?? '';
 unset($_SESSION['loan_release_message'], $_SESSION['loan_release_type']);
 
 function parseLoanTermMonths($loanTerm) {
-    if (is_numeric($loanTerm)) {
-        return max(1, (int)$loanTerm);
-    }
-
-    if (preg_match('/(\d+)/', (string)$loanTerm, $matches)) {
-        return max(1, (int)$matches[1]);
-    }
-
-    return 12;
+    return parseLoanTermMonthsValue($loanTerm);
 }
 
 function generateLoanNumber() {
@@ -175,20 +167,28 @@ function generateLoanNumber() {
 }
 
 function buildPaymentSchedule($loanAmount, $interestRate, $termMonths, $paymentFrequency, $releaseDate, $releaseId) {
+    if (!is_numeric($loanAmount) || (float)$loanAmount < 0) {
+        throw new InvalidArgumentException('Loan principal cannot be negative.');
+    }
+    $termMonths = (int)$termMonths;
+    if ($termMonths < 1) {
+        throw new InvalidArgumentException('Loan term must be at least 1 month.');
+    }
+    $loanAmount = (float)$loanAmount;
     $installments = [];
-    $termMonths = max(1, (int)$termMonths);
     $releaseDateTime = new DateTimeImmutable($releaseDate);
     $termEndDate = $releaseDateTime->modify('+' . $termMonths . ' months');
     $normalizedFrequency = normalizePaymentFrequencyKey($paymentFrequency);
     $count = getScheduleInstallmentCount($paymentFrequency, $termMonths);
-
-    $principalAmount = $loanAmount / max(1, $count);
-    $interestBreakdown = calculateLoanInterestBreakdown($loanAmount, $interestRate, $termMonths);
-    $totalInterest = $interestBreakdown['total_interest'];
-    $interestAmount = $totalInterest / max(1, $count);
+    $interestBreakdown = calculateLoanInterestBreakdown($loanAmount, (float)$interestRate, $termMonths);
+    $moneyRows = allocateEvenMoneyRows(
+        $loanAmount,
+        (float)$interestBreakdown['total_interest'],
+        (float)$interestBreakdown['total_payable'],
+        $count
+    );
 
     $currentDate = new DateTime($releaseDate);
-    $normalizedFrequency = normalizePaymentFrequencyKey($paymentFrequency);
     for ($i = 1; $i <= $count; $i++) {
         if ($normalizedFrequency === 'daily') {
             $currentDate->modify('+1 day');
@@ -201,13 +201,14 @@ function buildPaymentSchedule($loanAmount, $interestRate, $termMonths, $paymentF
         }
 
         $dueDate = $currentDate->format('Y-m-d');
+        $money = $moneyRows[$i - 1];
         $installments[] = [
             'release_id' => $releaseId,
             'installment_number' => $i,
             'due_date' => $dueDate,
-            'principal_amount' => round($principalAmount, 2),
-            'interest_amount' => round($interestAmount, 2),
-            'total_amount_due' => round($principalAmount + $interestAmount, 2),
+            'principal_amount' => $money['principal_amount'],
+            'interest_amount' => $money['interest_amount'],
+            'total_amount_due' => $money['total_amount_due'],
             'status' => 'Upcoming',
         ];
     }
@@ -219,6 +220,68 @@ function buildPaymentSchedule($loanAmount, $interestRate, $termMonths, $paymentF
     }
 
     return $installments;
+}
+
+/**
+ * Preview uses the same term choice, interest breakdown, and buildPaymentSchedule()
+ * call as a successful release. An invalid term returns no dates and no amounts.
+ *
+ * @return array{valid: bool, message: string, principal: float, term_label: string, interest_rate: float, total_interest: float, total_payable: float, payment_frequency: string, count: int, regular: float, final: float, first_due: string, final_due: string}
+ */
+function previewReleaseSchedule(array $application, string $releaseDate): array
+{
+    $loanAmount = (float)($application['approved_loan_amount'] ?? $application['loan_amount'] ?? 0);
+    $termChoice = resolveApplicationLoanTerm(
+        isset($application['approved_loan_term']) ? (string)$application['approved_loan_term'] : null,
+        isset($application['loan_term']) ? (string)$application['loan_term'] : null
+    );
+    $paymentFrequency = trim((string)($application['payment_frequency'] ?? ''));
+    if ($paymentFrequency === '') {
+        $paymentFrequency = 'Monthly';
+    }
+    $empty = [
+        'valid' => false,
+        'message' => '',
+        'principal' => $loanAmount,
+        'term_label' => $termChoice['label'],
+        'interest_rate' => getStandardMonthlyInterestRatePercent(),
+        'total_interest' => 0.0,
+        'total_payable' => 0.0,
+        'payment_frequency' => $paymentFrequency,
+        'count' => 0,
+        'regular' => 0.0,
+        'final' => 0.0,
+        'first_due' => '',
+        'final_due' => '',
+    ];
+    if ($loanAmount <= 0) {
+        $empty['message'] = 'This application has no valid loan amount. Set an approved loan amount before release.';
+        return $empty;
+    }
+    if (!$termChoice['valid']) {
+        $empty['message'] = 'This application has no valid loan term. ' . $termChoice['message'];
+        return $empty;
+    }
+
+    $interestRate = getStandardMonthlyInterestRatePercent();
+    $breakdown = calculateLoanInterestBreakdown($loanAmount, $interestRate, $termChoice['months']);
+    $schedule = buildPaymentSchedule($loanAmount, $interestRate, $termChoice['months'], $paymentFrequency, $releaseDate, 0);
+
+    return [
+        'valid' => true,
+        'message' => '',
+        'principal' => $loanAmount,
+        'term_label' => $termChoice['label'],
+        'interest_rate' => $interestRate,
+        'total_interest' => (float)$breakdown['total_interest'],
+        'total_payable' => (float)$breakdown['total_payable'],
+        'payment_frequency' => $paymentFrequency,
+        'count' => count($schedule),
+        'regular' => (float)$schedule[0]['total_amount_due'],
+        'final' => (float)$schedule[count($schedule) - 1]['total_amount_due'],
+        'first_due' => (string)$schedule[0]['due_date'],
+        'final_due' => (string)$schedule[count($schedule) - 1]['due_date'],
+    ];
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -304,7 +367,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $messageType = 'danger';
                     } else {
                     $interestRate = getStandardMonthlyInterestRatePercent();
-                    $loanTermMonths = parseLoanTermMonths($application['approved_loan_term'] ?? $application['loan_term'] ?? 12);
+                    $termChoice = resolveApplicationLoanTerm(
+                        isset($application['approved_loan_term']) ? (string)$application['approved_loan_term'] : null,
+                        isset($application['loan_term']) ? (string)$application['loan_term'] : null
+                    );
+                    $loanTermLabel = $termChoice['label'];
+                    $loanTermMonths = $termChoice['months'];
+                    if (!$termChoice['valid']) {
+                        $message = 'This application has no valid loan term. ' . $termChoice['message'];
+                        $messageType = 'danger';
+                    } else {
                     $releaseDate = date('Y-m-d');
                     $paymentFrequency = trim((string)($application['payment_frequency'] ?? $paymentFrequency));
                     if ($paymentFrequency === '') {
@@ -389,7 +461,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $loanNumber,
                             $loanAmount,
                             $interestRate,
-                            $application['approved_loan_term'] ?? $application['loan_term'] ?? '12 months',
+                            $loanTermLabel,
                             $paymentFrequency,
                             'Released',
                             $user['full_name'] ?? $user['username'] ?? 'Admin',
@@ -479,6 +551,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             $message .= ' (' . $releaseException->getMessage() . ')';
                         }
                         $messageType = 'danger';
+                    }
                     }
                     }
                 }
@@ -682,6 +755,32 @@ if ($viewId > 0 || $releaseId > 0) {
                                     <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle me-2"></i>Release Loan</button>
                                 </div>
                             </form>
+                        </div>
+                        <?php
+                        $releasePreview = previewReleaseSchedule($selectedApplication, date('Y-m-d'));
+                        ?>
+                        <div class="col-12">
+                            <div class="border rounded-4 p-3">
+                                <div class="fw-semibold mb-2">Schedule preview</div>
+                                <?php if (!$releasePreview['valid']): ?>
+                                    <div class="alert alert-danger alert-permanent mb-0"><?php echo htmlspecialchars($releasePreview['message']); ?> No repayment schedule is shown because this term cannot be released.</div>
+                                <?php else: ?>
+                                    <p class="small text-muted mb-3">These figures are produced by the same schedule function used when the loan is released. Confirm Release saves this schedule for today&apos;s release date.</p>
+                                    <div class="row g-3">
+                                        <div class="col-md-4"><div class="text-muted small">Approved principal</div><div class="fw-semibold">₱<?php echo number_format($releasePreview['principal'], 2); ?></div></div>
+                                        <div class="col-md-4"><div class="text-muted small">Approved loan term</div><div class="fw-semibold"><?php echo htmlspecialchars($releasePreview['term_label']); ?></div></div>
+                                        <div class="col-md-4"><div class="text-muted small">Interest rate</div><div class="fw-semibold"><?php echo number_format($releasePreview['interest_rate'], 2); ?>%</div></div>
+                                        <div class="col-md-4"><div class="text-muted small">Total interest</div><div class="fw-semibold">₱<?php echo number_format($releasePreview['total_interest'], 2); ?></div></div>
+                                        <div class="col-md-4"><div class="text-muted small">Total payable</div><div class="fw-semibold">₱<?php echo number_format($releasePreview['total_payable'], 2); ?></div></div>
+                                        <div class="col-md-4"><div class="text-muted small">Payment frequency</div><div class="fw-semibold"><?php echo htmlspecialchars(formatPaymentFrequencyLabel($releasePreview['payment_frequency'])); ?></div></div>
+                                        <div class="col-md-4"><div class="text-muted small">Number of payments</div><div class="fw-semibold"><?php echo (int)$releasePreview['count']; ?></div></div>
+                                        <div class="col-md-4"><div class="text-muted small">Regular installment</div><div class="fw-semibold">₱<?php echo number_format($releasePreview['regular'], 2); ?></div></div>
+                                        <div class="col-md-4"><div class="text-muted small">Final installment</div><div class="fw-semibold">₱<?php echo number_format($releasePreview['final'], 2); ?></div></div>
+                                        <div class="col-md-4"><div class="text-muted small">First due date</div><div class="fw-semibold"><?php echo htmlspecialchars($releasePreview['first_due']); ?></div></div>
+                                        <div class="col-md-4"><div class="text-muted small">Final due date</div><div class="fw-semibold"><?php echo htmlspecialchars($releasePreview['final_due']); ?></div></div>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
                         </div>
                     </div>
                 </div>

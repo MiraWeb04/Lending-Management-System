@@ -1,0 +1,96 @@
+C:\Users\HomePC\Downloads\FRAMS\FRAMS_REVISED_MANUSCRIPT_FINAL.docx
+[27] Background of Study
+[52] How acceptable is the developed system in terms of functionality, usability, reliability, security, and performance based on the evaluation of its intended users?
+[72] Significance of Study
+[242] Figure 2 is the Level 1 data flow diagram, with processes 1.0 through 5.0. The borrower, the collector, and the administrator send data into those processes and receive the records that belong to their role. Process 4.0 is a payment recorded by the collector. An administrator can
+[259] Figure 2 Level 1 Data Flow Diagram of FRAMS
+[261] Figure 3 is the entity-relationship diagram of FRAMS. A user account owns the borrower registration, the client record, password-reset tokens, and in-application notifications. A client is assigned to one collector through collector_id and may have many loans. A loan application 
+[263] Figure 3 Entity-Relationship Diagram of FRAMS
+[305] Figure 5.1 presents the overall operational flow of FRAMS. The process begins when a user opens the staff login or borrower login page and enters a username or email address and password. FRAMS checks the credentials and account status. If access is denied, the system displays an
+[320] Figure 5.2 FRAMS User Authentication Flowchart
+[321] 	Figure 5.2 shows how FRAMS authenticates a user. The process starts on the staff login page or the borrower login page. The user enters a username or email and password. If either field is empty, the page asks for both fields and returns to the form. If the fields are complete, 
+[350] Figure 5.3 FRAMS Borrower Registration Flowchart
+[351] Figure 5.3 presents borrower registration. The applicant enters identity, contact, government identification, username, and password, and gives consent. If a required field is missing or the passwords do not match, the page shows a validation error and keeps the form. If the form
+[367] Figure 5.4 FRAMS Loan Application Flowchart
+[368] Figure 5.4 traces the loan application completed by an approved borrower. The borrower enters personal details, employment, and income. FRAMS opens the loan-details step when employment status and income are present, existing debt is within the debt-to-income guidelines, and ther
+[399] Figure 5.5 Financial Risk Assessment Flow
+[401] Figure 5.5 shows the eligibility estimate used during the application and again on the administrator review page. The process reads income, existing debt, the requested amount, and the term. If a required value is missing, the status is Not Eligible, and the page lists the missin
+[427] Figure 5.6 FRAMS Loan Approval, Agreement, and Release Flowchart
+[429] Figure 5.6 shows administrator review through release of funds. The process starts when the administrator opens the application, the documents, and the stored eligibility estimate, and marks each document verified or rejected. If the application is not approved, the administrator
+[456] Figure 5.7 FRAMS Payment and Collection Flowchart
+[458] Figure 5.7 shows how an administrator or the assigned collector records a cash, bank transfer, or e-wallet payment on a released loan. A staff member selects the loan, and the page shows the remaining balance and the penalty due. Penalty due is computed from unpaid installments w
+[459] Figure 5.7 is the immediate recording path for cash, bank transfer, and e-wallet. An administrator or the assigned collector can save that payment as soon as the amount is valid. PayMongo Dynamic QR Ph waits for later confirmation. The Create Dynamic QR Ph action is shown only fo
+[473] Figure 5.8 FRAMS Report Generation Flowchart
+[474] Figure 5.8 shows report generation, which is available to the administrator. The process starts when the administrator opens Reports and selects the report type and the period. The report types are dashboard analytics, loan reports, payment reports, borrower reports, collector pe
+[485] Unit testing evaluated individual functions and validation rules within FRAMS. The tests covered authentication, registration, loan eligibility validation, document uploads, and payment amount validation. Each function was assessed independently to determine whether it produced t
+[488] Integration testing evaluated whether connected modules worked together correctly. The tests covered the workflow from borrower approval and login to loan application submission, eligibility assessment, loan release, installment schedule generation, payment recording, balance upd
+[490] System testing evaluated FRAMS as a complete application to determine whether its major features and workflows operated according to their intended requirements. The evaluation covered borrower management, loan processing, repayment monitoring, notifications, and report generatio
+[492] PayMongo QR Ph testing evaluated the integration between FRAMS and PayMongo's QR Ph payment processing. The tests covered QR code creation attempts, payment amount validation, cash-versus-QR controls, collector assignment restrictions, borrower access restrictions, unresolved pen
+[493] The testing evidence distinguishes provider rejection caused by an isolated invalid test key from successful QR code creation. The official PayMongo evaluation scope contains 11 test cases, PM-01 to PM-10 and PM-12, presented in Table 4.7, with supporting evidence in Figures B26–
+[496] The twelve penetration test cases, identified as PT-01 to PT-12, are presented in Table 4.8, with detailed results and supporting screenshots provided in Figures B38–B49. The findings are limited to the specific test cases and conditions examined. Passing these checks does not es
+[507] Table 4.1
+[626] Table 4.2
+[633] Table 4.3
+[639] User, collector, and profile management. Administrators add and edit users, assign the administrator, collector, or borrower role, and set an account active or inactive. The collectors page creates, edits, activates, and deactivates collector accounts and can search by name, user
+[653] Table 4.4
+[658] Table 4.5
+[662] Table 4.6
+[665] Table 4.7
+[675] Table 4.8
+[699] The official PayMongo QR Ph testing documentation includes 11 test cases, PM-01 to PM-10 and PM-12, supported by the screenshots and recorded results in Figures B26–B35 and B37. These tests evaluated safe handling of rejected QR creation requests, payment amount validation, cash-
+[700] PM-09 and PM-10 document receipt contents and the listing of a recorded E-Wallet repayment in the isolated test environment. They confirm payment recording and receipt access for that stored record. They do not demonstrate Payment Intent polling, staff-initiated Check with PayMon
+[703] Table 4.9
+[706] Table 4.10
+[912] Figure B5
+Evidence for UT-05: Invalid Document Upload
+[1033] Figure B26 (B26_pm01_qr_rejected.png)
+[1035] Figure B27 — PM-02
+[1039] Figure B27 (B26_pm01_qr_rejected.png)
+[1068] Figure B32 — PM-07
+[1097] This figure is not counted in Table 4.7.
+[1244] APPENDIX I
+FRAMS USER ACCEPTANCE TESTING (UAT)
+[1281] APPENDIX J
+USER ACCEPTANCE TESTING (UAT) EVIDENCE
+
+=== T8 IT ===
+Test ID | Test Scenario | Status | Evidence Reference
+IT-01 | Registration, Account Approval, and Login | PASS | Figure B7
+IT-02 | After registration, locate the borrower before account approval. | PASS | Figure B8
+IT-03 | Submitted application and borrower record | PASS | Figure B9
+IT-04 | Payment recording and remaining balance | PASS | Figure B22
+IT-05 | Loan Application and Eligibility Assessment | PASS | Figure B11
+IT-06 | Payment period and reports | PASS | Figure B12
+IT-07 | Borrower username on the staff sign-in | PASS | Figure B13
+
+=== T9 ST ids ===
+Test ID | Evidence Reference
+ST-01 | Figure B14
+ST-02 | Figure B15
+ST-03 | Figure B16
+ST-04 | Figure B17
+ST-05 | Figure B18
+ST-06 | Figure B19
+ST-07 | Figure B20
+ST-08 | Figure B21
+ST-09 | Figure B22
+ST-10 | Figure B23
+ST-11 | Figure B24
+ST-12 | Figure B25
+
+=== REFS LIST ===
+[870] References
+[871] The following references are presented in APA 7th edition format.
+[872] Bazarbash, M., & Beaton, K. (2020). Filling the gap: Digital credit and financial inclusion (IMF Working Paper No. WP/20/150). International Monetary Fund. https://doi.org/10.5089/
+[873] Campos, R. B., Jr. (2024). The impact of digitalization on credit risk management in microfinance institutions in Nueva Ecija, Philippines. Indian Journal of Information Sources an
+[874] Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. MIS Quarterly, 13(3), 319–340. https://doi.org/10.2307/249008
+[875] DeLone, W. H., & McLean, E. R. (2003). The DeLone and McLean model of information systems success: A ten-year update. Journal of Management Information Systems, 19(4), 9–30. https:
+[876] Estrellado, G. E. (2024). Financial inclusion of lending institutions on sustainability of micro-businesses. United International Journal for Research & Technology, 5(7). https://u
+[877] International Organization for Standardization. (2011). Systems and software engineering—Systems and software Quality Requirements and Evaluation (SQuaRE)—System and software quali
+[878] Juventud, W. M., Matigas, E. A. O., Himongala, J., Galla, M. R., & Abiol, M. J. D. (2023). Perceived credit risk of micro finance loans among micro-enterprises business in Població
+[879] Khandani, A. E., Kim, A. J., & Lo, A. W. (2010). Consumer credit-risk models via machine-learning algorithms. Journal of Banking & Finance, 34(11), 2767–2787. https://doi.org/10.10
+[880] Mina, J. C. (2024). The credit risk management practices of lending companies in Nueva Ecija: Basis for risk mitigating plan. International Journal of Advanced and Applied Sciences
+[881] PayMongo. (n.d.). PayMongo API documentation. https://developers.paymongo.com/
+[882] Penaso, C. P., & Dagang, A. L. (2025). Loan management practices as key drivers for the operation efficiency of microfinance institutions in Northern Mindanao, Philippines. Interna
+[883] Ramirez, J. G. (2024). Establishment of gross loan portfolio risk-return questionnaire: Reliability and validity structure. Mindoro Journal of Social Sciences and Development Studi
+[884] APPENDIX B

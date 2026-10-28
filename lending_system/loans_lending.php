@@ -202,9 +202,10 @@ $statsQuery = "SELECT
                 COUNT(*) as loan_count,
                 SUM(l.loan_amount) as total_loan_amount,
                 SUM(l.total_payable) as total_receivable,
-                SUM(CASE WHEN l.status != 'Paid' THEN l.total_payable ELSE 0 END) as outstanding_receivable
+                " . outstandingReceivableSelectSql() . " as outstanding_receivable
               FROM loans l
               JOIN clients c ON l.client_id = c.client_id
+              " . outstandingReceivableJoinSql() . "
               WHERE 1=1";
 $statsParams = [];
 if ($applyReleaseDateFilter) {

@@ -1,0 +1,13 @@
+HITS
+P282: paymongo_qrph_webhook_events. This table exists in the operational schema and stores provider event rows when they are present. It is not part of the selected payment-confirmation workflow or of the official PayMongo evaluation scope. In the selected workflow, a repayment is post
+
+P1329: Declared relationships. The dump contains one foreign key: paymongo_qrph_webhook_events.transaction_id references paymongo_qrph_transactions.id with ON DELETE SET NULL. Relationships among users, clients, loans, releases, schedules, and payments are enforced in application querie
+
+P1330: Required tables in the dump: users, clients, borrower_applications, loan_applications, loan_application_documents, loan_application_reviews, loan_agreements, loan_releases, loan_release_notifications, loans, loan_payment_schedules, payments, expenses, notifications, password_rese
+
+T5R19C0: paymongo_qrph_webhook_events
+
+COUNT49
+P496: The twelve penetration test cases, identified as PT-01 to PT-12, are presented in Table 4.8, with detailed results and supporting screenshots provided in Figures B38–B49. The findings are limited to t
+P701: Penetration and security testing was reported as passed in 12 of 12 controlled checks. The evidence in Figures B38–B49 documents the specific authentication, access-control, input-validation, session-
+P1234: The 48-case summary above remains the count of documented official cases listed in the test tables. A separate financial-computation and agreement-validation report records 53 test executions across t

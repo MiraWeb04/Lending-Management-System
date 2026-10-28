@@ -1,0 +1,143 @@
+PARA 81 text='\\'
+  run 0 text '\\'
+
+PARA 176 text='Research Design'
+  run 0 text 'Research Design'
+
+PARA 177 text='This study used a developmental research design to plan, develop, and refine the Financial Risk Assessment and Micro-Lending System (FRAMS). An iterative development approach was used because the lend'
+  run 0 text 'This study used a developmental research design to plan, develop, and refine the'
+
+PARA 239 text='Figure 2 is the Level 1 data flow diagram, with processes 1.0 through 5.0. The borrower, the collector, and the administrator send data into those processes and receive the records that belong to thei'
+  run 0 text 'Figure 2 is the Level 1 data flow diagram, with processes 1.0 through 5.0. The b'
+  run 1 text 'PayMongo'
+  run 2 text ' webhook also writes that store, and it is not drawn as a separate process on th'
+
+PARA 286 text='This section presents the operational flow of FRAMS with standard flowchart symbols. An oval marks the start or end. A rectangle marks a process. A diamond marks a decision, and its branches are label'
+  run 0 draw ''
+  run 1 text 'This section presents the operational flow of FRAMS with standard flowchart symb'
+
+PARA 350 text='Loan Application Flow'
+  run 0 draw ''
+  run 1 text 'Loan Application Flow'
+
+PARA 680 text='User Acceptance Testing (UAT) was intended to evaluate the acceptability of the Financial Risk Assessment and Micro-Lending System (FRAMS) based on respondents’ experience using the developed system. '
+  run 0 text 'User Acceptance Testing (UAT) was intended to evaluate the acceptability of the '
+  run 1 text 'criterion-level data supplied'
+  run 2 text ' are reported for thirty-two (32) respondents: thirty (30) borrowers, one (1) '
+  run 3 text 'administrator, and one (1) collector. These figures remain subject to confirmati'
+
+PARA 695 text='Presentation of Testing Data'
+  run 0 text 'Presentation of Testing Data'
+
+PARA 696 text='Presentation of Testing Data'
+  run 0 text 'Presentation of Testing Data'
+
+=== RECS ===
+[846] Recommendations 
+[847] Based on the system’s current scope and the limitations identified in the study, the researchers recommend the following:
+[848] SMS notifications. They may be added later if the lending office needs them and can support the cost. 
+[849] Establish a database backup and recovery procedure. Schedule regular MySQL backups of the actual production database and document how authorized personnel can restore a backup. Confirm the deployed database name before using it in any instructions.
+[850] Centralize business rules in configuration. Keep the debt-to-income limit, minimum and maximum loan amounts, interest rate, and penalty rates in controlled configuration or administrator settings so approved policy changes do not require direct edits to PHP files.
+[851] Develop an administrator settings page that allows authorized personnel to update loan limits and penalty rates, with validation and an audit trail.
+[852] Improve audit visibility by recording important actions—such as account approvals, loan releases, payment edits, and role changes—in a dedicated activity log for accountability and troubleshooting.
+[853] 
+[854] 
+[855] 
+[856] 
+[857] 
+[858] 
+[859] 
+[860] 
+[861] 
+[862] 
+[863] 
+[864] 
+
+=== REFS NOTES ===
+[865] References
+[866] Entries in A.1 follow APA 7th edition and were checked against the published work. Journal titles and volume numbers are italicized in the usual APA way. A hanging indent is used.
+[867] A.1 References matched to published works
+[868] Bazarbash, M., & Beaton, K. (2020). Filling the gap: Digital credit and financial inclusion (IMF Working Paper No. WP/20/150). International Monetary Fund. https://doi.org/10.5089/9781513552477.001
+[869] Campos, R. B., Jr. (2024). The impact of digitalization on credit risk management in microfinance institutions in Nueva Ecija, Philippines. Indian Journal of Information Sources and Services, 14(3). https://doi.org/10.51983/ijiss-2024.14.3.20
+[870] Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. MIS Quarterly, 13(3), 319–340. https://doi.org/10.2307/249008
+[871] DeLone, W. H., & McLean, E. R. (2003). The DeLone and McLean model of information systems success: A ten-year update. Journal of Management Information Systems, 19(4), 9–30. https://doi.org/10.1080/07421222.2003.11045748
+[872] Estrellado, G. E. (2024). Financial inclusion of lending institutions on sustainability of micro-businesses. United International Journal for Research & Technology, 5(7). https://uijrt.com/paper/financial-inclusion-lending-institutions-sustainability-micro-businesses
+[873] International Organization for Standardization. (2011). Systems and software engineering—Systems and software Quality Requirements and Evaluation (SQuaRE)—System and software quality models (ISO/IEC 25010:2011).
+[874] Juventud, W. M., Matigas, E. A. O., Himongala, J., Galla, M. R., & Abiol, M. J. D. (2023). Perceived credit risk of micro finance loans among micro-enterprises business in Población Iligan City. International Journal of Multidisciplinary: Applied Business and Education Research, 4(10), 3697–3702. ht
+[875] Khandani, A. E., Kim, A. J., & Lo, A. W. (2010). Consumer credit-risk models via machine-learning algorithms. Journal of Banking & Finance, 34(11), 2767–2787. https://doi.org/10.1016/j.jbankfin.2010.06.001
+[876] Mina, J. C. (2024). The credit risk management practices of lending companies in Nueva Ecija: Basis for risk mitigating plan. International Journal of Advanced and Applied Sciences, 11(9), 134–142. https://doi.org/10.21833/ijaas.2024.09.015
+[877] PayMongo. (n.d.). PayMongo API documentation. https://developers.paymongo.com/
+[878] Penaso, C. P., & Dagang, A. L. (2025). Loan management practices as key drivers for the operation efficiency of microfinance institutions in Northern Mindanao, Philippines. International Journal of Research and Scientific Innovation, 12(5), 1715–1724. https://doi.org/10.51244/ijrsi.2025.120500162
+[879] Ramirez, J. G. (2024). Establishment of gross loan portfolio risk-return questionnaire: Reliability and validity structure. Mindoro Journal of Social Sciences and Development Studies, 1(2), 18–26. https://journal.omsc.edu.ph/mjssds/article/view/11
+
+=== TABLE 0 ===
+R0: ['Area', 'Sources retained from the review', 'What those sources emphasize', 'What FRAMS implements']
+R1: ['Credit checking', 'Mina (2024); Juventud et al. (2023)', 'Interviews, business checks, and limited credit history', 'Eligibility estimates from income, debt, amount, term, and limits']
+R2: ['Financial inclusion', 'Estrellado (2024)', 'Loan access, repayment choice, and financial education', 'Online application and status viewing; no separate literacy module']
+R3: ['Digital lending records', 'Santos (2023); Campos (2024); Penaso and Dagang (2025)', 'Web access and structured loan monitoring', 'Borrower portal, staff console, schedules, and reports']
+R4: ['Portfolio tools', 'Ramirez (2024)', 'A structured risk-return instrument', 'Dashboard and period reports of loans, collections, and balances']
+R5: ['Predictive scoring', 'Kou et al. (2022); Chen and Li (2023); Khandani et al. (2018)', 'Machine learning and continuous rescoring', 'Not implemented; the estimate is rule-based and is not an approval']
+R6: ['Delinquency monitoring', 'Ghosh et al. (2023); Juszczak et al. (2022)', 'Early warning from behavior data', 'Overdue status, frequency-based penalties, and payment history']
+
+=== PM12 1098-1106 ===
+[1091] Figure B36 — PM-11
+[1092] Scenario: Webhook requests are submitted without a signature, with an invalid signature, and with a timestamp older than five minutes to verify the endpoint's signature-validation mechanism.
+[1093] Expected result: Requests with a missing signature, an incorrect signature, or a timestamp older than five minutes should be rejected with HTTP 401 and return an invalid_signature status.
+[1094] Actual result: The local webhook response table showed HTTP 401 and invalid_signature for the missing-signature, incorrect-signature, and older-timestamp requests. The displayed evidence documents local signature-validation responses, not external PayMongo webhook deliveries.
+[1095] 
+[1096] 
+[1097] Figure B36 (B36_pm11_webhook_responses.png) 
+[1098] Figure B37 — PM-12
+[1099] Scenario: An authorized staff member views the Payments Management page and reviews the displayed payment summaries and recorded payment entries.
+[1100] Expected result: The page should display the selected reporting period, payment summary information, and recorded payment entries.
+[1101] Actual result: The screenshot showed October 2026, collected and all-time collection totals of PHP 10,516.66, four payments for the period, and Payment ID 46 for PHP 100.00 in the payment list.
+[1102] Remarks: The screenshot supports the display of summary cards and payment entries; it does not test payment deletion restrictions.
+[1103] 
+[1104] 
+[1105] Figure B37 (Payments Management summary and payment list screenshot)
+[1106] Table B5
+[1107] Penetration Testing Test Evidence of FRAMS
+
+=== APP F 1211-1238 ===
+[1211] F. USER ACCEPTANCE TESTING
+[1212] The supplied User Acceptance Testing (UAT) response export contains 32 submissions, consisting of 28 borrowers, one administrator, and three collectors. The 20-item evaluation questionnaire covered five criteria: functionality, usability, reliability, security, and performance, with four statements assigned to each criterion.
+[1213] The corrected criterion-level weighted means are 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean across 640 individual ratings was 4.53, interpreted as Strongly Agree according to the five-point Likert scale used in the study.
+[1214] The response export serves as the supporting source for the reported calculations. The original spreadsheet and administered questionnaire should be retained as research records. The blank questionnaire in Appendix I documents the instrument wording but is not a substitute for the completed responses.
+[1215] Evidence limitation: the tally below is computed from the supplied respondent-level criterion scores (one rating per respondent for each of the five criteria). It verifies the stated criterion means from those scores, but it is not a transcription of all 20 individual questionnaire-item responses. The questionnaire added in Appendix I is a blank instrument template, not a completed response set. 
+[1216] Primary records to retain and verify before final submission are the exact questionnaire instrument administered, the original completed forms with personal information protected, the respondent-role tally, and the original calculation workbook. If the respondents completed only one rating per criterion, the manuscript should describe that instrument accurately rather than imply that twenty item-level responses were collected. If the twenty-item form was administered, its individual answers must
+[1217] G. UAT TALLY AND WEIGHTED-MEAN COMPUTATION
+[1218] The table below summarizes the response frequencies calculated from the supplied UAT response export. Each criterion includes four questionnaire statements answered by 32 respondents, producing 128 individual ratings per criterion. The overall results combine all 20 statements, producing 640 individual ratings.
+[1219] The weighted mean was calculated using:
+[1220] WM = [f(5) × 5 + f(4) × 4 + f(3) × 3 + f(2) × 2 + f(1) × 1] / N
+[1221] where f represents the frequency of a response rating and N represents the total number of valid individual ratings.
+[1222] 
+[1223] Note. The overall totals aggregate the response ratings across all 20 statements. Each criterion-level mean is based on 128 individual ratings, while the overall mean is based on 640 individual ratings.
+[1224] The overall weighted score was calculated as follows:
+[1225] (341 × 5) + (297 × 4) + (2 × 3) = 1,705 + 1,188 + 6 = 2,899.
+[1226] The total number of individual ratings was 32 respondents × 20 statements = 640.
+[1227] Therefore, the overall weighted mean was 2,899 ÷ 640 = 4.5297, rounded to 4.53 and interpreted as Strongly Agree.
+[1228] H. SUMMARY OF TESTING RESULTS
+[1229] The documented functional test-case summary contains 49 cases: six unit tests, seven integration tests, twelve system tests, twelve PayMongo-related tests, and twelve penetration/security tests. The recorded case summary reports 49 passed and 0 failed. These counts describe the listed test cases and should not be interpreted as proof of exhaustive testing or as a count of every execution run.
+[1230] The 49-case summary above remains the count of documented cases listed in the test tables. A separate financial-computation and agreement-validation report records 53 test executions across three groups: 28 financial-computation checks, 8 term-validation checks, and 17 agreement/due-date/release checks, all reported as passed in the isolated test environment. These 53 executions are not asserted to be 53 unique test cases and are not added to the 49-case total. The report states that isolated te
+[1231] The PayMongo and penetration/security evidence uses an isolated test server at 127.0.0.1:8099 and the frams_capstone_test database. The existing lending_management database was not modified, and no live PayMongo charge was created. PM-01 documents rejection of an isolated invalid test key, while PM-09 and PM-10 are local webhook simulations. These results support local validation and rejection-handling checks, but they do not prove a successful end-to-end transaction delivered by PayMongo’s exte
+[1232] 
+[1233] 
+[1234] 
+[1235] 
+[1236] 
+[1237] 
+[1238] 
+
+=== T19 HEADER ===
+Ape  | f(5) | f(4) | f(3) | f(2) | f(1) | N | Weighted Score  | Weighted mean
+
+=== EDITORIAL SCAN ===
+[319] 	Figure 5.2 shows how FRAMS authenticates a user. The process starts on the staff login page or the borrower login page. The user enters a username or email and password. If either field is empty, the page asks for both fields and returns t
+[634] Login interface. The borrower login and the staff login are separate pages. Each verifies the account, creates the session, and opens the matching dashboard. A borrower who is not yet approved does not enter the borrower pages. A forgotten-
+[832] The screenshots are evidence that the modules in Section 4.1.3 were built. They do not, by themselves, fill the actual-result columns in Tables 4.4 and 4.5. Chapter 5 can summarize these implementation and testing results, state the conclus
+[866] Entries in A.1 follow APA 7th edition and were checked against the published work. Journal titles and volume numbers are italicized in the usual APA way. A hanging indent is used.
+[867] A.1 References matched to published works
+[1216] Primary records to retain and verify before final submission are the exact questionnaire instrument administered, the original completed forms with personal information protected, the respondent-role tally, and the original calculation work
+[1574] The supplied criterion-level dataset is summarized for 32 post-development evaluation respondents: 30 borrowers, one administrator, and one collector. The criterion means calculated from those ratings are 4.81 for functionality, 4.75 for us
+[1576] Primary records to retain and verify before final submission are the exact questionnaire instrument administered, the original completed forms with personal information protected, the respondent-role tally, and the original calculation work
+[1684] Interpretation and limitation. The supplied report describes the earlier defects and records the corresponding corrections and retest outcomes. The manuscript should not rely on the earlier six-failure summary as the current status without 

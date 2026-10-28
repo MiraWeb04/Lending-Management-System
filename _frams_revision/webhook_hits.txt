@@ -1,0 +1,175 @@
+PARAS 1332 TABLES 24
+
+=== PARAGRAPHS ===
+
+[32|Normal]
+In addition to payments recorded at the lending office, FRAMS includes PayMongo Dynamic QR Ph. A collector starts the code for an assigned loan when the method is bank transfer or e-wallet. The borrower pays by scanning that code. The QR image is not a payment confirmation. While the QR payment page remains open, FRAMS polls the PayMongo Payment Intent API and records the repayment only after the provider status is succeeded and the paid amount matches the pending transaction. A webhook handler is present in the application and may also post a verified event, but it is optional for this collector workflow. Showing the code, returning to the browser, or waiting for a local timer does not, by itself, record the repayment. Cash is recorded directly by authorized staff. Bank transfer and e-wallet may also be recorded directly, without a QR code, by an administrator or the assigned collector.
+
+[69|Normal]
+The system includes PayMongo Dynamic QR Ph for supported non-cash collection transactions. According to the implemented workflow, an authorized collector initiates a QR payment for an assigned loan. The corresponding repayment is recorded after the Payment Intent status is confirmed as succeeded and the paid amount has been matched to the pending transaction. While the QR page is open, FRAMS polls the Payment Intent API for that confirmation. A webhook may also post a verified event when configured, but the collector workflow does not require a delivered webhook in order to record a matching paid intent. Cash payments and other authorized payment records may be entered directly by authorized personnel. Successful QR Ph collection depends on valid PayMongo API credentials and network access to retrieve Payment Intent status.
+
+[110|Normal]
+PayMongo Dynamic QR Ph. A collector-initiated QR payment for bank transfer or e-wallet. The repayment is recorded after PayMongo reports a succeeded Payment Intent for the matching amount, through status polling on the open QR page or through an optional webhook. Displaying the QR image is not confirmation of payment.
+
+[232|Normal]
+Payments and penalties. The system records a payment with amount, date, method, collector, optional reference, and a penalty portion. It rejects a payment that exceeds the remaining balance plus the penalty still due. It recomputes the balance and the installment status. For an unpaid installment past its due date, it computes a penalty of 1 percent, 2 percent, 3 percent, or 5 percent of the installment amount for daily, weekly, semi-monthly, and monthly loans. Cash, bank transfer, and e-wallet can be recorded at once by an administrator or the assigned collector. For bank transfer or e-wallet, a collector may instead start PayMongo Dynamic QR Ph. That repayment is stored only after the Payment Intent is confirmed as succeeded, either through status polling on the open QR page or through an optional verified webhook. 
+
+[242|Normal]
+Figure 2 is the Level 1 data flow diagram, with processes 1.0 through 5.0. The borrower, the collector, and the administrator send data into those processes and receive the records that belong to their role. Process 4.0 is a payment recorded by the collector. An administrator can record cash, bank transfer, and e-wallet on the same payments store. A confirmed PayMongo Payment Intent, retrieved while the QR page is open, also writes that store, and it is not drawn as a separate process on this figure. An optional webhook may write the same store when it is configured.
+
+[282|Normal]
+paymongo_qrph_webhook_events. Stores optional PayMongo webhook events for a QR Ph transaction and whether each event was processed. In the implemented collector workflow, the repayment is posted after Payment Intent status polling confirms success; the webhook is an additional path and is not required for the open QR page to record a matching paid intent.
+
+[492|Normal]
+PayMongo QR Ph testing evaluated the integration between FRAMS and PayMongo's QR Ph payment processing. The tests covered QR code creation attempts, payment amount validation, cash-versus-QR controls, collector assignment restrictions, borrower access restrictions, unresolved pending payment attempts, webhook-event handling, invalid-signature rejection, and protection of verified QR-linked repayments. The procedure used an isolated FRAMS test server and disposable test records to assess the specified payment workflows.
+
+[493|Normal]
+The testing evidence distinguishes provider rejection caused by an invalid test key from successful QR code creation. Local webhook simulations are documented as simulations and are not treated as evidence of actual external PayMongo webhook deliveries or live payment charges. The twelve PayMongo test cases, identified as PM-01 to PM-12, are presented in Table 4.7, with supporting evidence provided in Figures B26–B37.
+
+[505|Normal]
+FRAMS was implemented as a browser-based application for a local Apache, PHP, and MySQL environment. The documented local setup is XAMPP, with the application placed under the web server document root. Authorized users open the pages in a web browser. The server renders each page, checks the signed-in role, reads and writes the database, and returns HTML. There is no separate mobile application and no separate public web service for the screens. The payments page uses two authenticated JSON lookups. One loads the selected loan and its remaining balance into the payment form. The other refreshes a pending PayMongo QR Ph transaction by retrieving its Payment Intent status and returns the stored result. A QR Ph repayment is posted only after that status is succeeded and the amount matches, or after an optional verified webhook posts the same confirmation.
+
+[644|Normal]
+Payment and collection management. The payments page lists collections and records a payment for an authorized loan. The form shows the borrower, the amount already paid, and the remaining balance. The fields stored are the amount, date, collector, method, optional reference number, and penalty portion. The receipt number uses the prefix RJRR, the date, and a numeric sequence. The borrower can view that borrower's payment history and download a receipt for that borrower's own payment. The collector works from assigned accounts. When the method is bank transfer or e-wallet, that collector can start PayMongo Dynamic QR Ph. The repayment, receipt, and balance change are saved only after Payment Intent polling on the open QR page, or an optional verified webhook, confirms success and the paid amount matches the pending transaction. An unverified, expired, or mismatched QR code does not post a payment, and a verified QR Ph payment is not deleted from the list. A payment that fails the amount checked in Section 4.1.1 is rejected.
+
+[665|Normal]
+Table 4.7
+
+[699|Normal]
+The PayMongo QR Ph testing documentation includes twelve test cases, PM-01 to PM-12, supported by the screenshots and recorded results in Figures B26–B37. These tests evaluated safe handling of rejected QR creation requests, payment amount validation, cash-versus-QR controls, collector assignment restrictions, authentication requirements, unresolved QR payment attempts, receipt and payment record display, webhook signature validation, and payment summaries. The evidence includes the safe rejection of QR creation after PayMongo returned HTTP 401 for the isolated invalid test key, as well as validation messages and restrictions demonstrated in the isolated FRAMS test environment. These results support the specific behaviors documented in the corresponding test cases.
+
+[700|Normal]
+PM-09 and PM-10 document a locally simulated repayment and the display of its receipt and payment record within FRAMS. PM-11 documents local webhook signature-validation tests involving missing signatures, invalid signatures, and an expired timestamp. These are valid evidence of the tested local application behavior; however, they are not evidence of external PayMongo webhook delivery, successful live payment processing, or actual transfer of funds. The twelve documented PayMongo test cases and their corresponding evidence are presented in Table 4.7 and Figures B26–B37.
+
+[703|Normal]
+Table 4.9
+
+[839|Normal]
+The literature reviewed in Chapter II provides context for FRAMS through discussions of manual credit assessment, microfinance operations, and predictive scoring approaches. Unlike systems that use machine learning to predict default, FRAMS applies configured eligibility rules to assess borrower information and support the administrator's review. The system was evaluated through documented unit, integration, system, PayMongo integration, and penetration and security testing. The testing summary reports 49 of 49 documented test cases as passed, comprising six unit tests, seven integration tests, twelve system tests, twelve PayMongo-related tests, and twelve penetration and security tests. These results apply to the specific test cases and conditions documented in Appendix B and do not establish that every possible workflow, security condition, or external payment scenario has been tested.
+
+[849|Normal]
+The documented technical tests support the specific cases examined in their documented environments. Passing those cases does not establish that the entire system is free of defects. Local PayMongo simulations do not independently demonstrate a successful external PayMongo charge or a provider-delivered webhook.
+
+[1028|Normal]
+The PayMongo evidence for PM-01 to PM-12 is attached as Figures B26–B37. The test descriptions and results below are aligned to the behaviors shown in the supplied evidence. PM-01 and PM-02 document safe failure handling with an isolated invalid test key. PM-09 documents a local simulation and receipt display; it does not establish a live PayMongo charge or external webhook delivery.
+
+[1029|Heading 1]
+Figure B26 — PM-01
+
+[1080|Heading 1]
+Figure B34 — PM-09
+
+[1083|Normal]
+Actual result: This was a local signed webhook simulation, not a PayMongo delivery and not a live charge. The pending transaction changed to succeeded. One E-Wallet repayment of PHP 100.00 was stored with receipt RJRR-20261018-000004 and reference pay_frams_pm09_once. The receipt shows PHP 3,150.00 before payment and PHP 3,050.00 after payment.
+
+[1089|Heading 1]
+Figure B35 — PM-10
+
+[1095|Heading 1]
+Figure B36 — PM-11
+
+[1096|Normal]
+Scenario: Webhook requests are submitted without a signature, with an invalid signature, and with a timestamp older than five minutes to verify the endpoint's signature-validation mechanism.
+
+[1097|Normal]
+Expected result: Requests with a missing signature, an incorrect signature, or a timestamp older than five minutes should be rejected with HTTP 401 and return an invalid_signature status.
+
+[1098|Normal]
+Actual result: The local webhook response table showed HTTP 401 and invalid_signature for the missing-signature, incorrect-signature, and older-timestamp requests. The displayed evidence documents local signature-validation responses, not external PayMongo webhook deliveries.
+
+[1101|Normal]
+Figure B36 (B36_pm11_webhook_responses.png) 
+
+[1102|Heading 1]
+Figure B37 — PM-12
+
+[1233|Normal]
+The documented functional test-case summary contains 49 cases: six unit tests, seven integration tests, twelve system tests, twelve PayMongo-related tests, and twelve penetration/security tests. The recorded case summary reports 49 passed and 0 failed. These counts describe the listed test cases and should not be interpreted as proof of exhaustive testing or as a count of every execution run.
+
+[1235|Normal]
+The PayMongo and penetration/security evidence uses an isolated test server at 127.0.0.1:8099 and the frams_capstone_test database. The existing lending_management database was not modified, and no live PayMongo charge was created. PM-01 documents rejection of an isolated invalid test key, while PM-09 and PM-10 are local webhook simulations. These results support local validation and rejection-handling checks, but they do not prove a successful end-to-end transaction delivered by PayMongo’s external sandbox or production service. System tests ST-01 through ST-12 are recorded in Figures B14–B25.
+
+[1324|Normal]
+Interpretation and limitation. The supplied report describes the earlier defects and records the corresponding corrections and retest outcomes. The manuscript should not rely on the earlier six-failure summary as the current status without noting that a later fix report reports a successful 28-case retest. Conversely, “28 passed” should be attributed to the supplied automated report unless the CSV/JSON outputs and test environment are retained as auditable evidence. This appendix does not claim that every browser workflow or external PayMongo webhook was independently verified.
+
+[1329|Normal]
+Declared relationships. The dump contains one foreign key: paymongo_qrph_webhook_events.transaction_id references paymongo_qrph_transactions.id with ON DELETE SET NULL. Relationships among users, clients, loans, releases, schedules, and payments are enforced in application queries. A deleted parent row is not stopped by a database foreign key on those core tables.
+
+[1330|Normal]
+Required tables in the dump: users, clients, borrower_applications, loan_applications, loan_application_documents, loan_application_reviews, loan_agreements, loan_releases, loan_release_notifications, loans, loan_payment_schedules, payments, expenses, notifications, password_resets, contact_inquiries, contact_inquiry_replies, email_notifications, paymongo_qrph_transactions, and paymongo_qrph_webhook_events.
+
+[1331|Normal]
+Initialization notes. AUTO_INCREMENT values in the dump reflect the source database at the time of export and are not required for a new empty installation. Passwords in a new installation must be created through the application so that they are stored as hashes. This appendix does not contain live API keys, webhook secrets, or borrower records.
+
+
+=== TABLES ===
+
+----- TABLE 5 20x2 -----
+R0: Entity || Purpose
+R1: users || Accounts, roles, status, profile data, and the password hash
+R2: borrower_applications || Public registration and the approval decision
+R3: clients || Borrower records used for loans and collector assignment
+R4: loan_applications || Requested terms, income fields, status, remarks, and the saved eligibility estimate
+R5: loan_application_documents || Uploaded requirements and verification status
+R6: loan_application_reviews || Administrator decisions and review notes
+R7: loan_agreements || Agreement text, acceptance, signature name, and time
+R8: loan_releases || Loan number, released amount, borrower, collector, and terms
+R9: loan_payment_schedules || Installment due date, principal, interest, amount due, and status
+R10: loans || Operational loan, total payable, frequency, and status
+R11: payments || Amount, penalty portion, date, method, reference, collector, and receipt number
+R12: expenses || Office expense description, amount, date, and category
+R13: notifications || In-application messages and read state
+R14: password_resets || Password-reset token and expiry
+R15: contact_inquiries || Public contact-form messages and their status
+R16: contact_inquiry_replies || Administrator replies to a contact inquiry
+R17: email_notifications || Selected outbound email attempts, status, and send time
+R18: paymongo_qrph_transactions || Collector-started Dynamic QR Ph attempts, status, expiry, and the payment link after verification
+R19: paymongo_qrph_webhook_events || PayMongo webhook events and whether each event posted or withheld a repayment
+
+----- TABLE 10 13x6 -----
+R0: Test Case ID || Description || Test Steps || Expected Result || Actual Result || Remarks
+R1: PM-01 || Verify safe handling when PayMongo rejects QR Ph creation. || 1. Open Record Payment. 2. Select FRAMS-DISP-01 and E-Wallet. 3. Submit the request and inspect the response. || If QR creation is rejected, FRAMS should show an error, display no QR code, and create no repayment. || PayMongo returned HTTP 401 for the isolated test key. The QR page did not open, no QR image was displayed, no repayment was created, and the loan remained Activ || PASSED — Figure B26 shows the rejected request and the safe-failure screen.
+R2: PM-02 || Verify the payment form after QR generation fails. || 1. Attempt E-Wallet QR creation for FRAMS-DISP-01. 2. Inspect the page after the failed request. || The form should remain available without QR details, and the loan balance should remain unchanged. || The Record Payment screen remained open without a QR image, QR amount, QR method block, or expiry. The displayed remaining balance stayed at PHP 3,150.00. || PASSED — Figure B27 shows the form after the failed QR request.
+R3: PM-03 || Verify QR creation controls when Cash is selected. || 1. Open Record Payment. 2. Select Cash. 3. Inspect the available actions. || The Create Dynamic QR Ph action should not be available for Cash payments. || With Cash selected, the Create Dynamic QR Ph button was hidden or disabled, while Cancel and Record Payment remained available. || PASSED — Figure B28 shows the Cash selection and available actions.
+R4: PM-04 || Verify validation of blank, zero, and nonnumeric payment amounts. || 1. Submit a blank amount. 2. Submit zero. 3. Submit a nonnumeric value. 4. Inspect each validation response. || Blank input should trigger required-field validation; zero and nonnumeric amounts should be rejected with validation messages. || Blank input was stopped by browser validation. Zero returned “Payment amount must be greater than zero.” The nonnumeric value returned “Enter a valid payment am || PASSED — Figure B29(a) and B29(b) show zero and nonnumeric validation. The blank-input result is recorded in the test result.
+R5: PM-05 || Verify rejection of an amount exceeding the current total due. || 1. Open Record Payment for FRAMS-DISP-01. 2. Enter an amount greater than PHP 3,150.00. 3. Submit and inspect the response. || FRAMS should reject an amount greater than the current total amount due. || FRAMS displayed “Payment cannot exceed the current total amount due of ₱3,150.00.” || PASSED — Figure B30 shows the excessive-amount validation message.
+R6: PM-06 || Verify collector assignment restrictions for payment requests. || 1. Sign in as a collector. 2. Attempt a payment request for a loan assigned to another collector. 3. Inspect the response. || FRAMS should reject a collector’s request for a loan not assigned to that collector. || FRAMS displayed “You are not assigned to this loan.” The loan was not available in the displayed selection. || PASSED — Figure B31 shows the loan-assignment restriction message.
+R7: PM-07 || Verify authentication restrictions on the staff payment area. || 1. Sign out. 2. Attempt to open the protected staff payments page. 3. Observe the page shown. || An unauthenticated visitor should be redirected to the staff sign-in page. || The staff sign-in page was displayed. The supplied evidence documents the signed-out redirection; it does not independently show borrower role restrictions. || PASSED — Figure B32 supports the unauthenticated-access check shown in the evidence.
+R8: PM-08 || Verify handling of an unresolved prior QR Ph attempt. || 1. Open Record Payment for FRAMS-TEST-A. 2. Select E-Wallet. 3. Attempt another QR Ph request while the earlier attempt cannot be confirmed. 4. Inspect the resp || FRAMS should refuse a new attempt when the previous QR Ph transaction cannot be confirmed. || FRAMS displayed “The previous PayMongo QR Ph attempt could not be confirmed with PayMongo. Try again in a moment or open the QR status page first.” The displaye || PASSED — Figure B33 shows the blocked attempt and error message.
+R9: PM-09 || Verify the receipt details for a recorded E-Wallet repayment. || 1. Open the receipt for the recorded repayment. 2. Check receipt number, payment method, amount, and balances. || The receipt should display the recorded repayment details and the balance after payment. || The receipt showed RJRR-20261018-000004, E-Wallet, PHP 100.00 paid, PHP 3,150.00 before payment, and PHP 3,050.00 remaining. The recorded event was generated th || PASSED — Figure B34 supports receipt display and repayment details; it does not prove receipt of live funds by PayMongo.
+R10: PM-10 || Verify that a recorded repayment appears in Payments Management. || 1. Open Payments Management. 2. Locate the displayed E-Wallet payment. 3. Check the payment ID, borrower, loan ID, amount, method, reference, and collector. || The payment list should display the recorded payment and its visible transaction details. || The screenshot showed Payment ID 46 for Synthetic Borrower A, Loan ID 31, PHP 100.00, E-Wallet, reference `pay_frams_pm09_once`, and FRAMS Test Collector. || PASSED — Figure B35 supports display of the payment record only; it does not evidence duplicate-webhook handling.
+R11: PM-11 || Verify rejection of local webhook requests with missing or invalid signatures and an expired timestamp. || 1. Submit a local request without a signature. 2. Submit one with an incorrect signature. 3. Submit one with a timestamp older than five minutes. 4. Review the  || Each invalid request should be rejected with HTTP 401 and an `invalid_signature` response. || The local webhook response table showed HTTP 401 and `invalid_signature` for the missing-signature, incorrect-signature, and older-timestamp requests. || PASSED — Figure B36 shows the three local signature-validation responses. These were not external PayMongo deliveries.
+R12: PM-12 || Verify that the Payments Management page displays payment summaries and payment entries. || 1. Open Payments Management. 2. Review the selected period and summary cards. 3. Inspect the visible payment list and its transaction entry. || The page should display the selected reporting period, payment summary information, and recorded payment entries. || The screenshot showed October 2026, collected and all-time collection totals of PHP 10,516.66, four payments for the period, and Payment ID 46 for PHP 100.00 in || PASSED — Figure B37 supports the displayed summary cards and payment list; it does not test payment deletion restrictions.
+
+----- TABLE 12 7x5 -----
+R0: Testing Level || Test Cases || Passed || Failed || Remarks
+R1: Unit testing || 6 || 6 || 0 || All 6 unit cases passed. Figures B1–B6 match the expected results, including Pending Approval for UT-03.
+R2: Integration testing || 7 || 7 || 0 || All 7 integration cases passed. Figures B7–B13 match the expected results, including the approval list for IT-02.
+R3: System Testing || 12 || 12 || 0 || All 12 system cases passed. Figures B14–B25 match the expected results.
+R4: PayMongo Testing || 12 || 12 || 0 || 12/12 cases passed in the isolated test environment. PM-01/02 verified safe rejection with an invalid test key; PM-09/10 used local webhook simulation, not exte
+R5: Penetration Testing || 12 || 12 || 0 || 12/12 controlled security checks passed in the isolated test environment. See Figures B38–B49.
+R6: Total || 49 || 49 || 0 || 49 listed test cases passed: 6 unit, 7 integration, 12 system, 12 PayMongo-related, and 12 penetration/security cases. See Figures B1–B49. PayMongo local webhoo
+
+----- TABLE 17 13x6 -----
+R0: Test Case ID || Description || Test Steps || Expected Result || Actual Result || Remarks
+R1: PM-01 || Verify safe handling when PayMongo rejects QR Ph creation. || 1. Open Record Payment. 2. Select FRAMS-DISP-01 and E-Wallet. 3. Submit the request and inspect the response. || If QR creation is rejected, FRAMS should show an error, display no QR code, and create no repayment. || PayMongo returned HTTP 401 for the isolated test key. The QR page did not open, no QR image was displayed, no repayment was created, and the loan remained Activ || PASSED — Figure B26 shows the rejected request and the safe-failure screen.
+R2: PM-02 || Verify the payment form after QR generation fails. || 1. Attempt E-Wallet QR creation for FRAMS-DISP-01. 2. Inspect the page after the failed request. || The form should remain available without QR details, and the loan balance should remain unchanged. || The Record Payment screen remained open without a QR image, QR amount, QR method block, or expiry. The displayed remaining balance stayed at PHP 3,150.00. || PASSED — Figure B27 shows the form after the failed QR request.
+R3: PM-03 || Verify QR creation controls when Cash is selected. || 1. Open Record Payment. 2. Select Cash. 3. Inspect the available actions. || The Create Dynamic QR Ph action should not be available for Cash payments. || With Cash selected, the Create Dynamic QR Ph button was hidden or disabled, while Cancel and Record Payment remained available. || PASSED — Figure B28 shows the Cash selection and available actions.
+R4: PM-04 || Verify validation of blank, zero, and nonnumeric payment amounts. || 1. Submit a blank amount. 2. Submit zero. 3. Submit a nonnumeric value. 4. Inspect each validation response. || Blank input should trigger required-field validation; zero and nonnumeric amounts should be rejected with validation messages. || Blank input was stopped by browser validation. Zero returned “Payment amount must be greater than zero.” The nonnumeric value returned “Enter a valid payment am || PASSED — Figure B29(a) and B29(b) show zero and nonnumeric validation. The blank-input result is recorded in the test result.
+R5: PM-05 || Verify rejection of an amount exceeding the current total due. || 1. Open Record Payment for FRAMS-DISP-01. 2. Enter an amount greater than PHP 3,150.00. 3. Submit and inspect the response. || FRAMS should reject an amount greater than the current total amount due. || FRAMS displayed “Payment cannot exceed the current total amount due of ₱3,150.00.” || PASSED — Figure B30 shows the excessive-amount validation message.
+R6: PM-06 || Verify collector assignment restrictions for payment requests. || 1. Sign in as a collector. 2. Attempt a payment request for a loan assigned to another collector. 3. Inspect the response. || FRAMS should reject a collector’s request for a loan not assigned to that collector. || FRAMS displayed “You are not assigned to this loan.” The loan was not available in the displayed selection. || PASSED — Figure B31 shows the loan-assignment restriction message.
+R7: PM-07 || Verify authentication restrictions on the staff payment area. || 1. Sign out. 2. Attempt to open the protected staff payments page. 3. Observe the page shown. || An unauthenticated visitor should be redirected to the staff sign-in page. || The staff sign-in page was displayed. The supplied evidence documents the signed-out redirection; it does not independently show borrower role restrictions. || PASSED — Figure B32 supports the unauthenticated-access check shown in the evidence.
+R8: PM-08 || Verify handling of an unresolved prior QR Ph attempt. || 1. Open Record Payment for FRAMS-TEST-A. 2. Select E-Wallet. 3. Attempt another QR Ph request while the earlier attempt cannot be confirmed. 4. Inspect the resp || FRAMS should refuse a new attempt when the previous QR Ph transaction cannot be confirmed. || FRAMS displayed “The previous PayMongo QR Ph attempt could not be confirmed with PayMongo. Try again in a moment or open the QR status page first.” The displaye || PASSED — Figure B33 shows the blocked attempt and error message.
+R9: PM-09 || Verify the receipt details for a recorded E-Wallet repayment. || 1. Open the receipt for the recorded repayment. 2. Check receipt number, payment method, amount, and balances. || The receipt should display the recorded repayment details and the balance after payment. || The receipt showed RJRR-20261018-000004, E-Wallet, PHP 100.00 paid, PHP 3,150.00 before payment, and PHP 3,050.00 remaining. The recorded event was generated th || PASSED — Figure B34 supports receipt display and repayment details; it does not prove receipt of live funds by PayMongo.
+R10: PM-10 || Verify that a recorded repayment appears in Payments Management. || 1. Open Payments Management. 2. Locate the displayed E-Wallet payment. 3. Check the payment ID, borrower, loan ID, amount, method, reference, and collector. || The payment list should display the recorded payment and its visible transaction details. || The screenshot showed Payment ID 46 for Synthetic Borrower A, Loan ID 31, PHP 100.00, E-Wallet, reference `pay_frams_pm09_once`, and FRAMS Test Collector. || PASSED — Figure B35 supports display of the payment record only; it does not evidence duplicate-webhook handling.
+R11: PM-11 || Verify rejection of local webhook requests with missing or invalid signatures and an expired timestamp. || 1. Submit a local request without a signature. 2. Submit one with an incorrect signature. 3. Submit one with a timestamp older than five minutes. 4. Review the  || Each invalid request should be rejected with HTTP 401 and an `invalid_signature` response. || The local webhook response table showed HTTP 401 and `invalid_signature` for the missing-signature, incorrect-signature, and older-timestamp requests. || PASSED — Figure B36 shows the three local signature-validation responses. These were not external PayMongo deliveries.
+R12: PM-12 || Verify that the Payments Management page displays payment summaries and payment entries. || 1. Open Payments Management. 2. Review the selected period and summary cards. 3. Inspect the visible payment list and its transaction entry. || The page should display the selected reporting period, payment summary information, and recorded payment entries. || The screenshot showed October 2026, collected and all-time collection totals of PHP 10,516.66, four payments for the period, and Payment ID 46 for PHP 100.00 in || PASSED — Figure B37 supports the displayed summary cards and payment list; it does not test payment deletion restrictions.
+
+----- TABLE 20 7x6 -----
+R0: Testing level || Documented cases || Passed || Failed || Not yet tested || Blocked / needs setup
+R1: Unit testing || 6 || 6 || 0 || 0 || 0
+R2: Integration testing || 7 || 7 || 0 || 0 || 0
+R3: System testing || 12 || 12 || 0 || 0 || 0
+R4: PayMongo testing || 12 || 12 || 0 || 0 || 0
+R5: Penetration testing || 12 || 12 || 0 || 0 || 0
+R6: Total || 49 || 49 || 0 || 49 listed test cases passed: 6 unit, 7 integration, 12 system, 12 PayMongo-related, and 12 penetration/security cases. See Figures B1–B49. PayMongo local webhoo || 0

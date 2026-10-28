@@ -1,0 +1,47 @@
+Usability. Signed-in users share one sidebar and top bar. The application shows the step the borrower is on. A failed login, upload, eligibility check, or payment returns a message on the page.
+---
+Figure 5.7 is the immediate recording path for cash, bank transfer, and e-wallet. An administrator or the assigned collector can save that payment as soon as the amount is valid. PayMongo Dynamic QR Ph waits for a later confirmation. The Create Dynamic QR Ph action is shown only for bank transfer or e-wallet, and only a collector can start it. The page stores a pending QR Ph transaction and shows 
+---
+The source is organized by responsibility. Each major screen is a PHP page. Shared files under the include directory handle the database connection, session and role checks, cross-site request tokens, loan interest and schedules, the eligibility estimate, navigation, mail, and document checks. Pages that change data call the token check before the update is saved. Text written back into a page has
+---
+The signed-in interface uses a sidebar for navigation, a top bar for the page title, search where the role has a search target, the unread-notification count, and the user menu, and a content area for cards, forms, and tables. The sidebar changes with the role. Labels follow lending terms already used by the office: clients, loans, payments, loan applications, loan release, expenses, penalties, an
+---
+Testing is documented through unit, integration, system, PayMongo integration, and security test cases, with user acceptance testing reported separately. The final status of each test must be based on an actual execution record and supporting evidence. A test should be marked Passed only when its observed result matches the expected result. Failed, blocked, and not-yet-tested cases must remain sep
+---
+With a wrong password or an inactive account, login failed. An error message was shown, and the administrator and borrower pages were not accessible without a valid session.
+---
+The wizard stays on the loan-details step and states the limit that failed.
+---
+On Step 3, advancing to the next step was blocked when the debt-to-income or minimum or maximum loan rule failed. The message named the failed limit.
+---
+With the isolated invalid test key, the provider rejects QR creation. No QR page opens, no repayment is stored, and the loan balance stays unchanged; the attempt is recorded as failed.
+---
+The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 with a PHP 3,150.00 balance. PayMongo returned HTTP 401 because the isolated test key was invalid. No QR page or QR image opened; the transaction was stored as failed, no repayment was created, and the loan remained Active with the balance unchanged.
+---
+HEADER Failed
+---
+49 passed and 0 failed. PayMongo testing remains 12 passed and 0 failed (Figures B26–B37). Penetration testing remains 12 passed and 0 failed (Figures B38–B49).
+---
+The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 while the balance was PHP 3,150.00. PayMongo returned HTTP 401 and rejected the isolated test key. The QR page did not open. The stored transaction status was failed, and it had no QR image. No repayment was created and the loan stayed Active. The provider text was redacted in the screenshot because it echoed part of the test key.
+---
+Expected result: With the isolated invalid test key, PayMongo rejects QR creation. No QR page opens, no repayment is stored, and the loan balance stays unchanged. The attempt is saved as failed.
+---
+Actual result: The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 while the balance was PHP 3,150.00. PayMongo returned HTTP 401 and rejected the isolated test key. The QR page did not open. The stored transaction status was failed, and it had no QR image. No repayment was created and the loan stayed Active. The provider text was redacted in the screenshot because it echoed part of t
+---
+All 49 functional test cases passed, comprising 6 unit tests, 7 integration tests, 12 system tests, 12 PayMongo tests, and 12 penetration tests, with 49 passed and 0 failed.
+---
+HEADER Failed
+---
+HEADER Not yet tested
+---
+Unit, integration, and system testing each passed with no failed cases. PayMongo and penetration testing remain 12 passed and 0 failed. The total is 49 passed and 0 failed.
+---
+Results: 12 passed, 0 failed, 0 blocked, 0 not executed.
+---
+The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 while the balance was PHP 3,150.00. PayMongo returned HTTP 401 and rejected the isolated test key. The QR page did not open. The stored transaction status was failed, and it had no QR image. No repayment was created and the loan stayed Active. The provider text was redacted in the screenshot because it echoed part of the test key.
+---
+Expected result: With the isolated invalid test key, PayMongo rejects QR creation. No QR page opens, no repayment is stored, and the loan balance stays unchanged. The attempt is saved as failed.
+---
+Actual result: The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 while the balance was PHP 3,150.00. PayMongo returned HTTP 401 and rejected the isolated test key. The QR page did not open. The stored transaction status was failed, and it had no QR image. No repayment was created and the loan stayed Active. The provider text was redacted in the screenshot because it echoed part of t
+---
+Results: 12 passed, 0 failed, 0 blocked, 0 not executed.

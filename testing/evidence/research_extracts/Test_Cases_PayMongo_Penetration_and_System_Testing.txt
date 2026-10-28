@@ -1,0 +1,200 @@
+Test Cases
+Lending Management System
+PayMongo Test
+Test Case ID
+Description
+Expected Result
+Actual Result
+Remarks
+PM-01
+Sign in as the collector assigned to an unpaid loan. Choose Bank Transfer or E-Wallet, enter an amount greater than zero and within the amount due, and create a Dynamic QR Ph payment.
+A pending PayMongo QR Ph transaction is stored, and the QR payment page opens for that loan.
+After the collector submitted a valid Bank Transfer or E-Wallet amount, a pending QR Ph transaction was created and the Dynamic QR Ph page opened. The page showed the payment amount, the selected method, and the PayMongo Payment Intent.
+Pass
+PM-02
+Open a newly created QR Ph payment and check the loan balance before the borrower pays.
+The QR code is shown, and the loan balance stays unchanged until PayMongo confirms the payment.
+The QR image was displayed with the amount, method, and expiry. The outstanding balance and the loan status stayed the same while the transaction remained pending.
+Pass
+PM-03
+Choose Cash as the payment method on an assigned unpaid loan.
+Dynamic QR Ph is not offered for Cash.
+The Create Dynamic QR Ph action stayed hidden when Cash was selected. A cash collection could still be recorded through the regular payment form.
+Pass
+PM-04
+Start a QR Ph payment with a blank, zero, or non-numeric amount.
+The QR payment is not created, and a validation message is shown.
+The amount was rejected. No PayMongo transaction was stored, and the loan balance was not changed. The page asked for a valid payment amount greater than zero.
+Pass
+PM-05
+Start a QR Ph payment with an amount greater than the current total amount due.
+The QR payment is not created, and the amount due is not exceeded.
+The payment was rejected. The message stated that the payment cannot exceed the current total amount due, and no QR transaction was stored.
+Pass
+PM-06
+Sign in as a collector who is not assigned to the selected loan and try to create a QR Ph payment.
+The QR payment is refused because the collector is not assigned to that loan.
+The request was refused with the message that the collector is not assigned to the loan. No QR code was created and no payment was recorded.
+Pass
+PM-07
+Try to start a PayMongo QR Ph payment while signed in as a borrower, or without a collector session.
+Only an assigned collector can start a PayMongo QR Ph payment.
+The borrower session and a signed-out visit could not start a QR Ph payment. The system kept the action limited to a collector.
+Pass
+PM-08
+Try to create a second QR Ph payment while an earlier QR Ph attempt for the same loan is still unresolved.
+The second attempt is blocked until the open attempt is finished, refreshed, or marked expired.
+The system kept the existing open attempt and did not create another QR code. It directed the user to finish or check the open QR Ph payment first.
+Pass
+PM-09
+Complete a PayMongo test-mode payment for a pending QR Ph transaction.
+PayMongo confirms the payment, the repayment is recorded once, the loan balance is updated, and the receipt is available.
+After the test payment was confirmed, the QR status changed to paid. One repayment was recorded, the loan balance was reduced, and the receipt was available. The balance had remained unchanged until that confirmation.
+Pass
+PM-10
+Deliver a PayMongo webhook with a valid signature and a current timestamp for a confirmed payment on a pending QR Ph transaction.
+The signature is accepted and the repayment is recorded once.
+The signed webhook was accepted. The matching pending transaction was marked paid, one repayment was stored, and the receipt was linked to that PayMongo transaction.
+Pass
+PM-11
+Deliver a PayMongo webhook with a missing signature, an incorrect signature, or a timestamp outside the allowed window.
+The webhook is rejected and no repayment is recorded.
+The webhook was rejected. The loan balance, the payment list, and the pending QR Ph transaction were not updated from that request.
+Pass
+PM-12
+Try to delete a repayment that is linked to a verified PayMongo QR Ph transaction.
+The linked payment, receipt, and PayMongo record stay on file.
+The deletion was refused. The message stated that the payment is linked to a verified PayMongo QR Ph transaction and was not deleted.
+Pass
+Penetration Test
+Test Case ID
+Description
+Expected Result
+Actual Result
+Remarks
+PT-01
+Open the administrator dashboard, collector dashboard, payments, reports, and borrower account pages without signing in.
+The protected pages do not open. The user is sent to the sign-in page.
+Each protected page redirected to the sign-in page. No dashboard, client, loan, or payment data was shown.
+Pass
+PT-02
+Sign in with a wrong password or with an inactive account.
+The protected pages do not open.
+Login failed. An error message was shown, and the administrator, collector, and borrower pages were not accessible without a valid session.
+Pass
+PT-03
+Sign in as a borrower and open administrator pages for users, reports, loan release, payments, and expenses.
+The borrower cannot open administrator pages.
+The borrower was returned to the borrower dashboard. Administrator records and actions were not displayed.
+Pass
+PT-04
+Sign in as a collector and open administrator-only pages for user management, reports, borrower approval, and loan release.
+The collector cannot open administrator-only pages.
+The collector was returned to the collector dashboard or received an unauthorized response. Administrator-only records were not changed.
+Pass
+PT-05
+Submit a form that creates or changes a record, such as registration, payment, expense, user, or loan release, without a valid security token.
+The change is rejected.
+The submission was rejected. No registration, payment, expense, user, or loan release was saved from that request.
+Pass
+PT-06
+Enter database query text in the sign-in, search, and record fields.
+The text is treated as ordinary input. It does not change which records are returned or saved.
+The entered text was handled as data. Sign-in failed, or the search returned only ordinary matches. No extra accounts, loans, or payments were exposed or changed.
+Pass
+PT-07
+Enter script markup in names, remarks, search, and other text fields, then open the page that displays those fields.
+The markup is shown as text and does not run in the browser.
+The stored text was displayed as plain text. The markup was not executed, and the surrounding page continued to load normally.
+Pass
+PT-08
+Sign in as a borrower and open another borrower's loan, payment history, receipt, or uploaded document by using that record's address.
+The other borrower's records do not open.
+The request was refused, or the page showed only the signed-in borrower's own records. The other receipt and document were not downloaded.
+Pass
+PT-09
+Sign in as a collector and open a client, loan, or payment that is not assigned to that collector.
+The unassigned record does not open for collection.
+Access was denied and the collector was returned to the collector dashboard. No payment was recorded for the unassigned loan.
+Pass
+PT-10
+Upload a loan document that is not a JPG, PNG, or PDF file, and upload a file larger than 8 MB.
+The file is rejected and is not stored with the application.
+The upload was rejected. The message identified the allowed file types or the 8 MB limit, and the file was not saved with the loan documents.
+Pass
+PT-11
+Sign out, then use the browser Back button or the previous session to open a protected page.
+The ended session cannot open protected pages.
+Sign-out cleared the session. The protected page redirected to the sign-in page, and the previous account data was no longer shown.
+Pass
+PT-12
+Open a password-reset link that is missing, expired, or already used, and submit a new password.
+The password is not changed.
+The page showed that the token was invalid or expired and asked for a new reset link. The existing password still signed in, and the rejected link did not set a new password.
+Pass
+System Testing
+Test Case ID
+Description
+Expected Result
+Actual Result
+Remarks
+ST-01
+Register a new borrower with the required account details.
+A pending account is stored, and the success page is shown.
+The new borrower data was saved. The account status was Pending, and the registration success page was displayed.
+Pass
+ST-02
+Sign in as an administrator and approve a pending borrower registration.
+The borrower account becomes active, and the borrower can sign in.
+The registration was approved and the account status became Active. The borrower was able to sign in to the borrower dashboard, and an approval notification was recorded.
+Pass
+ST-03
+Sign in as an approved borrower and submit a loan application with personal, income, and loan details, plus a JPG, PNG, or PDF document.
+The application and the document are stored, and the borrower can see the application status.
+The application was saved with the entered details and the uploaded document. The application status was available for the borrower to view.
+Pass
+ST-04
+Sign in as an administrator, verify the application documents, and approve the loan application.
+The approval and review notes are stored, and the application status changes to approved.
+The documents were marked verified, the approval was saved with the review notes, and the application status showed the approval. The borrower received a notification.
+Pass
+ST-05
+Generate the loan agreement and accept it as the borrower by entering the borrower name.
+The acceptance, name, and time are stored, and the application can proceed to release.
+The agreement was shown to the borrower. After the borrower name was entered, the acceptance and the time were saved, and the application was ready for release.
+Pass
+ST-06
+Sign in as an administrator, select an active collector, and release an accepted loan.
+A loan number, a loan record, a release record, and the installment schedule are created, and the assigned users are notified.
+The loan was released to the selected active collector. A loan number and an installment schedule were generated, and the assigned users received a notification.
+Pass
+ST-07
+Sign in as the assigned collector and record a cash payment that does not exceed the amount due.
+The payment is saved, a receipt number is created, and the balance is reduced.
+The cash payment was saved with the date, collector, and amount. A receipt number in the RJRR-YYYYMMDD-###### format was created, and the remaining balance was reduced.
+Pass
+ST-08
+Open the payment history as the borrower who owns the payment and download the receipt.
+The borrower can view the payment and download the receipt for that payment.
+The payment appeared in the borrower's payment history. The receipt downloaded for the owned payment and showed the recorded amount and receipt number.
+Pass
+ST-09
+Record payments against a released loan until the outstanding amount is fully covered.
+The installment status and the loan status are recalculated from the payments and due dates.
+Covered installments were updated from the amount paid. When the outstanding amount was fully paid, the loan status became Paid.
+Pass
+ST-10
+Sign in as a collector and open the collector dashboard, assigned clients, loans, and collection schedule.
+Only clients and loans assigned to that collector are shown.
+The dashboard listed the assigned clients, loans, pending collections, and schedule. Loans assigned to another collector were not listed for collection.
+Pass
+ST-11
+Sign in as an administrator and open the reports for borrowers, collectors, loan status, collections, expenses, disbursements, receivables, and collector performance.
+The reports open, and the totals agree with the recorded loans, payments, and expenses.
+The report pages opened for the administrator. The collection, expense, disbursement, receivable, and collector totals matched the records stored in the system.
+Pass
+ST-12
+Complete an action that sends a notification, then open the notification list as the intended user and mark the item as read.
+The notification is visible only to the intended user, and its read state is saved.
+The notification appeared for the intended user with an unread count. After it was opened, the item was marked read and the unread count decreased.
+Pass

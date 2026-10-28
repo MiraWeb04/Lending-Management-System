@@ -29,10 +29,10 @@ if ($rawBody === false || $rawBody === '' || strlen($rawBody) > 262144) {
     lendingPaymongoWebhookRespond(400, 'invalid_payload');
 }
 
-$mode = strtolower(trim((string)lendingEnv('PAYMONGO_MODE', '')));
-if ($mode !== 'test') {
-    error_log('PayMongo webhook endpoint is configured for test mode only.');
-    lendingPaymongoWebhookRespond(503, 'test_mode_required');
+$mode = lendingPaymongoConfiguredMode();
+if ($mode !== 'test' && $mode !== 'live') {
+    error_log('PayMongo webhook endpoint requires PAYMONGO_MODE=test or PAYMONGO_MODE=live.');
+    lendingPaymongoWebhookRespond(503, 'paymongo_mode_invalid');
 }
 
 $webhookSecret = trim((string)lendingEnv('PAYMONGO_WEBHOOK_SECRET', ''));

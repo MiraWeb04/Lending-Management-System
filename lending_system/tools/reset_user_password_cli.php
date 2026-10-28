@@ -9,7 +9,7 @@ if (PHP_SAPI !== 'cli') {
     exit('Not found');
 }
 
-require_once dirname(__DIR__) . '/includes/db_lending.php';
+require_once dirname(__DIR__) . '/includes/auth_lending.php';
 
 $username = trim($argv[1] ?? '');
 $newPassword = (string)($argv[2] ?? '');
@@ -19,8 +19,9 @@ if ($username === '' || $newPassword === '') {
     exit(1);
 }
 
-if (strlen($newPassword) < 8) {
-    fwrite(STDERR, "Password must be at least 8 characters.\n");
+$passwordError = lendingValidatePassword($newPassword);
+if ($passwordError !== '') {
+    fwrite(STDERR, $passwordError . PHP_EOL);
     exit(1);
 }
 

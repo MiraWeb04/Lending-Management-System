@@ -1,0 +1,30 @@
+31: • How acceptable is the developed system in terms of functionality, usability, reliability, security, and performance?
+40: The eligibility estimate uses monthly income, existing debt payments, other monthly obligations, employment or business length, the requested amount, the term, and the interest rate. The default limits in the program are a maximum debt-to-i
+70: Juventud, Matigas, Himongala, Galla, and Abiol (2023) assessed perceived credit risk of microfinance loans among micro-enterprise owners in Barangay Población, Iligan City. Using a descriptive-correlational design and 75 business owners, th
+131: This chapter describes how FRAMS was planned and how the system is designed. The order follows the capstone guide: the development life cycle, the requirements, the system design, the technical specifications, and the development and testin
+136: Planning. The need for the system was identified from the difficulty of managing applications, credit review, and payment tracking in disconnected records. Selected borrowers, lenders, and administrators were the intended respondents for a 
+137: Instruments and procedures. The instruments identified for the study were a survey questionnaire, an interview guide for lenders and administrators, observation of loan processing and payment tracking, and secondary sources consisting of th
+141: Testing. Unit testing, integration testing, and user acceptance testing are the methods required for the report. They are described in Section 3.5 and carried out in Chapter 4.
+251: Development used a local XAMPP environment, MySQL, and a code editor, with the project files kept under version control. Testing follows the capstone requirement for unit testing, integration testing, and user acceptance testing.
+252: Unit testing. Login, registration, the eligibility gate, document upload, and the payment amount check are tested as separate rules. The expected results are stated in Chapter 4.
+254: User acceptance testing. The respondents identified for evaluation use the tasks allowed for their role. Scores are computed from the questionnaires with the scale adopted for the study and are reported only after they are tallied. Chapter 
+258: This chapter presents the actual implementation, testing, and results of the Financial Risk Assessment and Micro-Lending System (FRAMS) for RJ and RR Finance Services. In the running interface the organization is identified as RJ and RR Fin
+411: Testing for this chapter follows the methods required for the capstone report: unit testing, integration testing, and user acceptance testing. Unit, integration, and user acceptance testing were completed on the running prototype with the c
+412: Unit Testing
+413: Unit testing examines whether a single function or page accepts valid input, rejects input that breaks its own rule, and shows or stores the intended result. The cases cover login, registration, the eligibility gate, document upload, and pa
+416: Unit test cases of FRAMS
+417: Test case
+449: Integration test cases of FRAMS
+450: Test case
+483: User acceptance testing used the evaluation instrument described in Chapter 3. The client organization, RJ and RR Finance Services, participated through its administrator, assigned collector, and representative borrowers who perform the dai
+484: The guided tasks that match the implemented system are signing in, reviewing or approving a borrower registration, completing or reviewing a loan application, reading the eligibility estimate, accepting an agreement, releasing a loan, recor
+487: Functional results from unit and integration testing are recorded in Tables 4.4 and 4.5. All listed cases passed on the running prototype. User acceptance results from the scored questionnaires are summarized in Table 4.7. Table 4.6 consoli
+491: Number of test cases
+495: Unit testing
+510: Functionality
+525: The verbal interpretation follows the scale adopted in Chapter 3 (4.21–5.00, Very High). The raw tally and accomplished questionnaires are attached in Appendix B. All criteria received a Very High weighted mean, and RJ and RR Finance Servic
+527: The analysis below relates the implemented software to the objectives stated in Chapter 1. It does not treat the eligibility estimate as a prediction that a borrower will default, and it does not replace the administrator's decision to appr
+528: Functionality. The implemented modules provide one path from public registration and administrator approval, through a five-step application and document review, to an eligibility estimate, an accepted agreement, a released loan, an install
+529: Usability. The signed-in pages share a sidebar, a top bar, forms, and tables, and the loan application uses a five-step progress display. Validation messages are returned on the page when a login, an eligibility rule, an upload, or a paymen
+532: Performance. The application is built as a locally hosted lending office system. No measured response time, concurrent-user count, or load result was found in the project files. Performance findings, if the objectives require them, shall co
+581: The review of related literature was used to place this rule-based office system beside manual credit-checking practices and beside foreign studies of predictive scoring. FRAMS follows the first group in using stated credit checks, and it d

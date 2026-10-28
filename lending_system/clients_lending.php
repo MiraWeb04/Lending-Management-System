@@ -558,10 +558,11 @@ $clients = $clientsResult->fetchAll();
                                 <div class="col-md-6 col-lg-4">
                                     <label class="form-label" for="add_password">Password <span class="required-star">*</span></label>
                                     <div class="input-group input-group-lg">
-                                        <input type="password" class="form-control rounded-start-3 add-client-field" id="add_password" name="password" required autocomplete="new-password">
+                                        <input type="password" class="form-control rounded-start-3 add-client-field" id="add_password" name="password" <?php echo lendingPasswordInputAttributes(); ?> required>
                                         <button type="button" class="btn btn-outline-secondary password-toggle rounded-end-3" data-target="add_password" aria-label="Show password"><i class="fas fa-eye"></i></button>
                                     </div>
                                     <div class="password-strength mt-2 small" id="addPasswordStrength">Password strength: <span>weak</span></div>
+                                    <?php echo lendingPasswordHintHtml(); ?>
                                 </div>
                                 <div class="col-md-6 col-lg-4">
                                     <label class="form-label" for="add_confirm_password">Confirm password <span class="required-star">*</span></label>

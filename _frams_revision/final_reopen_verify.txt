@@ -1,0 +1,88 @@
+FINAL C:\Users\HomePC\Downloads\FRAMS_MANUSCRIPT_FINAL_REVIEWED.docx size=34319946 mtime=2026-10-23 14:50:56.730606
+PREV  C:\Users\HomePC\Downloads\FRAMS_MANUSCRIPT_AUDIT_CORRECTED.docx size=34321135 mtime=2026-10-23 14:36:20.912592
+FINAL paras=1336 tables=24
+PREV  paras=1332 tables=24
+PREV still lacks Santos, A. R.=True
+PREV still has broken T21 header Strongly Agree twice=True
+
+=== IN-TEXT ===
+  Batista and Montero (2020)
+  Bazarbash and Beaton (2020)
+  BlueOrchard (2025)
+  Campos (2024)
+  Chen and Li (2023)
+  Chen et al. (2021)
+  Davis (1989)
+  DeLone and McLean (2003)
+  Estrellado (2024)
+  Frost et al. (2024)
+  Ghosh et al. (2023)
+  Juszczak et al. (2022)
+  Juventud et al. (2023)
+  Khandani et al. (2010)
+  Kou et al. (2022)
+  LendStack (n.d.)
+  Lopez and Martinez (2024)
+  Mina (2024)
+  PayMongo (n.d.)
+  Penaso and Dagang (2025)
+  Rahman and Hasan (2025)
+  Ramirez (2024)
+  Santos (2023)
+REF [872] Bazarbash, M., & Beaton, K. (2020). Filling the gap: Digital credit and financial inclusion (IMF Working Paper No. WP/20/150). International Monetary Fund. https://doi.org/10.5089/9781513552477.001
+REF [873] BlueOrchard. (2025, February 3). Microfinance outlook for 2025. https://www.blueorchard.com/microfinance-outlook-for-2025/
+REF [874] Campos, R. B., Jr. (2024). The impact of digitalization on credit risk management in microfinance institutions in Nueva Ecija, Philippines. Indian Journal of Information Sources and Services, 14(3). https://doi.org/10.51
+REF [875] Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. MIS Quarterly, 13(3), 319–340. https://doi.org/10.2307/249008
+REF [876] DeLone, W. H., & McLean, E. R. (2003). The DeLone and McLean model of information systems success: A ten-year update. Journal of Management Information Systems, 19(4), 9–30. https://doi.org/10.1080/07421222.2003.11045748
+REF [877] Estrellado, G. E. (2024). Financial inclusion of lending institutions on sustainability of micro-businesses. United International Journal for Research & Technology, 5(7). https://uijrt.com/paper/financial-inclusion-lendi
+REF [878] International Organization for Standardization. (2011). Systems and software engineering—Systems and software Quality Requirements and Evaluation (SQuaRE)—System and software quality models (ISO/IEC 25010:2011).
+REF [879] Juventud, W. M., Matigas, E. A. O., Himongala, J., Galla, M. R., & Abiol, M. J. D. (2023). Perceived credit risk of micro finance loans among micro-enterprises business in Población Iligan City. International Journal of 
+REF [880] Khandani, A. E., Kim, A. J., & Lo, A. W. (2010). Consumer credit-risk models via machine-learning algorithms. Journal of Banking & Finance, 34(11), 2767–2787. https://doi.org/10.1016/j.jbankfin.2010.06.001
+REF [881] LendStack. (n.d.). Building the future of lending infrastructure. https://www.lendstack.in/
+REF [882] Mina, J. C. (2024). The credit risk management practices of lending companies in Nueva Ecija: Basis for risk mitigating plan. International Journal of Advanced and Applied Sciences, 11(9), 134–142. https://doi.org/10.218
+REF [883] PayMongo. (n.d.). PayMongo API documentation. https://developers.paymongo.com/
+REF [884] Penaso, C. P., & Dagang, A. L. (2025). Loan management practices as key drivers for the operation efficiency of microfinance institutions in Northern Mindanao, Philippines. International Journal of Research and Scientifi
+REF [885] Ramirez, J. G. (2024). Establishment of gross loan portfolio risk-return questionnaire: Reliability and validity structure. Mindoro Journal of Social Sciences and Development Studies, 1(2), 18–26. https://journal.omsc.ed
+REF [886] Santos, A. R. (2023). The rise of digital payments: Transforming the financial landscape in the Philippines. International Journal of Applied Engineering and Technology, 5(2), 22–27. https://romanpub.com/resources/ijaet%
+
+=== MATCH ===
+  Batista and Montero (2020) -> MISSING
+  Bazarbash and Beaton (2020) -> MATCH
+  BlueOrchard (2025) -> MATCH
+  Campos (2024) -> MATCH
+  Chen and Li (2023) -> MISSING
+  Chen et al. (2021) -> MISSING
+  Davis (1989) -> MATCH
+  DeLone and McLean (2003) -> MATCH
+  Estrellado (2024) -> MATCH
+  Frost et al. (2024) -> MISSING
+  Ghosh et al. (2023) -> MISSING
+  Juszczak et al. (2022) -> MISSING
+  Juventud et al. (2023) -> MATCH
+  Khandani et al. (2010) -> MATCH
+  Kou et al. (2022) -> MISSING
+  LendStack (n.d.) -> MATCH
+  Lopez and Martinez (2024) -> MISSING
+  Mina (2024) -> MATCH
+  PayMongo (n.d.) -> MATCH
+  Penaso and Dagang (2025) -> MATCH
+  Rahman and Hasan (2025) -> MISSING
+  Ramirez (2024) -> MATCH
+  Santos (2023) -> MATCH
+
+Still missing: Batista and Montero (2020); Chen and Li (2023); Chen et al. (2021); Frost et al. (2024); Ghosh et al. (2023); Juszczak et al. (2022); Kou et al. (2022); Lopez and Martinez (2024); Rahman and Hasan (2025)
+INV '30 borrowers, one administrator, and one collector': 9
+INV '640 individual': 7
+INV 'overall weighted mean was 4.53': 2
+INV '4.53': 0
+T12 total: Total | 48 | 48 | 0 | 48 listed official test cases passed: 6 unit, 7 integration, 12 system, 11 PayMongo-relate
+T13 overall: Overall Mean | 4.53 | Strongly Agree
+T21 27x7 header=['No.', 'Evaluation Statement', 'Strongly Agree', 'Agree', 'Neutral', 'Disagree', 'Strongly Disagree']
+T21 item nos=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20']
+LOC [881] LendStack. (n.d.). Building the future of lending infrastructure. https://www.lendstack.in/
+LOC [1071] Figure B32 — PM-07
+LOC [1077] Figure B32. Staff sign-in page after a signed-out request for the staff payments page. The attached screenshot shows the staff console sign-in form. A separate borrower payment-his
+LOC [1252] Table I1 FRAMS 20-Item User Acceptance Questionnaire
+PM-11 excluded note present=True
+Check with PayMongo mentioned=20
+live PayMongo leftover overclaim check: 'live PayMongo charge' count=8

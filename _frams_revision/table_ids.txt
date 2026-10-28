@@ -1,0 +1,74 @@
+
+===== TABLE 0 7x4 =====
+R0C0='Area' | R0C1='Sources retained from the review'
+R1C0='Credit checking' | R1C1='Mina (2024); Juventud et al. (2023)'
+R2C0='Financial inclusion' | R2C1='Estrellado (2024)'
+R3C0='Digital lending records' | R3C1='Santos (2023); Campos (2024); Penaso and Dagang (2025)'
+
+===== TABLE 7 7x6 =====
+R0C0='Test ID' | R0C1='Test Scenario'
+R1C0='UT-01' | R1C1='Valid Login'
+R2C0='UT-02' | R2C1='Incorrect Password or Inactive Account'
+R3C0='UT-03' | R3C1='Register a new borrower with complete and valid account details.'
+
+===== TABLE 8 8x6 =====
+R0C0='Test ID' | R0C1='Test Scenario'
+R1C0='IT-01' | R1C1='Registration, Account Approval, and Login'
+R2C0='IT-02' | R2C1='After registration, locate the borrower before account approval.'
+R3C0='IT-03' | R3C1='Submitted application and borrower record'
+
+===== TABLE 9 13x6 =====
+R0C0='Test ID' | R0C1='Test Scenario'
+R1C0='ST-01' | R1C1='Register a new borrower with the required account details.'
+R2C0='ST-02' | R2C1='An administrator approves that registration, and the borrower signs in.'
+R3C0='ST-03' | R3C1='An approved borrower submits an application within the debt-to-income and loan l'
+
+===== TABLE 10 13x6 =====
+R0C0='Test Case ID' | R0C1='Description'
+R1C0='PM-01' | R1C1='Verify safe handling when PayMongo rejects QR Ph creation.'
+R2C0='PM-02' | R2C1='Verify the payment form after QR generation fails.'
+R3C0='PM-03' | R3C1='Verify QR creation controls when Cash is selected.'
+
+===== TABLE 11 13x6 =====
+R0C0='Test Case ID' | R0C1='Description'
+R1C0='PT-01' | R1C1='To verify that protected staff and borrower pages cannot be accessed without aut'
+R2C0='PT-02' | R2C1='To verify that FRAMS rejects login attempts using an incorrect password or an in'
+R3C0='PT-03' | R3C1='To verify that a borrower cannot access staff-only pages and can view only their'
+
+===== TABLE 12 7x5 =====
+R0C0='Testing Level' | R0C1='Test Cases'
+R1C0='Unit testing' | R1C1='6'
+R2C0='Integration testing' | R2C1='7'
+R3C0='System Testing' | R3C1='12'
+
+===== TABLE 13 7x3 =====
+R0C0='Criterion' | R0C1='Weighted mean'
+R1C0='Functionality' | R1C1='4.56'
+R2C0='Usability' | R2C1='4.54 / '
+R3C0='Reliability' | R3C1='4.56 / '
+
+=== para 177 full ===
+This study used a developmental research design to plan, develop, and refine the Financial Risk Assessment and Micro-Lending System (FRAMS). An iterative development approach was used because the lending workflow consists of related modules, including registration, loan application, eligibility assessment, agreement acceptance, loan release, payment recording, and reporting. The modules were developed and reviewed in stages so that issues identified during development could be addressed. Claims about testing or evaluation in this manuscript are limited to activities supported by actual records.
+
+=== para 181 full ===
+Before coding and developing FRAMS, the researchers conducted pre-development data-gathering activities at RJ and RR Finance Services to understand the existing lending operations and identify the requirements of the proposed system. The activities involved twelve (12) participants: one (1) owner, one (1) collector, and ten (10) borrowers. These participants provided perspectives on management, collection activities, and borrower experiences. The pre-development participants are reported separately from the thirty-two (32) post-development system-evaluation respondents.
+
+=== para 32 full ===
+In addition to payments recorded at the lending office, FRAMS includes PayMongo Dynamic QR Ph. A collector starts the code for an assigned loan when the method is bank transfer or e-wallet. The borrower pays by scanning that code. The balance, receipt, and installment status change only after PayMongo sends a verified webhook and the paid amount matches the loan. Showing the code, returning to the browser, or waiting for a local timer does not record the repayment. Cash is recorded directly by authorized staff. Bank transfer and e-wallet may also be recorded directly, without a QR code, by an administrator or the assigned collector.
+
+=== para 68 full ===
+The system includes PayMongo Dynamic QR Ph for supported non-cash collection transactions. According to the intended workflow, an authorized collector initiates a QR payment for an assigned loan, and the corresponding repayment is recorded after the payment notification has been verified and the paid amount has been matched to the transaction. Cash payments and other authorized payment records may be entered directly by authorized personnel. The successful operation of external payment processing depends on the correct configuration of the applicable API credentials, webhook secret, and test or live environment.
+
+=== para 582 full ===
+The eligibility estimates assigns Not Eligible when required information is missing, proposed DTI exceeds the configured limit, or a blocking validation fails. It assigns Conditionally Eligible when the requested amount exceeds the maximum affordable amount or other policy reasons remain. It assigns Eligible when the affordability figures fall within the limits and no disqualifying policy reason remains. The application wizard blocks progression when existing debt already exceeds the limit or when the requested amount fails the minimum, maximum, or DTI validation. The administrator retains authority to approve, reject, or request additional documents. The stored disclaimer states that the estimate is for reviewer use and is not a final lending decision or automatic approval.
+
+=== para 623 full ===
+The operational database name in the connection file is lending_management, unless the environment supplies another name. The connection uses the host, database, user, and password from that configuration, with a local default. A single installation script that creates every table was not found in the repository. The PayMongo QR Ph tables are created from the SQL migration files. The pages expect core tables for users, clients, loans, and payments, and several other feature tables and columns are created or extended when the related page runs. Eligibility results are columns on the loan application, not a separate risk table. Passwords are stored as hashes. This section does not list credentials.
+
+=== para 842-845 ===
+[842] FRAMS provides a centralized web-based application for recording borrower information, processing loan applications, presenting a rule-based eligibility estimate, generating installment schedules, recording payments and penalties, monitoring repayments, and preparing financial reports. These functions support the organization of lending transactions and provide information that assists authorized personnel in reviewing applications and monitoring loan accounts. The eligibility estimate remains a decision-support tool rather than a final lending decision or a prediction of borrower default.
+[843] The documented technical testing results indicate that the specified unit, integration, system, PayMongo-related, and penetration and security test cases were reported as passed in their documented testing environments. These findings support the operation of the features examined under the specified test conditions. However, passing the documented cases does not establish that the entire system is free of defects or security vulnerabilities. In addition, the PayMongo test evidence should be interpreted according to the specific checks performed; local webhook simulations do not independently demonstrate successful external PayMongo webhook delivery or live payment processing.
+[844] The UAT results indicate that respondents generally expressed positive assessments of FRAMS in terms of functionality, usability, reliability, security, and performance. The overall weighted mean of 4.53 falls within the Strongly Agree interpretation range. These findings support the acceptability of the system among the respondents represented in the supplied UAT response export. Nevertheless, user evaluation ratings represent respondents' perceptions and do not independently establish that every system workflow is error-free or that all security and performance conditions have been fully verified.
+[845] The conclusions of this study are therefore limited to the system functions implemented, the documented technical tests, and the recorded user evaluation responses. The results should not be interpreted as evidence of capabilities or performance conditions that were not established by the available testing and evaluation records 
+
+=== body element types around appendix duplicate ===

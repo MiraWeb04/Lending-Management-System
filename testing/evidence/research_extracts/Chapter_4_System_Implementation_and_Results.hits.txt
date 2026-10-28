@@ -1,0 +1,20 @@
+2: This chapter presents the actual implementation, testing, and results of the Financial Risk Assessment and Micro-Lending System (FRAMS) for RJ and RR Finance Services. In the running interface the organization is identified as RJ and RR Fin
+155: Testing for this chapter follows the methods required for the capstone report: unit testing, integration testing, and user acceptance testing. No completed test log, automated test report, or scored questionnaire was found in the project fi
+156: 4.2.1 Unit Testing
+157: Unit testing examines whether a single function or page accepts valid input, rejects input that breaks its own rule, and shows or stores the intended result. The cases cover login, registration, the eligibility gate, document upload, and pa
+159: Unit test cases of FRAMS
+160: Test case
+191: Integration test cases of FRAMS
+192: Test case
+225: User acceptance testing uses the respondents and the instrument identified in Chapter 3. The number of respondents, their roles, and the rating scale are not restated here, because Chapter 3 was not part of the program files and those facts
+226: The guided tasks that match the implemented system are signing in, reviewing or approving a borrower registration, completing or reviewing a loan application, reading the eligibility estimate, accepting an agreement, releasing a loan, recor
+229: Functional results shall be transferred from Tables 4.4 and 4.5 after the researchers have recorded what the running system did. User acceptance results shall be transferred from the scored questionnaires into Table 4.7. Until then, the tec
+233: Number of test cases
+237: Unit testing
+248: User evaluation results of FRAMS, to be completed from the questionnaires
+252: Functionality
+267: The verbal interpretation shall use the scale adopted in Chapter 3. The researchers shall attach the raw tally in Appendix B. Charts of respondent ratings are not drawn in this chapter, because no scores have been computed. The charts alrea
+269: The analysis below relates the implemented software to the objectives stated in Chapter 1. It does not treat the eligibility estimate as a prediction that a borrower will default, and it does not replace the administrator's decision to appr
+270: Functionality. The implemented modules provide one path from public registration and administrator approval, through a five-step application and document review, to an eligibility estimate, an accepted agreement, a released loan, an install
+271: Usability. The signed-in pages share a sidebar, a top bar, forms, and tables, and the loan application uses a five-step progress display. Validation messages are returned on the page when a login, an eligibility rule, an upload, or a paymen
+274: Performance. The application is built as a locally hosted lending office system. No measured response time, concurrent-user count, or load result was found in the project files. Performance findings, if the objectives require them, shall co

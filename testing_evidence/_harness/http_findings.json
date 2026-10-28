@@ -1,0 +1,38 @@
+[
+    {
+        "id": "F-002",
+        "category": "Security Testing",
+        "component": "expenses_lending.php message query parameter",
+        "description": "The expenses page prints the message query parameter without encoding, so an authenticated user can be sent a link that injects HTML.",
+        "severity": "Medium",
+        "evidence": "04_Security_Testing/logs/http_test_execution.log",
+        "reproduction": "Sign in as an administrator on the isolated server and open expenses_lending.php?message=FRAMSXSS<b>probe</b>&type=success. The response contains the raw b tag.",
+        "recommendation": "Encode $message and $messageType with htmlspecialchars before output. Apply the same fix on the other pages that echo those variables.",
+        "retest": "Not retested. Application code was not changed.",
+        "demonstrated": "Yes"
+    },
+    {
+        "id": "F-003",
+        "category": "Security Testing",
+        "component": "loans_lending.php update_status",
+        "description": "An authenticated administrator request can change a loan status without a CSRF token.",
+        "severity": "Medium",
+        "evidence": "04_Security_Testing/logs/http_test_execution.log",
+        "reproduction": "Sign in as the synthetic administrator and POST update_status, loan_id, and status=Overdue to loans_lending.php without _csrf_token. The loan status changes.",
+        "recommendation": "Call csrfRequireValid() before update_status, as payments_lending.php already does.",
+        "retest": "Not retested. The synthetic loan status is restored after the demonstration. Application code was not changed.",
+        "demonstrated": "Yes"
+    },
+    {
+        "id": "F-004",
+        "category": "Security Testing",
+        "component": "HTTP response headers",
+        "description": "Login responses do not set X-Frame-Options, X-Content-Type-Options, Content-Security-Policy, Referrer-Policy.",
+        "severity": "Low",
+        "evidence": "04_Security_Testing/logs/http_test_execution.log",
+        "reproduction": "GET login_lending.php on the isolated server and inspect the response headers.",
+        "recommendation": "Send the missing headers from a shared include used by every page.",
+        "retest": "Not retested. Application code was not changed.",
+        "demonstrated": "Yes"
+    }
+]

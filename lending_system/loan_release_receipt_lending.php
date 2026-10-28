@@ -72,13 +72,16 @@ $termMonths = resolveLoanTermMonths(
 
 );
 
-if ($termMonths < 1) {
-
-    $termMonths = 12;
-
+$releasePrincipal = (float)($release['loan_amount'] ?? 0);
+if ($termMonths < 1 || $releasePrincipal < 0) {
+    $interestBreakdown = [
+        'monthly_interest' => 0.0,
+        'total_interest' => 0.0,
+        'total_payable' => 0.0,
+    ];
+} else {
+    $interestBreakdown = calculateLoanInterestBreakdown($releasePrincipal, (float)($release['interest_rate'] ?? 5), $termMonths);
 }
-
-$interestBreakdown = calculateLoanInterestBreakdown((float)($release['loan_amount'] ?? 0), (float)($release['interest_rate'] ?? 5), $termMonths);
 
 $firstSchedule = executeQuery('SELECT due_date, total_amount_due FROM loan_payment_schedules WHERE release_id = ? ORDER BY installment_number ASC LIMIT 1', [$releaseId])->fetch(PDO::FETCH_ASSOC);
 

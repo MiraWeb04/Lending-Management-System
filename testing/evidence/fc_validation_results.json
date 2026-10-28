@@ -1,0 +1,1041 @@
+{
+    "executed_at": "2026-10-22T08:07:57+00:00",
+    "php_version": "8.4.23",
+    "database": "frams_capstone_test",
+    "source_database_unchanged": true,
+    "source_table_count": 20,
+    "tolerance": "0.00 currency units after half-up rounding to two decimal places",
+    "counts": {
+        "executed": 28,
+        "passed": 28,
+        "failed": 0,
+        "blocked": 0
+    },
+    "results": [
+        {
+            "id": "FC-01a",
+            "feature": "FC-01",
+            "purpose": "Standard 12-month interest",
+            "inputs": {
+                "principal": "10000.00",
+                "monthly_rate_percent": "5",
+                "months": 12
+            },
+            "formula": "monthly = P x (r/100); total interest = monthly x n; payable = P + total interest; each figure half-up to centavos",
+            "steps": {
+                "monthly_interest_unrounded": "500.000000000000",
+                "total_interest_unrounded": "6000.000000000000",
+                "total_payable_unrounded": "16000.000000000000"
+            },
+            "expected": {
+                "monthly_interest": "500.00",
+                "total_interest": "6000.00",
+                "total_payable": "16000.00"
+            },
+            "actual": {
+                "monthly_interest": "500.00",
+                "total_interest": "6000.00",
+                "total_payable": "16000.00"
+            },
+            "difference": {
+                "monthly_interest": "0.00",
+                "total_interest": "0.00",
+                "total_payable": "0.00"
+            },
+            "status": "PASS",
+            "explanation": "The application result matches the flat formula after half-up rounding to centavos.",
+            "source": "lending_system/includes/loan_helpers.php calculateLoanInterestBreakdown lines 21-35"
+        },
+        {
+            "id": "FC-01b",
+            "feature": "FC-01",
+            "purpose": "Three-month interest",
+            "inputs": {
+                "principal": "10000.00",
+                "monthly_rate_percent": "5",
+                "months": 3
+            },
+            "formula": "monthly = P x (r/100); total interest = monthly x n; payable = P + total interest; each figure half-up to centavos",
+            "steps": {
+                "monthly_interest_unrounded": "500.000000000000",
+                "total_interest_unrounded": "1500.000000000000",
+                "total_payable_unrounded": "11500.000000000000"
+            },
+            "expected": {
+                "monthly_interest": "500.00",
+                "total_interest": "1500.00",
+                "total_payable": "11500.00"
+            },
+            "actual": {
+                "monthly_interest": "500.00",
+                "total_interest": "1500.00",
+                "total_payable": "11500.00"
+            },
+            "difference": {
+                "monthly_interest": "0.00",
+                "total_interest": "0.00",
+                "total_payable": "0.00"
+            },
+            "status": "PASS",
+            "explanation": "The application result matches the flat formula after half-up rounding to centavos.",
+            "source": "lending_system/includes/loan_helpers.php calculateLoanInterestBreakdown lines 21-35"
+        },
+        {
+            "id": "FC-01c",
+            "feature": "FC-01",
+            "purpose": "One-month interest",
+            "inputs": {
+                "principal": "8000.00",
+                "monthly_rate_percent": "5",
+                "months": 1
+            },
+            "formula": "monthly = P x (r/100); total interest = monthly x n; payable = P + total interest; each figure half-up to centavos",
+            "steps": {
+                "monthly_interest_unrounded": "400.000000000000",
+                "total_interest_unrounded": "400.000000000000",
+                "total_payable_unrounded": "8400.000000000000"
+            },
+            "expected": {
+                "monthly_interest": "400.00",
+                "total_interest": "400.00",
+                "total_payable": "8400.00"
+            },
+            "actual": {
+                "monthly_interest": "400.00",
+                "total_interest": "400.00",
+                "total_payable": "8400.00"
+            },
+            "difference": {
+                "monthly_interest": "0.00",
+                "total_interest": "0.00",
+                "total_payable": "0.00"
+            },
+            "status": "PASS",
+            "explanation": "The application result matches the flat formula after half-up rounding to centavos.",
+            "source": "lending_system/includes/loan_helpers.php calculateLoanInterestBreakdown lines 21-35"
+        },
+        {
+            "id": "FC-02a",
+            "feature": "FC-02",
+            "purpose": "Monthly schedule",
+            "inputs": {
+                "principal": "10000.00",
+                "monthly_rate_percent": "5",
+                "months": 3,
+                "frequency": "Monthly",
+                "release_date": "2026-01-15"
+            },
+            "formula": "Payable from FC-01. Count is n, n x 4, n x 2, or n x 30. Each row divides principal and rounded total interest evenly and rounds each component half-up. The final due date is the release date plus n calendar months.",
+            "expected": {
+                "total_payable": "11500.00",
+                "installment_count": 3,
+                "first_total": "3833.33",
+                "last_due": "2026-04-15",
+                "schedule_sum": "11500.00"
+            },
+            "actual": {
+                "installment_count": 3,
+                "first_total": "3833.33",
+                "last_due": "2026-04-15",
+                "schedule_sum": "11500.00"
+            },
+            "difference": {
+                "schedule_sum_versus_payable": "0.00",
+                "rows": [
+                    {
+                        "installment": 1,
+                        "due_difference_days": 0,
+                        "total_difference": "0.00",
+                        "actual_due": "2026-02-15",
+                        "expected_due": "2026-02-15",
+                        "actual_total": "3833.33",
+                        "expected_total": "3833.33"
+                    },
+                    {
+                        "installment": 2,
+                        "due_difference_days": 0,
+                        "total_difference": "0.00",
+                        "actual_due": "2026-03-15",
+                        "expected_due": "2026-03-15",
+                        "actual_total": "3833.33",
+                        "expected_total": "3833.33"
+                    },
+                    {
+                        "installment": 3,
+                        "due_difference_days": 0,
+                        "total_difference": "0.00",
+                        "actual_due": "2026-04-15",
+                        "expected_due": "2026-04-15",
+                        "actual_total": "3833.34",
+                        "expected_total": "3833.34"
+                    }
+                ]
+            },
+            "status": "PASS",
+            "explanation": "Installment amounts and due dates match the documented even split and final-date rule. The schedule sum is compared with total payable in FC-05.",
+            "source": "lending_system/loan_release_lending.php buildPaymentSchedule lines 177-221"
+        },
+        {
+            "id": "FC-02b",
+            "feature": "FC-02",
+            "purpose": "Weekly schedule",
+            "inputs": {
+                "principal": "10000.00",
+                "monthly_rate_percent": "5",
+                "months": 3,
+                "frequency": "Weekly",
+                "release_date": "2026-01-15"
+            },
+            "formula": "Payable from FC-01. Count is n, n x 4, n x 2, or n x 30. Each row divides principal and rounded total interest evenly and rounds each component half-up. The final due date is the release date plus n calendar months.",
+            "expected": {
+                "total_payable": "11500.00",
+                "installment_count": 12,
+                "first_total": "958.33",
+                "last_due": "2026-04-15",
+                "schedule_sum": "11500.00"
+            },
+            "actual": {
+                "installment_count": 12,
+                "first_total": "958.33",
+                "last_due": "2026-04-15",
+                "schedule_sum": "11500.00"
+            },
+            "difference": {
+                "schedule_sum_versus_payable": "0.00",
+                "rows": [
+                    {
+                        "installment": 1,
+                        "due_difference_days": 0,
+                        "total_difference": "0.00",
+                        "actual_due": "2026-01-22",
+                        "expected_due": "2026-01-22",
+                        "actual_total": "958.33",
+                        "expected_total": "958.33"
+                    },
+                    {
+                        "installment": 2,
+                        "due_difference_days": 0,
+                        "total_difference": "0.00",
+                        "actual_due": "2026-01-29",
+                        "expected_due": "2026-01-29",
+                        "actual_total": "958.33",
+                        "expected_total": "958.33"
+                    },
+                    {
+                        "installment": 3,
+                        "due_difference_days": 0,
+                        "total_difference": "0.00",
+                        "actual_due": "2026-02-05",
+                        "expected_due": "2026-02-05",
+                        "actual_total": "958.33",
+                        "expected_total": "958.33"
+                    },
+                    {
+                        "installment": 4,
+                        "due_difference_days": 0,
+                        "total_difference": "0.00",
+                        "actual_due": "2026-02-12",
+                        "expected_due": "2026-02-12",
+                        "actual_total": "958.33",
+                        "expected_total": "958.33"
+                    },
+                    {
+                        "installment": 5,
+                        "due_difference_days": 0,
+                        "total_difference": "0.00",
+                        "actual_due": "2026-02-19",
+                        "expected_due": "2026-02-19",
+                        "actual_total": "958.33",
+                        "expected_total": "958.33"
+                    },
+                    {
+                        "installment": 6,
+                        "due_difference_days": 0,
+                        "total_difference": "0.00",
+                        "actual_due": "2026-02-26",
+                        "expected_due": "2026-02-26",
+                        "actual_total": "958.33",
+                        "expected_total": "958.33"
+                    },
+                    {
+                        "installment": 7,
+                        "due_difference_days": 0,
+                        "total_difference": "0.00",
+                        "actual_due": "2026-03-05",
+                        "expected_due": "2026-03-05",
+                        "actual_total": "958.33",
+                        "expected_total": "958.33"
+                    },
+                    {
+                        "installment": 8,
+                        "due_difference_days": 0,
+                        "total_difference": "0.00",
+                        "actual_due": "2026-03-12",
+                        "expected_due": "2026-03-12",
+                        "actual_total": "958.33",
+                        "expected_total": "958.33"
+                    },
+                    {
+                        "installment": 9,
+                        "due_difference_days": 0,
+                        "total_difference": "0.00",
+                        "actual_due": "2026-03-19",
+                        "expected_due": "2026-03-19",
+                        "actual_total": "958.33",
+                        "expected_total": "958.33"
+                    },
+                    {
+                        "installment": 10,
+                        "due_difference_days": 0,
+                        "total_difference": "0.00",
+                        "actual_due": "2026-03-26",
+                        "expected_due": "2026-03-26",
+                        "actual_total": "958.33",
+                        "expected_total": "958.33"
+                    },
+                    {
+                        "installment": 11,
+                        "due_difference_days": 0,
+                        "total_difference": "0.00",
+                        "actual_due": "2026-04-02",
+                        "expected_due": "2026-04-02",
+                        "actual_total": "958.33",
+                        "expected_total": "958.33"
+                    },
+                    {
+                        "installment": 12,
+                        "due_difference_days": 0,
+                        "total_difference": "0.00",
+                        "actual_due": "2026-04-15",
+                        "expected_due": "2026-04-15",
+                        "actual_total": "958.37",
+                        "expected_total": "958.37"
+                    }
+                ]
+            },
+            "status": "PASS",
+            "explanation": "Installment amounts and due dates match the documented even split and final-date rule. The schedule sum is compared with total payable in FC-05.",
+            "source": "lending_system/loan_release_lending.php buildPaymentSchedule lines 177-221"
+        },
+        {
+            "id": "FC-02c",
+            "feature": "FC-02",
+            "purpose": "Public calculator compared with the flat installment",
+            "inputs": {
+                "principal": "100000.00",
+                "labeled_rate_percent": "5",
+                "months": 12
+            },
+            "formula": "The public quote uses calculateLoanInterestBreakdown and puts leftover centavos on the final installment. Installment shown is the regular row. Total payable = principal + total interest.",
+            "expected": {
+                "installment": "13333.33",
+                "final_installment": "13333.37",
+                "total_payable": "160000.00",
+                "monthly_interest": "5000.00",
+                "total_interest": "60000.00",
+                "page_uses_flat_quote": true
+            },
+            "actual": {
+                "installment": "13333.33",
+                "final_installment": "13333.37",
+                "total_payable": "160000.00",
+                "monthly_interest": "5000.00",
+                "total_interest": "60000.00",
+                "page_uses_flat_quote": true
+            },
+            "difference": {
+                "installment": "0.00",
+                "total_payable": "0.00"
+            },
+            "status": "PASS",
+            "explanation": "index.php now requests loan_quote_lending.php, which calls the same flat-interest function as loan release. The amortizing expression is no longer in the page.",
+            "source": "lending_system/includes/loan_helpers.php buildPublicLoanQuote; lending_system/index.php; lending_system/loan_quote_lending.php"
+        },
+        {
+            "id": "FC-03",
+            "feature": "FC-03",
+            "purpose": "Partial payment reduces the scheduled balance by the amount applied to the loan",
+            "inputs": {
+                "total_payable": "11500.00",
+                "payment_received": "2000.00",
+                "penalty_portion": "0.00",
+                "loan_number": "FRAMS-FC-03"
+            },
+            "formula": "Remaining balance = total payable - sum of payments.amount_paid. A penalty of zero leaves the full receipt on amount_paid.",
+            "expected": {
+                "amount_paid": "2000.00",
+                "penalty_paid": "0.00",
+                "remaining_balance": "9500.00",
+                "payment_rows_added": 1
+            },
+            "actual": {
+                "amount_paid": "2000.00",
+                "penalty_paid": "0.00",
+                "remaining_balance": "9500.00",
+                "payment_rows_added": 1,
+                "receipt_issued": true
+            },
+            "difference": {
+                "remaining_balance": "0.00"
+            },
+            "status": "PASS",
+            "explanation": "The receipt total is stored in amount_paid and the remaining balance is total payable minus that amount.",
+            "source": "lending_system/includes/db_lending.php recordPaymentTransaction lines 448-466; loan_helpers.php calculateLoanBalanceSummary lines 340-344"
+        },
+        {
+            "id": "FC-04",
+            "feature": "FC-04",
+            "purpose": "A 2500 receipt with a 500 penalty reduces the scheduled balance by 2000",
+            "inputs": {
+                "total_payment_received": "2500.00",
+                "scheduled_component": "2000.00",
+                "penalty_component": "500.00",
+                "installment_total": "10000.00",
+                "installment_due": "2026-10-21",
+                "frequency": "Monthly",
+                "loan_number": "FRAMS-FC-04"
+            },
+            "formula": "Monthly overdue penalty = installment total x 5 / 100. Stored scheduled amount = receipt - penalty designated, limited to the penalty still due. Remaining balance = total payable - sum of amount_paid.",
+            "steps": {
+                "independent_penalty": "10000.00 x 0.05 = 500.00",
+                "independent_remaining": "10000.00 - 2000.00 = 8000.00"
+            },
+            "expected": {
+                "penalty_due_before": "500.00",
+                "amount_paid": "2000.00",
+                "penalty_paid": "500.00",
+                "remaining_balance": "8000.00"
+            },
+            "actual": {
+                "penalty_due_before": "500.00",
+                "amount_paid": "2000.00",
+                "penalty_paid": "500.00",
+                "remaining_balance": "8000.00",
+                "penalty_due_after": "0.00",
+                "receipt_issued": true
+            },
+            "difference": {
+                "amount_paid": "0.00",
+                "remaining_balance": "0.00"
+            },
+            "status": "PASS",
+            "explanation": "The scheduled balance decreased by 2000.00. The 500.00 penalty was stored in penalty_paid and was not subtracted from total payable.",
+            "source": "lending_system/includes/loan_helpers.php calculateOverduePenaltyDue lines 265-285; db_lending.php lines 448-466"
+        },
+        {
+            "id": "FC-05a",
+            "feature": "FC-05",
+            "purpose": "Interest rounding for a principal that does not land on a whole centavo",
+            "inputs": {
+                "principal": "100.33",
+                "monthly_rate_percent": "5",
+                "months": 3
+            },
+            "formula": "monthly = 100.33 x 0.05 = 5.0165, half-up 5.02. total interest = 15.0495, half-up 15.05. payable = 115.3795, half-up 115.38. Rounded monthly interest times months is 15.06 and is not the formula used.",
+            "steps": {
+                "monthly_interest_unrounded": "5.016500000000",
+                "total_interest_unrounded": "15.049500000000",
+                "total_payable_unrounded": "115.379500000000"
+            },
+            "expected": {
+                "monthly_interest": "5.02",
+                "total_interest": "15.05",
+                "total_payable": "115.38",
+                "rounded_monthly_times_months": "15.06"
+            },
+            "actual": {
+                "monthly_interest": "5.02",
+                "total_interest": "15.05",
+                "total_payable": "115.38"
+            },
+            "difference": {
+                "total_interest_versus_unrounded_product": "0.00",
+                "total_interest_versus_rounded_monthly_times_months": "-0.01"
+            },
+            "status": "PASS",
+            "explanation": "The function matches half-up rounding of the unrounded products. Displaying 5.02 and multiplying by 3 would show 15.06, which is 0.01 more than the stored total interest.",
+            "source": "lending_system/includes/loan_helpers.php lines 26-33"
+        },
+        {
+            "id": "FC-05b",
+            "feature": "FC-05",
+            "purpose": "Whether installment rounding is adjusted so the rows equal total payable",
+            "inputs": {
+                "principal": "10000.00",
+                "months": 3,
+                "frequency": "Monthly"
+            },
+            "formula": "Earlier rows use the truncated centavo share. The last monthly installment receives the remainder, 3833.34, so the rows sum to 11500.00.",
+            "expected": {
+                "even_split_sum": "11500.00",
+                "reconciling_schedule_sum": "11500.00",
+                "reconciling_last_installment": "3833.34"
+            },
+            "actual": {
+                "schedule_sum": "11500.00",
+                "last_installment": "3833.34"
+            },
+            "difference": {
+                "actual_sum_minus_payable": "0.00",
+                "last_installment_minus_reconciling_amount": "0.00"
+            },
+            "status": "PASS",
+            "explanation": "The three installments now sum to 11500.00. The last installment is 3833.34.",
+            "source": "lending_system/loan_release_lending.php lines 185-210"
+        },
+        {
+            "id": "FC-05c",
+            "feature": "FC-05",
+            "purpose": "Weekly installment rounding against total payable",
+            "inputs": {
+                "principal": "10000.00",
+                "months": 3,
+                "frequency": "Weekly",
+                "count": 12
+            },
+            "formula": "10000 / 12 = 833.333... half-up 833.33. 1500 / 12 = 125.00. Row total 958.33. Twelve rows = 11499.96. Reconciling last row would be 958.37.",
+            "expected": {
+                "reconciling_schedule_sum": "11500.00",
+                "even_split_sum": "11500.00"
+            },
+            "actual": {
+                "schedule_sum": "11500.00",
+                "last_due": "2026-04-15"
+            },
+            "difference": {
+                "actual_sum_minus_payable": "0.00"
+            },
+            "status": "PASS",
+            "explanation": "The twelve weekly installments now sum to 11500.00. The final due date remains the release date plus three calendar months.",
+            "source": "lending_system/loan_release_lending.php lines 185-218"
+        },
+        {
+            "id": "FC-06a",
+            "feature": "FC-06",
+            "purpose": "DTI exactly 40 percent",
+            "inputs": {
+                "gross_income": "10000.00",
+                "existing_debt": "0.00",
+                "requested_principal": "30000.00",
+                "months": 12,
+                "employment": "12 months"
+            },
+            "formula": "Payment = round(total payable / 12, 2). DTI = round((existing debt + payment) / gross x 100, 2). Above 40.00 is Not Eligible.",
+            "steps": {
+                "total_payable": "48000.00",
+                "monthly_payment": "4000.00",
+                "dti_arithmetic": "4000.00 / 10000.00 x 100"
+            },
+            "expected": {
+                "dti_after_percent": "40.00",
+                "status": "Eligible",
+                "monthly_payment": "4000.00"
+            },
+            "actual": {
+                "dti_after_percent": "40.00",
+                "status": "Eligible",
+                "monthly_payment": "4000.00"
+            },
+            "difference": {
+                "dti_after_percent": "0.00"
+            },
+            "expected_status": "Eligible",
+            "actual_status": "Eligible",
+            "status": "PASS",
+            "explanation": "The classification matches the 40 percent boundary.",
+            "source": "lending_system/includes/loan_eligibility_helpers.php lines 74-83 and 178-227"
+        },
+        {
+            "id": "FC-06b",
+            "feature": "FC-06",
+            "purpose": "DTI below 40 percent",
+            "inputs": {
+                "gross_income": "10000.00",
+                "existing_debt": "0.00",
+                "requested_principal": "29000.00",
+                "months": 12,
+                "employment": "12 months"
+            },
+            "formula": "Payment = round(total payable / 12, 2). DTI = round((existing debt + payment) / gross x 100, 2). Above 40.00 is Not Eligible.",
+            "steps": {
+                "total_payable": "46400.00",
+                "monthly_payment": "3866.67",
+                "dti_arithmetic": "3866.67 / 10000.00 x 100"
+            },
+            "expected": {
+                "dti_after_percent": "38.67",
+                "status": "Eligible",
+                "monthly_payment": "3866.67"
+            },
+            "actual": {
+                "dti_after_percent": "38.67",
+                "status": "Eligible",
+                "monthly_payment": "3866.67"
+            },
+            "difference": {
+                "dti_after_percent": "0.00"
+            },
+            "expected_status": "Eligible",
+            "actual_status": "Eligible",
+            "status": "PASS",
+            "explanation": "The classification matches the 40 percent boundary.",
+            "source": "lending_system/includes/loan_eligibility_helpers.php lines 74-83 and 178-227"
+        },
+        {
+            "id": "FC-06c",
+            "feature": "FC-06",
+            "purpose": "DTI above 40 percent",
+            "inputs": {
+                "gross_income": "10000.00",
+                "existing_debt": "0.00",
+                "requested_principal": "31000.00",
+                "months": 12,
+                "employment": "12 months"
+            },
+            "formula": "Payment = round(total payable / 12, 2). DTI = round((existing debt + payment) / gross x 100, 2). Above 40.00 is Not Eligible.",
+            "steps": {
+                "total_payable": "49600.00",
+                "monthly_payment": "4133.33",
+                "dti_arithmetic": "4133.33 / 10000.00 x 100"
+            },
+            "expected": {
+                "dti_after_percent": "41.33",
+                "status": "Not Eligible",
+                "monthly_payment": "4133.33"
+            },
+            "actual": {
+                "dti_after_percent": "41.33",
+                "status": "Not Eligible",
+                "monthly_payment": "4133.33"
+            },
+            "difference": {
+                "dti_after_percent": "0.00"
+            },
+            "expected_status": "Not Eligible",
+            "actual_status": "Not Eligible",
+            "status": "PASS",
+            "explanation": "The classification matches the 40 percent boundary.",
+            "source": "lending_system/includes/loan_eligibility_helpers.php lines 74-83 and 178-227"
+        },
+        {
+            "id": "FC-07a",
+            "feature": "FC-07",
+            "purpose": "Requested principal equal to the affordable principal",
+            "inputs": {
+                "gross_income": "20000.00",
+                "existing_debt": "0.00",
+                "requested_principal": "60000.00",
+                "months": 12
+            },
+            "formula": "Room = 20000 x 0.40 = 8000. Raw principal = (8000 x 12) / 1.60 = 60000.00. DTI uses the proposed payment for the requested amount.",
+            "steps": {
+                "affordable_principal": "60000.00",
+                "monthly_payment": "8000.00",
+                "dti_after": "40.00"
+            },
+            "expected": {
+                "maximum_affordable_principal": "60000.00",
+                "dti_after_percent": "40.00",
+                "status": "Eligible"
+            },
+            "actual": {
+                "maximum_eligible_loan_amount": "60000.00",
+                "dti_after_percent": "40.00",
+                "status": "Eligible"
+            },
+            "difference": {
+                "maximum_principal": "0.00"
+            },
+            "expected_status": "Eligible",
+            "actual_status": "Eligible",
+            "status": "PASS",
+            "explanation": "The reported maximum and classification match the affordable-principal formula for an amount above the 3000 minimum.",
+            "source": "lending_system/includes/loan_eligibility_helpers.php calculateMaxPrincipalFromMonthlyPayment lines 85-98 and assessLoanEligibility lines 182-220"
+        },
+        {
+            "id": "FC-07b",
+            "feature": "FC-07",
+            "purpose": "Requested principal below the affordable principal",
+            "inputs": {
+                "gross_income": "20000.00",
+                "existing_debt": "0.00",
+                "requested_principal": "45000.00",
+                "months": 12
+            },
+            "formula": "Room = 20000 x 0.40 = 8000. Raw principal = (8000 x 12) / 1.60 = 60000.00. DTI uses the proposed payment for the requested amount.",
+            "steps": {
+                "affordable_principal": "60000.00",
+                "monthly_payment": "6000.00",
+                "dti_after": "30.00"
+            },
+            "expected": {
+                "maximum_affordable_principal": "60000.00",
+                "dti_after_percent": "30.00",
+                "status": "Eligible"
+            },
+            "actual": {
+                "maximum_eligible_loan_amount": "60000.00",
+                "dti_after_percent": "30.00",
+                "status": "Eligible"
+            },
+            "difference": {
+                "maximum_principal": "0.00"
+            },
+            "expected_status": "Eligible",
+            "actual_status": "Eligible",
+            "status": "PASS",
+            "explanation": "The reported maximum and classification match the affordable-principal formula for an amount above the 3000 minimum.",
+            "source": "lending_system/includes/loan_eligibility_helpers.php calculateMaxPrincipalFromMonthlyPayment lines 85-98 and assessLoanEligibility lines 182-220"
+        },
+        {
+            "id": "FC-07c",
+            "feature": "FC-07",
+            "purpose": "Requested principal above the affordable principal while displayed DTI remains 40.00",
+            "inputs": {
+                "gross_income": "20000.00",
+                "existing_debt": "0.00",
+                "requested_principal": "60000.50",
+                "months": 12
+            },
+            "formula": "Room = 20000 x 0.40 = 8000. Raw principal = (8000 x 12) / 1.60 = 60000.00. DTI uses the proposed payment for the requested amount.",
+            "steps": {
+                "affordable_principal": "60000.00",
+                "monthly_payment": "8000.07",
+                "dti_after": "40.00"
+            },
+            "expected": {
+                "maximum_affordable_principal": "60000.00",
+                "dti_after_percent": "40.00",
+                "status": "Conditionally Eligible"
+            },
+            "actual": {
+                "maximum_eligible_loan_amount": "60000.00",
+                "dti_after_percent": "40.00",
+                "status": "Conditionally Eligible"
+            },
+            "difference": {
+                "maximum_principal": "0.00"
+            },
+            "expected_status": "Conditionally Eligible",
+            "actual_status": "Conditionally Eligible",
+            "status": "PASS",
+            "explanation": "The reported maximum and classification match the affordable-principal formula for an amount above the 3000 minimum.",
+            "source": "lending_system/includes/loan_eligibility_helpers.php calculateMaxPrincipalFromMonthlyPayment lines 85-98 and assessLoanEligibility lines 182-220"
+        },
+        {
+            "id": "FC-07d",
+            "feature": "FC-07",
+            "purpose": "Affordable principal below the 3000 minimum",
+            "inputs": {
+                "gross_income": "10000.00",
+                "existing_debt": "3900.00",
+                "months": 12,
+                "requested_for_boundary": "750.00",
+                "requested_clamped_figure": "3000.00"
+            },
+            "formula": "Room = 10000 x 0.40 - 3900 = 100. Raw principal = (100 x 12) / 1.60 = 750.00. The code then raises that result to the 3000 minimum.",
+            "steps": {
+                "room_for_new_payment": "100.00",
+                "raw_principal": "750.00",
+                "clamped_principal": "3000.00"
+            },
+            "expected": {
+                "dti_safe_principal": "750.00",
+                "status_at_750": "Not Eligible",
+                "dti_at_3000": "43.00",
+                "status_at_3000": "Not Eligible"
+            },
+            "actual": {
+                "maximum_eligible_loan_amount": "750.00",
+                "status_at_750": "Not Eligible",
+                "dti_at_750": "40.00",
+                "status_at_3000": "Not Eligible",
+                "dti_at_3000": "43.00"
+            },
+            "difference": {
+                "reported_maximum_minus_dti_safe_principal": "0.00"
+            },
+            "expected_status": "Not Eligible at 750.00 because 750.00 is below the 3000.00 product minimum; Not Eligible at 3000.00",
+            "actual_status": "Not Eligible at 750.00; Not Eligible at 3000.00",
+            "status": "PASS",
+            "explanation": "The reported maximum stays at the DTI-safe principal of 750.00. It is not raised to 3000.00. A borrower who cannot afford the minimum product is Not Eligible, and a 3000.00 request on this income is also Not Eligible at 43.00 percent DTI.",
+            "source": "lending_system/includes/loan_eligibility_helpers.php clampLoanAmountToPolicy lines 100-106"
+        },
+        {
+            "id": "FC-08",
+            "feature": "FC-08",
+            "purpose": "Requested amount exceeds both the 40 percent DTI limit and the affordable principal",
+            "inputs": {
+                "gross_income": "10000.00",
+                "existing_debt": "0.00",
+                "requested_principal": "31000.00",
+                "months": 12
+            },
+            "formula": "Affordable principal = (4000 x 12) / 1.60 = 30000.00. Payment on 31000 = 4133.33. DTI = 41.33. DTI above 40 takes precedence over Conditionally Eligible.",
+            "steps": {
+                "affordable_principal": "30000.00",
+                "monthly_payment": "4133.33",
+                "dti_after": "41.33"
+            },
+            "expected": {
+                "status": "Not Eligible",
+                "dti_after_percent": "41.33",
+                "maximum_affordable_principal": "30000.00"
+            },
+            "actual": {
+                "status": "Not Eligible",
+                "dti_after_percent": "41.33",
+                "maximum_eligible_loan_amount": "30000.00"
+            },
+            "difference": {
+                "dti_after_percent": "0.00"
+            },
+            "expected_status": "Not Eligible",
+            "actual_status": "Not Eligible",
+            "status": "PASS",
+            "explanation": "Both limits are exceeded. The application classifies the request as Not Eligible rather than Conditionally Eligible.",
+            "source": "lending_system/includes/loan_eligibility_helpers.php lines 215-220"
+        },
+        {
+            "id": "FC-09",
+            "feature": "FC-09",
+            "purpose": "Remaining balance after two payments",
+            "inputs": {
+                "total_payable": "11500.00",
+                "first_payment": "2000.00",
+                "second_payment": "3000.00",
+                "loan_number": "FRAMS-FC-09"
+            },
+            "formula": "Remaining = 11500.00 - (2000.00 + 3000.00) = 6500.00.",
+            "expected": {
+                "payment_count": 2,
+                "amount_paid_sum": "5000.00",
+                "remaining_balance": "6500.00"
+            },
+            "actual": {
+                "payment_count": 2,
+                "amount_paid_sum": "5000.00",
+                "remaining_balance": "6500.00"
+            },
+            "difference": {
+                "remaining_balance": "0.00"
+            },
+            "status": "PASS",
+            "explanation": "Two separate payment rows were stored and the balance function subtracted both from total payable.",
+            "source": "lending_system/includes/loan_helpers.php calculateLoanBalanceSummary lines 335-344"
+        },
+        {
+            "id": "FC-10a",
+            "feature": "FC-10",
+            "purpose": "Zero, negative, and over-limit payments are rejected",
+            "inputs": {
+                "loan_payable": "2000.00",
+                "amounts": [
+                    "0.00",
+                    "-25.00",
+                    "2000.01"
+                ],
+                "loan_number": "FRAMS-FC-10"
+            },
+            "formula": "A payment must be greater than zero, and the installment portion cannot exceed the remaining balance.",
+            "expected": {
+                "zero_payment": "rejected",
+                "negative_payment": "rejected",
+                "overpayment": "rejected",
+                "rows_added": 0
+            },
+            "actual": {
+                "zero_payment": "rejected",
+                "negative_payment": "rejected",
+                "overpayment": "rejected",
+                "rows_added": 0
+            },
+            "difference": {
+                "rows_added": "0"
+            },
+            "status": "PASS",
+            "explanation": "All three invalid amounts were rejected and no payment row was added.",
+            "source": "lending_system/includes/loan_helpers.php validatePaymentAmounts lines 288-316"
+        },
+        {
+            "id": "FC-10b",
+            "feature": "FC-10",
+            "purpose": "Exact payment of the remaining balance",
+            "inputs": {
+                "total_payable": "2000.00",
+                "payment": "2000.00"
+            },
+            "formula": "Remaining = 2000.00 - 2000.00 = 0.00. Status becomes Paid when amount paid reaches total payable.",
+            "expected": {
+                "remaining_balance": "0.00",
+                "status": "Paid"
+            },
+            "actual": {
+                "remaining_balance": "0.00",
+                "status": "Paid"
+            },
+            "difference": {
+                "remaining_balance": "0.00"
+            },
+            "expected_status": "Paid",
+            "actual_status": "Paid",
+            "status": "PASS",
+            "explanation": "The exact payment cleared the synthetic balance and the loan status became Paid.",
+            "source": "lending_system/includes/db_lending.php updateLoanStatusForLoan lines 226-227"
+        },
+        {
+            "id": "FC-10c",
+            "feature": "FC-10",
+            "purpose": "Zero principal",
+            "inputs": {
+                "principal": "0.00",
+                "monthly_rate_percent": "5",
+                "months": 12
+            },
+            "formula": "0 x 0.05 = 0. Total payable = 0.",
+            "expected": {
+                "total_payable": "0.00"
+            },
+            "actual": {
+                "total_payable": "0.00"
+            },
+            "difference": {
+                "total_payable": "0.00"
+            },
+            "status": "PASS",
+            "explanation": "A zero principal produces a zero payable.",
+            "source": "lending_system/includes/loan_helpers.php lines 23-28"
+        },
+        {
+            "id": "FC-10d",
+            "feature": "FC-10",
+            "purpose": "Negative principal",
+            "inputs": {
+                "principal": "-5000.00",
+                "monthly_rate_percent": "5",
+                "months": 1
+            },
+            "formula": "A negative principal is rejected. It is not converted to zero and it is not priced with the flat formula.",
+            "expected": {
+                "rejected": true,
+                "schedule_rejected": true
+            },
+            "actual": {
+                "rejected": true,
+                "schedule_rejected": true,
+                "message": "Loan principal cannot be negative."
+            },
+            "difference": {
+                "rejected": "0"
+            },
+            "status": "PASS",
+            "explanation": "The interest function and the schedule builder both rejected the negative principal.",
+            "source": "lending_system/includes/loan_helpers.php calculateLoanInterestBreakdown"
+        },
+        {
+            "id": "FC-10e",
+            "feature": "FC-10",
+            "purpose": "Zero-month term",
+            "inputs": {
+                "principal": "10000.00",
+                "monthly_rate_percent": "5",
+                "months": 0
+            },
+            "formula": "A term below 1 month is rejected. It is not replaced with one month of interest.",
+            "expected": {
+                "rejected": true,
+                "schedule_rejected": true
+            },
+            "actual": {
+                "rejected": true,
+                "schedule_rejected": true,
+                "message": "Loan term must be at least 1 month."
+            },
+            "difference": {
+                "rejected": "0"
+            },
+            "status": "PASS",
+            "explanation": "A zero-month term was rejected by the interest function and the schedule builder, so no 500.00 interest charge was created.",
+            "source": "lending_system/includes/loan_helpers.php calculateLoanInterestBreakdown"
+        },
+        {
+            "id": "FC-10f",
+            "feature": "FC-10",
+            "purpose": "Negative term is rejected and a 12-month term still prices at 5 percent",
+            "inputs": {
+                "negative_months": -3,
+                "valid_principal": "10000.00",
+                "valid_months": 12
+            },
+            "formula": "Term must be at least 1 month. A valid 12-month loan remains principal 10000, interest 6000, payable 16000.",
+            "expected": {
+                "negative_term_rejected": true,
+                "valid_total_payable": "16000.00"
+            },
+            "actual": {
+                "negative_term_rejected": true,
+                "valid_total_payable": "16000.00"
+            },
+            "difference": {
+                "valid_total_payable": "0.00"
+            },
+            "status": "PASS",
+            "explanation": "The negative term throws. The valid 12-month calculation is unchanged.",
+            "source": "lending_system/includes/loan_helpers.php calculateLoanInterestBreakdown"
+        },
+        {
+            "id": "FC-07e",
+            "feature": "FC-07",
+            "purpose": "Requested principal above the 500000 maximum loan",
+            "inputs": {
+                "gross_income": "2000000.00",
+                "existing_debt": "0.00",
+                "requested_principal": "600000.00",
+                "months": 12
+            },
+            "formula": "The affordable principal is capped at the 500000 product maximum. A larger request is not eligible for the amount requested.",
+            "expected": {
+                "maximum_eligible_loan_amount": "500000.00",
+                "status": "Conditionally Eligible"
+            },
+            "actual": {
+                "maximum_eligible_loan_amount": "500000.00",
+                "status": "Conditionally Eligible",
+                "dti_after_percent": "4.00"
+            },
+            "difference": {
+                "maximum_eligible_loan_amount": "0.00"
+            },
+            "expected_status": "Conditionally Eligible",
+            "actual_status": "Conditionally Eligible",
+            "status": "PASS",
+            "explanation": "The maximum stays at 500000.00. The 600000.00 request is above that cap and is Conditionally Eligible rather than approved.",
+            "source": "lending_system/includes/loan_eligibility_helpers.php clampLoanAmountToPolicy and assessLoanEligibility"
+        },
+        {
+            "id": "FC-11",
+            "feature": "FC-11",
+            "purpose": "Portfolio outstanding uses remaining scheduled balance",
+            "inputs": {
+                "partial_loan": "FRAMS-FC-03",
+                "paid_loan": "FRAMS-FC-10"
+            },
+            "formula": "Outstanding = total payable - sum of amount_paid for loans that are not Paid. Penalty amounts are not subtracted. A Paid loan contributes 0.",
+            "expected": {
+                "partial_outstanding": "9500.00",
+                "paid_outstanding": "0.00"
+            },
+            "actual": {
+                "partial_outstanding": "9500.00",
+                "paid_outstanding": "0.00"
+            },
+            "difference": {
+                "partial_outstanding": "0.00",
+                "paid_outstanding": "0.00"
+            },
+            "status": "PASS",
+            "explanation": "The loans-page outstanding expression subtracts amount_paid and excludes the Paid loan. It does not subtract penalty_paid.",
+            "source": "lending_system/includes/loan_helpers.php outstandingReceivableSelectSql; lending_system/loans_lending.php"
+        }
+    ]
+}

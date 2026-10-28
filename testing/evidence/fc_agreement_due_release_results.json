@@ -1,0 +1,285 @@
+{
+    "executed_at": "2026-10-20T20:37:42+02:00",
+    "php_version": "8.2.12",
+    "database": "frams_capstone_test",
+    "release_method": "transaction rolled back",
+    "browser_release": "NOT RUN",
+    "isolated_table_counts_unchanged": true,
+    "lending_management_unchanged": true,
+    "counts_before": {
+        "users": 6,
+        "clients": 2,
+        "loan_applications": 36,
+        "loan_agreements": 0,
+        "loans": 36,
+        "loan_releases": 36,
+        "loan_payment_schedules": 74,
+        "payments": 39,
+        "notifications": 131
+    },
+    "counts_after": {
+        "users": 6,
+        "clients": 2,
+        "loan_applications": 36,
+        "loan_agreements": 0,
+        "loans": 36,
+        "loan_releases": 36,
+        "loan_payment_schedules": 74,
+        "payments": 39,
+        "notifications": 131
+    },
+    "lending_management_before": {
+        "users": 15,
+        "clients": 9,
+        "loan_applications": 12,
+        "loan_agreements": 16,
+        "loans": 11,
+        "loan_releases": 10,
+        "loan_payment_schedules": 75,
+        "payments": 20,
+        "notifications": 179
+    },
+    "lending_management_after": {
+        "users": 15,
+        "clients": 9,
+        "loan_applications": 12,
+        "loan_agreements": 16,
+        "loans": 11,
+        "loan_releases": 10,
+        "loan_payment_schedules": 75,
+        "payments": 20,
+        "notifications": 179
+    },
+    "counts": {
+        "executed": 19,
+        "passed": 19,
+        "failed": 0
+    },
+    "results": [
+        {
+            "id": "RP-01",
+            "expected": "The release preview for 10,000.00 over 3 months uses the approved term and the same rows buildPaymentSchedule() would save. Select does not fall back to a requested 12-month schedule.",
+            "actual": {
+                "principal": "10000.00",
+                "term": "3 months",
+                "payable": "11500.00",
+                "regular": "3833.33",
+                "final": "3833.34",
+                "first_due": "2026-11-21",
+                "final_due": "2027-01-21",
+                "saved_rows": [
+                    "3833.33",
+                    "3833.33",
+                    "3833.34"
+                ],
+                "select_valid": false,
+                "select_message": "This application has no valid loan term. A loan term of at least 1 month is required.",
+                "select_due": ""
+            },
+            "status": "PASS",
+            "explanation": "The preparation screen calls the release schedule function. An explicit invalid approved term produces no due date."
+        },
+        {
+            "id": "AG-01",
+            "expected": "Principal 10,000.00 for 3 months stays payable 11500.00. Regular installments are 3833.33 and the final installment is 3833.34.",
+            "actual": {
+                "total_payable": "11500.00",
+                "installments": [
+                    "3833.33",
+                    "3833.33",
+                    "3833.34"
+                ],
+                "sum": "11500.00",
+                "agreement_has_regular": true,
+                "agreement_has_final": true
+            },
+            "status": "PASS",
+            "explanation": "The agreement text and the shared row allocator use the same centavo split. Total payable is unchanged."
+        },
+        {
+            "id": "AG-02",
+            "expected": "Principal 100,000.00 for 12 months stays payable 160000.00. Regular installments are 13333.33 and the final installment is 13333.37.",
+            "actual": {
+                "total_payable": "160000.00",
+                "installments": [
+                    "13333.33",
+                    "13333.33",
+                    "13333.33",
+                    "13333.33",
+                    "13333.33",
+                    "13333.33",
+                    "13333.33",
+                    "13333.33",
+                    "13333.33",
+                    "13333.33",
+                    "13333.33",
+                    "13333.37"
+                ],
+                "sum": "160000.00",
+                "agreement_has_regular": true,
+                "agreement_has_final": true
+            },
+            "status": "PASS",
+            "explanation": "The agreement text and the shared row allocator use the same centavo split. Total payable is unchanged."
+        },
+        {
+            "id": "AG-03",
+            "expected": "A 10,000.00 loan for 6 months stays payable 13,000.00. The regular installment is 2,166.66 and the final installment is 2,166.70. The approval card uses that split instead of the equal-rounded 2,166.67.",
+            "actual": {
+                "regular": "2166.66",
+                "final": "2166.70",
+                "total_payable": "13000.00",
+                "sum": "13000.00",
+                "approval_uses_shared_split": true
+            },
+            "status": "PASS",
+            "explanation": "The approval display and the saved regular installment use the same rows as the agreement schedule."
+        },
+        {
+            "id": "DD-01",
+            "expected": "Not Provided",
+            "actual": "Not Provided",
+            "status": "PASS",
+            "explanation": "A missing approved term and a missing requested term produce no due date."
+        },
+        {
+            "id": "DD-02",
+            "expected": "Not Provided",
+            "actual": "Not Provided",
+            "status": "PASS",
+            "explanation": "Select stays invalid and does not use the requested 12-month term."
+        },
+        {
+            "id": "DD-03",
+            "expected": "Not Provided",
+            "actual": "Not Provided",
+            "status": "PASS",
+            "explanation": "Zero stays invalid and does not use the requested 12-month term."
+        },
+        {
+            "id": "DD-04",
+            "expected": "Not Provided",
+            "actual": "Not Provided",
+            "status": "PASS",
+            "explanation": "A negative term stays invalid and does not use the requested 12-month term."
+        },
+        {
+            "id": "DD-05",
+            "expected": "Not Provided",
+            "actual": "Not Provided",
+            "status": "PASS",
+            "explanation": "A nonnumeric term stays invalid and does not use the requested 12-month term."
+        },
+        {
+            "id": "DD-06",
+            "expected": "2027-04-20",
+            "actual": "2027-04-20",
+            "status": "PASS",
+            "explanation": "An explicit approved term of 6 months estimates 2027-04-20 from 2026-10-20."
+        },
+        {
+            "id": "DD-07",
+            "expected": "2027-01-15",
+            "actual": "2027-01-15",
+            "status": "PASS",
+            "explanation": "A stored approved due date is kept when the approved term is valid."
+        },
+        {
+            "id": "DD-08",
+            "expected": "2027-04-20",
+            "actual": "2027-04-20",
+            "status": "PASS",
+            "explanation": "A blank approved term still uses an explicit requested term of 6 months."
+        },
+        {
+            "id": "DD-09",
+            "expected": "The approval card and client details card call the shared due-date helper and do not use a 12-month fallback.",
+            "actual": {
+                "approval_helper": true,
+                "approval_fallback": false,
+                "client_helper": true,
+                "client_fallback": false,
+                "script_stops_invalid_term": true
+            },
+            "status": "PASS",
+            "explanation": "Invalid terms no longer reach a display default of 12 months."
+        },
+        {
+            "id": "RL-06",
+            "expected": "A rolled-back 3-month release stores 3,833.33, 3,833.33, and 3,833.34, totaling 11,500.00. Missing, zero, negative, Select, and nonnumeric terms store no release. Isolated and lending_management counts return to the starting values.",
+            "actual": {
+                "installments": [
+                    "3833.33",
+                    "3833.33",
+                    "3833.34"
+                ],
+                "sum": "11500.00",
+                "payable": "11500.00",
+                "invalid_releases_stored": 0,
+                "rolled_back": true,
+                "cleanup": "rollback",
+                "isolated_counts_restored": true,
+                "lending_management_unchanged": true,
+                "error": "",
+                "browser": "NOT RUN"
+            },
+            "status": "PASS",
+            "explanation": "The release schedule was inserted in frams_capstone_test and removed by rolling back the transaction. The browser confirm button was not clicked."
+        },
+        {
+            "id": "RL-01",
+            "expected": "A missing term is rejected before a release row is stored.",
+            "actual": {
+                "accepted": false,
+                "message": "This application has no valid loan term. A loan term of at least 1 month is required.",
+                "releases_for_invalid_applications": 0
+            },
+            "status": "PASS",
+            "explanation": "The release gate uses the approved term. The requested 12-month value is not stored in its place."
+        },
+        {
+            "id": "RL-02",
+            "expected": "A zero term is rejected before a release row is stored.",
+            "actual": {
+                "accepted": false,
+                "message": "This application has no valid loan term. A loan term of at least 1 month is required.",
+                "releases_for_invalid_applications": 0
+            },
+            "status": "PASS",
+            "explanation": "The release gate uses the approved term. The requested 12-month value is not stored in its place."
+        },
+        {
+            "id": "RL-03",
+            "expected": "A negative term is rejected before a release row is stored.",
+            "actual": {
+                "accepted": false,
+                "message": "This application has no valid loan term. A loan term of at least 1 month is required.",
+                "releases_for_invalid_applications": 0
+            },
+            "status": "PASS",
+            "explanation": "The release gate uses the approved term. The requested 12-month value is not stored in its place."
+        },
+        {
+            "id": "RL-04",
+            "expected": "A Select term is rejected before a release row is stored.",
+            "actual": {
+                "accepted": false,
+                "message": "This application has no valid loan term. A loan term of at least 1 month is required.",
+                "releases_for_invalid_applications": 0
+            },
+            "status": "PASS",
+            "explanation": "The release gate uses the approved term. The requested 12-month value is not stored in its place."
+        },
+        {
+            "id": "RL-05",
+            "expected": "A nonnumeric term is rejected before a release row is stored.",
+            "actual": {
+                "accepted": false,
+                "message": "This application has no valid loan term. A loan term of at least 1 month is required.",
+                "releases_for_invalid_applications": 0
+            },
+            "status": "PASS",
+            "explanation": "The release gate uses the approved term. The requested 12-month value is not stored in its place."
+        }
+    ]
+}

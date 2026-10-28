@@ -1,0 +1,145 @@
+{
+    "executed_at": "2026-10-20T20:37:42+02:00",
+    "php_version": "8.2.12",
+    "database": "frams_capstone_test",
+    "writes": "none",
+    "isolated_table_counts_unchanged": true,
+    "counts_before": {
+        "clients": 2,
+        "loan_applications": 36,
+        "loan_agreements": 0,
+        "loans": 36,
+        "loan_releases": 36,
+        "payments": 39
+    },
+    "counts_after": {
+        "clients": 2,
+        "loan_applications": 36,
+        "loan_agreements": 0,
+        "loans": 36,
+        "loan_releases": 36,
+        "payments": 39
+    },
+    "counts": {
+        "executed": 8,
+        "passed": 8,
+        "failed": 0
+    },
+    "results": [
+        {
+            "id": "LT-01",
+            "expected": "Approved term \"12 months\" is kept. Payable on 10,000.00 is 16,000.00. No invented term.",
+            "actual": {
+                "label": "12 months",
+                "months": 12,
+                "valid": true,
+                "total_payable": 16000
+            },
+            "status": "PASS",
+            "explanation": "An explicit approved term is parsed and priced. The 12 comes from the stored term, not from a blank-term default."
+        },
+        {
+            "id": "LT-02",
+            "expected": "Blank approved and requested terms are invalid. Eligibility lists Loan term. Agreement generation throws the term message.",
+            "actual": {
+                "choice_valid": false,
+                "choice_months": 0,
+                "message": "A loan term of at least 1 month is required.",
+                "eligibility_status": "Not Eligible",
+                "missing_fields": [
+                    "Loan term"
+                ],
+                "wizard_message": "We cannot verify an affordable loan amount yet. Please complete Step 2 (Employment & income), including income and debt information, then adjust your loan amount: Loan term.",
+                "agreement": "A loan term of at least 1 month is required."
+            },
+            "status": "PASS",
+            "explanation": "A missing term stays missing. The agreement helper does not substitute 12 months."
+        },
+        {
+            "id": "LT-03",
+            "expected": "An explicit zero-month term is invalid and does not fall back to a requested 12-month term.",
+            "actual": {
+                "label": "0 months",
+                "months": 0,
+                "valid": false,
+                "message": "A loan term of at least 1 month is required.",
+                "eligibility_status": "Not Eligible",
+                "missing_fields": [
+                    "Loan term"
+                ]
+            },
+            "status": "PASS",
+            "explanation": "Zero is an entered term. The requested 12-month value is not used in its place."
+        },
+        {
+            "id": "LT-04",
+            "expected": "A negative term is invalid, including a label such as \"-3 months\".",
+            "actual": {
+                "numeric_months": -3,
+                "numeric_valid": false,
+                "label_months": -3,
+                "label_valid": false,
+                "eligibility_status": "Not Eligible",
+                "missing_fields": [
+                    "Loan term"
+                ]
+            },
+            "status": "PASS",
+            "explanation": "Negative terms are rejected. They are not clamped to 1 or 12 months."
+        },
+        {
+            "id": "LT-05",
+            "expected": "Approved \"6 Months\" wins over requested \"24 Months\". Payable on 10,000.00 is 13,000.00.",
+            "actual": {
+                "label": "6 Months",
+                "months": 6,
+                "total_interest": 3000,
+                "total_payable": 13000
+            },
+            "status": "PASS",
+            "explanation": "The approved term is priced. The requested term does not replace it, and 24 months would have produced 22,000.00 payable."
+        },
+        {
+            "id": "LT-06",
+            "expected": "Agreement text shows \"6 Months\", regular installment 2,166.66, final installment 2,166.70, and does not show the requested 24-month term.",
+            "actual": {
+                "contains_approved_term": true,
+                "contains_requested_term": false,
+                "contains_installment": true,
+                "contains_final_installment": true,
+                "stable": true
+            },
+            "status": "PASS",
+            "explanation": "The agreement is built from the approved term. The installment lines use the shared centavo split, which sums to 13,000.00. Repeating the call does not change the text and does not write a row."
+        },
+        {
+            "id": "LT-07",
+            "expected": "A blank or non-numeric term does not release. The schedule function rejects the parsed term, and the release page has no 12-month substitute.",
+            "actual": {
+                "blank_valid": false,
+                "blank_months": 0,
+                "select_valid": false,
+                "select_months": 0,
+                "schedule_rejected": true,
+                "schedule_message": "Loan term must be at least 1 month.",
+                "release_source_blocks_default": true
+            },
+            "status": "PASS",
+            "explanation": "Release uses the same term choice as approval. \"Select\" is not a term, and the page does not store 12 months for it."
+        },
+        {
+            "id": "LT-08",
+            "expected": "A stored 12-month term still prices 16,000.00 and prints that term. A blank term with dates is not turned into an agreement. Released-loan display may still estimate months from dates.",
+            "actual": {
+                "display_months_from_dates": 12,
+                "display_label": "12 months",
+                "valid_payable": 16000,
+                "blank_with_dates": "A loan term of at least 1 month is required.",
+                "stored_term_line": true,
+                "stored_installment": true
+            },
+            "status": "PASS",
+            "explanation": "Existing valid terms are unchanged. Date-based display remains only in resolveLoanTermMonths(), which agreement generation does not use."
+        }
+    ]
+}

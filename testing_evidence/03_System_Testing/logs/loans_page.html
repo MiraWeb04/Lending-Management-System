@@ -1,0 +1,461 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0f3974">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="RJ &amp; RR Finance">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="images/logo.png">
+    <title>Loans Management - Lending Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="assets/vendor/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="assets/vendor/fontawesome/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/lending_styles.css">
+</head>
+<body>
+    <a class="skip-link" href="#mainContent">Skip to content</a>
+<div class="dashboard-layout">
+    <div class="sidebar-backdrop" id="sidebarBackdrop" hidden></div>
+    <aside class="sidebar sidebar--premium" id="mainSidebar" aria-label="Primary navigation">
+        <div class="brand-logo">
+            <img src="images/logo.png" alt="RJ and RR Finance Services logo">
+            <span class="brand-text">RJ &amp; RR Finance</span>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Sidebar menu">
+                            <div class="nav-section-label">Main</div>
+                <ul class="nav-links">
+                                                                    <li>
+                            <a href="dashboard_lending.php" class="" data-nav-label="Dashboard" title="Dashboard">
+                                <i class="fas fa-gauge-high" aria-hidden="true"></i>
+                                <span class="nav-label">Dashboard</span>
+                                                            </a>
+                        </li>
+                                                                    <li>
+                            <a href="notifications_lending.php" class="" data-nav-label="Notifications" title="Notifications, 3 unread" aria-label="Notifications, 3 unread">
+                                <i class="fas fa-bell" aria-hidden="true"></i>
+                                <span class="nav-label">Notifications</span>
+                                                                    <span class="nav-count" data-nav-count="notifications_lending.php" data-nav-hint="unread" aria-hidden="true">3</span>
+                                                            </a>
+                        </li>
+                                    </ul>
+                            <div class="nav-section-label">Portfolio</div>
+                <ul class="nav-links">
+                                                                    <li>
+                            <a href="clients_lending.php" class="" data-nav-label="Clients" title="Clients">
+                                <i class="fas fa-users" aria-hidden="true"></i>
+                                <span class="nav-label">Clients</span>
+                                                            </a>
+                        </li>
+                                                                    <li>
+                            <a href="loans_lending.php" class="active" aria-current="page" data-nav-label="Loans" title="Loans, 1 overdue" aria-label="Loans, 1 overdue">
+                                <i class="fas fa-hand-holding-dollar" aria-hidden="true"></i>
+                                <span class="nav-label">Loans</span>
+                                                                    <span class="nav-count" data-nav-count="loans_lending.php" data-nav-hint="overdue" aria-hidden="true">1</span>
+                                                            </a>
+                        </li>
+                                                                    <li>
+                            <a href="payments_lending.php" class="" data-nav-label="Payments" title="Payments">
+                                <i class="fas fa-money-check-dollar" aria-hidden="true"></i>
+                                <span class="nav-label">Payments</span>
+                                                            </a>
+                        </li>
+                                                                    <li>
+                            <a href="collectors_lending.php" class="" data-nav-label="Collectors" title="Collectors">
+                                <i class="fas fa-user-tie" aria-hidden="true"></i>
+                                <span class="nav-label">Collectors</span>
+                                                            </a>
+                        </li>
+                                    </ul>
+                            <div class="nav-section-label">Origination</div>
+                <ul class="nav-links">
+                                                                    <li>
+                            <a href="loan_applications_lending.php" class="" data-nav-label="Applications" title="Applications">
+                                <i class="fas fa-file-signature" aria-hidden="true"></i>
+                                <span class="nav-label">Applications</span>
+                                                                    <span class="nav-count" data-nav-count="loan_applications_lending.php" data-nav-hint="awaiting review" hidden aria-hidden="true">0</span>
+                                                            </a>
+                        </li>
+                                                                    <li>
+                            <a href="borrower_approval_lending.php" class="" data-nav-label="Borrower Approval" title="Borrower Approval">
+                                <i class="fas fa-user-check" aria-hidden="true"></i>
+                                <span class="nav-label">Borrower Approval</span>
+                                                                    <span class="nav-count" data-nav-count="borrower_approval_lending.php" data-nav-hint="awaiting approval" hidden aria-hidden="true">0</span>
+                                                            </a>
+                        </li>
+                                                                    <li>
+                            <a href="loan_release_lending.php" class="" data-nav-label="Loan Release" title="Loan Release">
+                                <i class="fas fa-file-contract" aria-hidden="true"></i>
+                                <span class="nav-label">Loan Release</span>
+                                                                    <span class="nav-count" data-nav-count="loan_release_lending.php" data-nav-hint="ready to release" hidden aria-hidden="true">0</span>
+                                                            </a>
+                        </li>
+                                                                    <li>
+                            <a href="loan_release_invoices_lending.php" class="" data-nav-label="Release Invoices" title="Release Invoices">
+                                <i class="fas fa-file-invoice" aria-hidden="true"></i>
+                                <span class="nav-label">Release Invoices</span>
+                                                            </a>
+                        </li>
+                                    </ul>
+                            <div class="nav-section-label">Finance</div>
+                <ul class="nav-links">
+                                                                    <li>
+                            <a href="expenses_lending.php" class="" data-nav-label="Expenses" title="Expenses">
+                                <i class="fas fa-receipt" aria-hidden="true"></i>
+                                <span class="nav-label">Expenses</span>
+                                                            </a>
+                        </li>
+                                                                    <li>
+                            <a href="penalties_lending.php" class="" data-nav-label="Penalties" title="Penalties">
+                                <i class="fas fa-triangle-exclamation" aria-hidden="true"></i>
+                                <span class="nav-label">Penalties</span>
+                                                            </a>
+                        </li>
+                                                                    <li>
+                            <a href="reports_lending.php" class="" data-nav-label="Reports &amp; Analytics" title="Reports &amp; Analytics">
+                                <i class="fas fa-chart-line" aria-hidden="true"></i>
+                                <span class="nav-label">Reports &amp; Analytics</span>
+                                                            </a>
+                        </li>
+                                    </ul>
+                            <div class="nav-section-label">System</div>
+                <ul class="nav-links">
+                                                                    <li>
+                            <a href="contact_inquiries_lending.php" class="" data-nav-label="Contact Inquiries" title="Contact Inquiries">
+                                <i class="fas fa-envelope-open-text" aria-hidden="true"></i>
+                                <span class="nav-label">Contact Inquiries</span>
+                                                                    <span class="nav-count" data-nav-count="contact_inquiries_lending.php" data-nav-hint="new" hidden aria-hidden="true">0</span>
+                                                            </a>
+                        </li>
+                                                                    <li>
+                            <a href="users_lending.php" class="" data-nav-label="Users" title="Users">
+                                <i class="fas fa-user-gear" aria-hidden="true"></i>
+                                <span class="nav-label">Users</span>
+                                                            </a>
+                        </li>
+                                                                    <li>
+                            <a href="profile_lending.php" class="" data-nav-label="Profile" title="Profile">
+                                <i class="fas fa-id-card" aria-hidden="true"></i>
+                                <span class="nav-label">Profile</span>
+                                                            </a>
+                        </li>
+                                    </ul>
+                    </nav>
+
+        <div class="sidebar-footer-note">
+            <div>Signed in as FRAMS Test Admin</div>
+                            <a href="logout_lending.php" class="sidebar-logout-link"><i class="fas fa-sign-out-alt me-1"></i> Logout</a>
+                    </div>
+    </aside>
+
+    <div class="main-panel" id="mainContent">
+        <meta name="csrf-token" content="05c0afd8ebf87193f919e1e80fdafe0dbfa91bfa1b3fcc4209481dc2086f027e">
+        <header class="topbar">
+            <div class="topbar-inner">
+                <div class="topbar-left">
+                    <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar" aria-controls="mainSidebar" aria-expanded="false">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div>
+                        <div class="topbar-title">Loans</div>
+                        <div class="small text-muted d-none d-md-block">Portfolio</div>
+                    </div>
+                </div>
+
+                <div class="topbar-meta">
+                                            <div class="topbar-search position-relative">
+                            <i class="fas fa-search" aria-hidden="true"></i>
+                            <input type="search" class="form-control" placeholder="Search clients or records..." data-global-search="clients_lending.php" aria-label="Search">
+                        </div>
+                                        <div class="topbar-text d-none d-xl-block" id="dateTime"></div>
+                                        <a href="notifications_lending.php" class="notification-bell icon-button has-unread" data-nav-label="Notifications" aria-label="Notifications, 3 unread"><span class="notification-bell__icon"><i class="fas fa-bell" aria-hidden="true"></i></span><span class="notification-bell__badge" data-nav-count="notifications_lending.php" data-nav-hint="unread">3</span></a>                    <div class="dropdown profile-dropdown">
+                        <button class="btn btn-light dropdown-toggle d-flex align-items-center gap-2" type="button" id="profileMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="role-badge d-none d-md-inline-flex">Admin</span>
+                            <span class="d-none d-sm-inline">FRAMS Test Admin</span>
+                            <i class="fas fa-user-circle"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileMenuButton">
+                            <li><a class="dropdown-item" href="profile_lending.php"><i class="fas fa-id-card me-2"></i> Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="logout_lending.php"><i class="fas fa-sign-out-alt me-2"></i> Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-panel-body">
+
+    <div class="app-content py-2">
+        <div class="dashboard-header">
+            <div>
+                <div class="dashboard-breadcrumb"><a href="dashboard_lending.php">Home</a> / Loans</div>
+                <h1 class="page-title mb-1"><i class="fas fa-hand-holding-dollar me-2"></i>Loans Management</h1>
+                <p class="page-subtitle mb-0">
+                                                                        Manage loan releases, outstanding balances, and status across the portfolio.
+                                                            </p>
+            </div>
+                        <div class="quick-actions">
+                <a href="admin_create_loan_lending.php" class="btn btn-primary btn-sm"><i class="fas fa-plus me-1"></i> New Loan</a>
+            </div>
+                    </div>
+
+        
+        
+        <div class="reports-filter-card mb-4">
+    <div class="card-body p-4">
+        <form action="loans_lending.php" method="get" class="row g-3 align-items-end lending-period-filter" id="loans-period-filter-form">
+                        <div class="col-lg-3 col-md-4">
+                <label class="form-label fw-semibold" for="loans-period-filter-form_mode">Period</label>
+                <select class="form-select lending-period-mode" name="period_mode" id="loans-period-filter-form_mode">
+                                            <option value="all" selected>All releases</option>
+                                            <option value="daily">Daily</option>
+                                            <option value="monthly">Monthly</option>
+                                            <option value="yearly">Yearly</option>
+                                            <option value="custom">Custom range</option>
+                                    </select>
+            </div>
+            <div class="col-lg-3 col-md-4 reports-period-field" data-period-field="daily">
+                <label class="form-label">Day</label>
+                <input type="date" class="form-control" name="report_date" value="2026-10-18" max="2026-10-18">
+            </div>
+            <div class="col-lg-3 col-md-4 reports-period-field" data-period-field="monthly">
+                <label class="form-label">Month</label>
+                <input type="month" class="form-control" name="report_month" value="2026-10" max="2026-10">
+            </div>
+            <div class="col-lg-3 col-md-4 reports-period-field" data-period-field="yearly">
+                <label class="form-label">Year</label>
+                <select class="form-select" name="report_year">
+                                            <option value="2026" selected>2026</option>
+                                            <option value="2025">2025</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2021">2021</option>
+                                            <option value="2020">2020</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2016">2016</option>
+                                            <option value="2015">2015</option>
+                                            <option value="2014">2014</option>
+                                    </select>
+            </div>
+            <div class="col-lg-4 col-md-6 reports-period-field" data-period-field="custom">
+                <label class="form-label">Custom range</label>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <input type="date" class="form-control" name="start_date" value="2026-10-18" max="2026-10-18" aria-label="From date">
+                    </div>
+                    <div class="col-6">
+                        <input type="date" class="form-control" name="end_date" value="2026-10-18" max="2026-10-18" aria-label="To date">
+                    </div>
+                </div>
+            </div>
+                        <div class="col-lg-2 col-md-3 ms-lg-auto">
+                <button type="submit" class="btn btn-primary w-100"><i class="fas fa-filter me-1"></i> Apply</button>
+            </div>
+            <div class="col-12 lending-period-showing">Showing: <strong>All releases</strong></div>
+        </form>
+    </div>
+</div>
+
+        <div class="kpi-grid">
+            <div class="kpi-card kpi-card--primary">
+                <div class="kpi-card__top"><div class="kpi-card__label">Total released</div><div class="kpi-card__icon"><i class="fas fa-layer-group"></i></div></div>
+                <div class="kpi-card__value">2</div>
+                <div class="kpi-card__meta">2 after status filter</div>
+            </div>
+            <div class="kpi-card kpi-card--success">
+                <div class="kpi-card__top"><div class="kpi-card__label">Active</div><div class="kpi-card__icon"><i class="fas fa-circle-check"></i></div></div>
+                <div class="kpi-card__value">2</div>
+                <div class="kpi-card__meta">Currently collecting</div>
+            </div>
+            <div class="kpi-card kpi-card--danger">
+                <div class="kpi-card__top"><div class="kpi-card__label">Overdue</div><div class="kpi-card__icon"><i class="fas fa-triangle-exclamation"></i></div></div>
+                <div class="kpi-card__value">0</div>
+                <div class="kpi-card__meta">Requires follow-up</div>
+            </div>
+            <div class="kpi-card kpi-card--info">
+                <div class="kpi-card__top"><div class="kpi-card__label">Fully Paid</div><div class="kpi-card__icon"><i class="fas fa-clipboard-check"></i></div></div>
+                <div class="kpi-card__value">0</div>
+                <div class="kpi-card__meta">Closed loans</div>
+            </div>
+        </div>
+
+        <div class="kpi-grid mb-4">
+            <div class="kpi-card kpi-card--primary">
+                <div class="kpi-card__top"><div class="kpi-card__label">Total Released</div><div class="kpi-card__icon"><i class="fas fa-peso-sign"></i></div></div>
+                <div class="kpi-card__value">₱15,000.00</div>
+                <div class="kpi-card__meta">Principal released in period</div>
+            </div>
+            <div class="kpi-card kpi-card--success">
+                <div class="kpi-card__top"><div class="kpi-card__label">Total Receivable</div><div class="kpi-card__icon"><i class="fas fa-chart-line"></i></div></div>
+                <div class="kpi-card__value">₱17,000.00</div>
+                <div class="kpi-card__meta">Payable on period releases</div>
+            </div>
+            <div class="kpi-card kpi-card--warning">
+                <div class="kpi-card__top"><div class="kpi-card__label">Outstanding</div><div class="kpi-card__icon"><i class="fas fa-scale-unbalanced"></i></div></div>
+                <div class="kpi-card__value">₱17,000.00</div>
+                <div class="kpi-card__meta">Open balance (period releases)</div>
+            </div>
+            <div class="kpi-card kpi-card--info">
+                <div class="kpi-card__top"><div class="kpi-card__label">Collected (all time)</div><div class="kpi-card__icon"><i class="fas fa-hand-holding-dollar"></i></div></div>
+                <div class="kpi-card__value">₱10,416.66</div>
+                <div class="kpi-card__meta">All payments in range</div>
+            </div>
+        </div>
+
+        <div class="panel-card panel-card--flush mb-4">
+            <div class="chart-panel__header">
+                <h6 class="m-0 fw-bold"><i class="fas fa-search me-2 text-primary"></i>Search &amp; status</h6>
+            </div>
+            <div class="chart-panel__body pt-0">
+                <form action="loans_lending.php" method="get" class="row g-3 align-items-end">
+                    <input type="hidden" name="period_mode" value="all">
+                    <input type="hidden" name="report_date" value="2026-10-18">
+                    <input type="hidden" name="report_month" value="2026-10">
+                    <input type="hidden" name="report_year" value="2026">
+                    <input type="hidden" name="start_date" value="2026-10-18">
+                    <input type="hidden" name="end_date" value="2026-10-18">
+                    <div class="col-lg-6">
+                        <label class="form-label small text-muted mb-2">Client or Loan ID</label>
+                        <div class="input-group modern-input-group">
+                            <span class="input-group-text"><i class="fas fa-search"></i></span>
+                            <input type="text" class="form-control" name="search" placeholder="Search by client name or loan ID" value="">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="fas fa-search me-1"></i>Search
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label class="form-label small text-muted mb-2">Status</label>
+                        <select class="form-select modern-select" name="status" onchange="this.form.submit()">
+                            <option value="">All Statuses</option>
+                            <option value="Active" >Active</option>
+                            <option value="Paid" >Paid</option>
+                            <option value="Overdue" >Overdue</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-2">
+                        <a href="loans_lending.php" class="btn btn-outline-secondary w-100 modern-reset-btn">Reset all</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="panel-card panel-card--flush mb-4">
+            <div class="chart-panel__header">
+                <h6 class="m-0 fw-bold"><i class="fas fa-list me-2 text-primary"></i>All loans</h6>
+                <span class="text-muted small">2 shown · All releases</span>
+            </div>
+            <div class="chart-panel__body pt-0 px-0 pb-0">
+                                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 data-table">
+                        <thead>
+                            <tr>
+                                <th>Loan ID</th>
+                                <th>Borrower</th>
+                                <th>Released</th>
+                                <th>Loan Amount</th>
+                                <th>Frequency</th>
+                                <th>Installment</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                                                        <tr>
+                                <td>29</td>
+                                <td>
+                                    <a href="client_details_lending.php?id=20">
+                                        Synthetic BorrowerA                                    </a>
+                                </td>
+                                <td>Oct 18, 2026</td>
+                                <td>₱10,000.00</td>
+                                <td>Monthly</td>
+                                <td>₱3,833.33</td>
+                                <td>Jan 18, 2027</td>
+                                <td><span class="status-pill status-pill--active">Active</span></td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="loan_details_lending.php?id=29" class="btn btn-sm btn-info btn-rounded btn-action-hover" data-bs-toggle="tooltip" data-bs-placement="top" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                                                                <a href="payments_lending.php?add=true&loan=29&borrower=Synthetic%20BorrowerA" class="btn btn-sm btn-success btn-rounded btn-action-hover" data-bs-toggle="tooltip" data-bs-placement="top" title="Record Payment">
+                                            <i class="fas fa-cash-register"></i>
+                                        </a>
+                                                                            </div>
+                                </td>
+                            </tr>
+                                                        <tr>
+                                <td>30</td>
+                                <td>
+                                    <a href="client_details_lending.php?id=21">
+                                        Synthetic BorrowerB                                    </a>
+                                </td>
+                                <td>Oct 18, 2026</td>
+                                <td>₱5,000.00</td>
+                                <td>Monthly</td>
+                                <td>₱2,750.00</td>
+                                <td>Dec 18, 2026</td>
+                                <td><span class="status-pill status-pill--active">Active</span></td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a href="loan_details_lending.php?id=30" class="btn btn-sm btn-info btn-rounded btn-action-hover" data-bs-toggle="tooltip" data-bs-placement="top" title="View Details">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                                                                <a href="payments_lending.php?add=true&loan=30&borrower=Synthetic%20BorrowerB" class="btn btn-sm btn-success btn-rounded btn-action-hover" data-bs-toggle="tooltip" data-bs-placement="top" title="Record Payment">
+                                            <i class="fas fa-cash-register"></i>
+                                        </a>
+                                                                            </div>
+                                </td>
+                            </tr>
+                                                    </tbody>
+                    </table>
+                </div>
+                            </div>
+        </div>
+    </div>
+
+        </div>
+    </div>
+</div>
+
+<footer class="app-footer text-muted small py-3 px-2">
+    Copyright &copy; Lending Management System 2026</footer>
+
+<script src="assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="assets/lending_ui.js"></script>
+<script src="assets/lending.js"></script>
+<script src="assets/pwa.js" defer></script>
+    <script>
+    (function () {
+        'use strict'
+        
+        // Fetch all forms we want to apply validation styles to
+        var forms = document.querySelectorAll('.needs-validation')
+        
+        // Loop over them and prevent submission
+        Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                
+                form.classList.add('was-validated')
+            }, false)
+        })
+    })()
+    </script>
+</body>
+</html>

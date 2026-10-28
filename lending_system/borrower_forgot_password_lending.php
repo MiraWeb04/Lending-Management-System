@@ -126,8 +126,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = 'Please enter and confirm your new password.';
             } elseif ($password !== $password2) {
                 $error = 'Passwords do not match.';
-            } elseif (strlen($password) < 8) {
-                $error = 'Use at least 8 characters for your new password.';
+            } elseif (($passwordError = lendingValidatePassword($password)) !== '') {
+                $error = $passwordError;
             } else {
                 $updated = resetUserPasswordAfterOtp($resetUserId, $password);
                 if ($updated) {
@@ -221,8 +221,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label class="form-label" for="password">New password</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="fas fa-key"></i></span>
-                            <input type="password" id="password" name="password" class="form-control" minlength="8" required autofocus>
+                            <input type="password" id="password" name="password" class="form-control" <?php echo lendingPasswordInputAttributes(); ?> required autofocus>
                         </div>
+                        <?php echo lendingPasswordHintHtml(); ?>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="password2">Confirm password</label>

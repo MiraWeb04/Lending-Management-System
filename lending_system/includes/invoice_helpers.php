@@ -22,6 +22,50 @@ function invoiceMoney(float $amount): string
     return '₱' . number_format($amount, 2);
 }
 
+function invoicePaymentBorrowerSignature(int $loanId, string $fallbackBorrowerName): string
+{
+    if ($loanId <= 0 || !function_exists('executeQuery')) {
+        return trim($fallbackBorrowerName);
+    }
+
+    $agreementRow = executeQuery(
+        'SELECT ag.signed_by
+         FROM loans l
+         LEFT JOIN loan_releases lr ON lr.id = l.release_id
+         LEFT JOIN loan_agreements ag ON ag.application_id = lr.application_id
+         WHERE l.loan_id = ?
+         ORDER BY ag.id DESC
+         LIMIT 1',
+        [$loanId]
+    )->fetch(PDO::FETCH_ASSOC);
+    $signedBy = trim((string)($agreementRow['signed_by'] ?? ''));
+    if ($signedBy !== '' && strcasecmp($signedBy, 'Declined') !== 0) {
+        return $signedBy;
+    }
+
+    return trim($fallbackBorrowerName);
+}
+
+function invoiceAuthorizedSignatoryName(): string
+{
+    $configured = trim((string)lendingEnv('INVOICE_AUTHORIZED_SIGNATORY', ''));
+    if ($configured !== '') {
+        return $configured;
+    }
+
+    if (function_exists('executeQuery')) {
+        $adminRow = executeQuery(
+            "SELECT full_name FROM users WHERE role IN ('Admin', 'ADMIN') AND status = 'Active' ORDER BY user_id ASC LIMIT 1"
+        )->fetch(PDO::FETCH_ASSOC);
+        $adminName = trim((string)($adminRow['full_name'] ?? ''));
+        if ($adminName !== '') {
+            return $adminName;
+        }
+    }
+
+    return invoiceBrand()['legal_name'];
+}
+
 function renderInvoiceBrandContactList(): string
 {
     $brand = invoiceBrand();

@@ -1,0 +1,19 @@
+5: References, Questionnaires, and Forms
+14: This packet supports Chapters I to V. It has three parts. Part A is the reference list for the sources that can be matched to a published work, plus the author–year mentions in Chapter II that still need the copy the group actually read. Pa
+16: Respondents named in Chapter III: one lending administrator, one collector, and thirty borrowers of the Poblacion, Sominot office.
+25: •  B.3  Pre-development survey questionnaire
+50: Ramirez, J. G. (2024). Establishment of gross loan portfolio risk-return questionnaire: Reliability and validity structure. Mindoro Journal of Social Sciences and Development Studies, 1(2), 18–26. https://journal.omsc.edu.ph/mjssds/article/
+56: •  Chapter II cites Ramirez (2024) for a structured risk-and-return instrument in Occidental Mindoro. That description matches the 2024 questionnaire article listed above.
+57: •  ISO/IEC 25010:2011 is listed because the evaluation form uses functionality, usability, reliability, security, and performance, the criteria named in Chapter III. The chapters themselves do not have to add this entry unless the group ado
+89: Names, loan amounts, government ID numbers, and uploaded files will be kept for the study record and will not be published with identifying detail. Participation is voluntary. A respondent may stop at any time.
+120: B.3  Pre-development survey questionnaire
+121: Use this form before FRAMS is built. It identifies delays in applications, manual credit checking, and payment tracking. One form is for each consenting respondent.
+122: Respondent no.: __________     Date: ______________     Form: printed ☐   online ☐
+278: Use this part after the prototype runs. The five criteria are those named in Chapter III: functionality, usability, reliability, security, and performance. They follow the same groupings used in ISO/IEC 25010:2011. Each respondent answers o
+299: Frequency (f) is the number of respondents who chose a scale value. N is the number who rated that item. The weight (w) is the scale value 5, 4, 3, 2, or 1.
+306: Respondent no.: __________     Date: ______________     Form no.: __________
+387: Functionality. The tasks for my role can be completed in FRAMS.
+410: One row per statement in Form C.2. Use N = 1 for administrator-only items, N = 1 for collector-only items, N = 30 for borrower-only items, and N = 32 for items answered by all roles, unless a respondent left an item blank. Then use the numb
+411: Chapter IV Table 4.7 reports these criterion means: functionality 4.48, usability 4.41, reliability 4.39, security 4.36, and performance 4.33, each interpreted as Very High. Enter those means in the summary below only after this tally produ
+448: Group the item means as follows, then average the items in the group. Functionality: items 1–6, 7–12, 13–18, and 19, using only the items the role was asked to answer, then combine by the plan in your tally notes. A simpler office tally is 
+453: Functionality

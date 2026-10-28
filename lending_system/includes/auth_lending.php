@@ -14,6 +14,33 @@ if (session_status() == PHP_SESSION_NONE) {
 require_once __DIR__ . '/db_lending.php';
 require_once __DIR__ . '/csrf_lending.php';
 
+function lendingPasswordPolicyMessage(): string
+{
+    return 'Password must be at least 8 characters and include a special character (for example @Password123!).';
+}
+
+function lendingPasswordMeetsPolicy(string $password): bool
+{
+    return strlen($password) >= 8 && preg_match('/[^A-Za-z0-9]/', $password) === 1;
+}
+
+function lendingValidatePassword(string $password): string
+{
+    return lendingPasswordMeetsPolicy($password) ? '' : lendingPasswordPolicyMessage();
+}
+
+function lendingPasswordInputAttributes(): string
+{
+    $title = htmlspecialchars(lendingPasswordPolicyMessage(), ENT_QUOTES, 'UTF-8');
+
+    return 'minlength="8" maxlength="128" pattern="(?=.*[^A-Za-z0-9]).{8,}" title="' . $title . '" autocomplete="new-password"';
+}
+
+function lendingPasswordHintHtml(): string
+{
+    return '<div class="form-text">' . htmlspecialchars(lendingPasswordPolicyMessage(), ENT_QUOTES, 'UTF-8') . '</div>';
+}
+
 function passwordMatches($inputPassword, $storedPassword) {
     if ($storedPassword === null || $storedPassword === '' || !is_string($storedPassword)) {
         return false;
@@ -48,6 +75,14 @@ function isActiveAccount($user) {
 
 function isCollector() {
     return isLoggedIn() && strcasecmp((string)($_SESSION['role'] ?? ''), 'Collector') === 0;
+}
+
+/**
+ * Staff who may initiate PayMongo Dynamic QR Ph from the payment collection UI.
+ */
+function canInitiatePaymongoQrph(): bool
+{
+    return isAdmin() || isCollector();
 }
 
 function userIsBorrowerAccount(?array $user = null): bool
@@ -229,7 +264,7 @@ function verifyPasswordResetOtp(int $userId, string $otp): string
 
 function resetUserPasswordAfterOtp(int $userId, string $newPassword)
 {
-    if ($userId <= 0 || trim($newPassword) === '' || !getActivePasswordResetRow($userId)) {
+    if ($userId <= 0 || !lendingPasswordMeetsPolicy($newPassword) || !getActivePasswordResetRow($userId)) {
         return false;
     }
 
@@ -253,7 +288,7 @@ function getUserByResetToken(string $token) {
 }
 
 function resetUserPasswordByToken(string $token, string $newPassword) {
-    if (trim($token) === '' || trim($newPassword) === '') return false;
+    if (trim($token) === '' || !lendingPasswordMeetsPolicy($newPassword)) return false;
     $user = getUserByResetToken($token);
     if (!$user) return false;
 

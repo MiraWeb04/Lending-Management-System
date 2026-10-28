@@ -1,0 +1,179 @@
+paras 1329 tables 24
+
+[32] ['Payment Intent']
+In addition to payments recorded at the lending office, FRAMS includes PayMongo Dynamic QR Ph. A collector starts the code for an assigned loan when the method is bank transfer or e-wallet. The borrower pays by scanning that code. The QR image is not a payment confirmation. While the QR payment page remains open, FRAMS polls the PayMongo Payment Intent API and records the repayment only after the provider status is succeeded and the paid amount matches the pending transaction. A webhook handler 
+
+[67] ['HTML minimum']
+The loan-amount field on the application form uses an HTML minimum of PHP 1,000 so that the browser can reject nonnumeric or negative entry. The eligibility function, however, still applies the configured policy minimum of PHP 3,000 and blocks a requested amount below that limit. Appendix K, Figure K1, shows the frontend numeric-entry message and should not be read as a change to the policy minimum.
+
+[69] ['Payment Intent']
+The system includes PayMongo Dynamic QR Ph for supported non-cash collection transactions. According to the implemented workflow, an authorized collector initiates a QR payment for an assigned loan. The corresponding repayment is recorded after the Payment Intent status is confirmed as succeeded and the paid amount has been matched to the pending transaction. While the QR page is open, FRAMS polls the Payment Intent API for that confirmation. A webhook may also post a verified event when configu
+
+[78] ['eligibility estimates']
+Future researchers. The study may be a reference for later work on micro-lending systems and rule-based eligibility estimates.
+
+[110] ['Payment Intent']
+PayMongo Dynamic QR Ph. A collector-initiated QR payment for bank transfer or e-wallet. The repayment is recorded after PayMongo reports a succeeded Payment Intent for the matching amount, through status polling on the open QR page or through an optional webhook. Displaying the QR image is not confirmation of payment.
+
+[134] ['eligibility estimates']
+Taken together, the foreign literature describes approaches that may inform future development but are outside the current FRAMS implementation. The present study focuses on a locally hosted web application that keeps borrower information, applications, eligibility estimates, loan schedules, payments, and collection records within one system. This distinction is important when interpreting the project’s functionality and results.
+
+[147] ['FRAMS differ']
+The gap that FRAMS addresses is the absence of one web-based record that registers the borrower, stores the application and documents, applies a stated eligibility rule, releases the loan with a schedule, and tracks payments and penalties for a small lending office. FRAMS differs from the reviewed predictive systems because the eligibility result is explainable from income, debt, amount, term, and limits, and because the administrator remains the approving authority. Table 1 summarizes that comp
+
+[159] ['FRAMS work']
+The conceptual framework of this study shows how FRAMS works. It explains how the system handles loan applications, loan release, and collection for RJ and RR Finance Services. The framework uses the Input–Process–Output (IPO) model, which shows how information flows from inputs, through the system, to outputs. The system takes information such as borrower registration and identity, employment, income, and obligations, the loan request and documents, and payment and penalty records from the admi
+
+[186] ['30 borrowers']
+After the development of FRAMS, the system was evaluated by its intended users to assess its acceptability in terms of functionality, usability, reliability, security, and performance. The supplied User Acceptance Testing (UAT) response export contains 32 submissions. Based on the recorded user-role field, the respondents consisted of 30 borrowers, one administrator, and one collector.
+
+[190] ['30 borrowers']
+The post-development evaluation dataset contains 32 submissions, consisting of 30 borrowers, one administrator, and one collector. These respondents were selected using purposive sampling because they represented intended users with relevant experience or responsibilities related to the lending operations addressed by FRAMS. The evaluation results were calculated from their recorded responses to the 20-item questionnaire. The respondent-role distribution is based on the recorded user-role field 
+
+[218] ['30 borrowers']
+Descriptive statistics were used to analyze the respondents' evaluations of the Financial Risk Assessment and Micro-Lending System (FRAMS). The evaluation covered five criteria: functionality, usability, reliability, security, and performance. The weighted mean was used to determine the average rating for each criterion based on the responses of the 32 respondents, consisting of 30 borrowers, one administrator, and one collector.
+
+[232] ['verified webhook', 'Payment Intent']
+Payments and penalties. The system records a payment with amount, date, method, collector, optional reference, and a penalty portion. It rejects a payment that exceeds the remaining balance plus the penalty still due. It recomputes the balance and the installment status. For an unpaid installment past its due date, it computes a penalty of 1 percent, 2 percent, 3 percent, or 5 percent of the installment amount for daily, weekly, semi-monthly, and monthly loans. Cash, bank transfer, and e-wallet 
+
+[242] ['Payment Intent']
+Figure 2 is the Level 1 data flow diagram, with processes 1.0 through 5.0. The borrower, the collector, and the administrator send data into those processes and receive the records that belong to their role. Process 4.0 is a payment recorded by the collector. An administrator can record cash, bank transfer, and e-wallet on the same payments store. A confirmed PayMongo Payment Intent, retrieved while the QR page is open, also writes that store, and it is not drawn as a separate process on this fi
+
+[282] ['Payment Intent']
+paymongo_qrph_webhook_events. Stores optional PayMongo webhook events for a QR Ph transaction and whether each event was processed. In the implemented collector workflow, the repayment is posted after Payment Intent status polling confirms success; the webhook is an additional path and is not required for the open QR page to record a matching paid intent.
+
+[459] ['Payment Intent']
+Figure 5.7 is the immediate recording path for cash, bank transfer, and e-wallet. An administrator or the assigned collector can save that payment as soon as the amount is valid. PayMongo Dynamic QR Ph waits for later confirmation. The Create Dynamic QR Ph action is shown only for bank transfer or e-wallet, and only a collector can start it. The page stores a pending QR Ph transaction and shows the code. The balance stays unchanged until the Payment Intent is confirmed as succeeded and the paid 
+
+[505] ['verified webhook', 'Payment Intent']
+FRAMS was implemented as a browser-based application for a local Apache, PHP, and MySQL environment. The documented local setup is XAMPP, with the application placed under the web server document root. Authorized users open the pages in a web browser. The server renders each page, checks the signed-in role, reads and writes the database, and returns HTML. There is no separate mobile application and no separate public web service for the screens. The payments page uses two authenticated JSON look
+
+[644] ['verified webhook', 'Payment Intent']
+Payment and collection management. The payments page lists collections and records a payment for an authorized loan. The form shows the borrower, the amount already paid, and the remaining balance. The fields stored are the amount, date, collector, method, optional reference number, and penalty portion. The receipt number uses the prefix RJRR, the date, and a numeric sequence. The borrower can view that borrower's payment history and download a receipt for that borrower's own payment. The collec
+
+[682] ['30 borrowers']
+User Acceptance Testing (UAT) evaluated the acceptability of the Financial Risk Assessment and Micro-Lending System (FRAMS) based on respondents’ experience using the developed system. The supplied workbook, FRAMS UAT Responses (1).xlsx, contains 32 valid submissions and a recorded user-role field for each respondent: 30 borrowers, one administrator, and one collector. Each respondent answered all 20 questionnaire items. The five evaluation criteria were functionality, usability, reliability, se
+
+[697] ['Presentation of Testing']
+Presentation of Testing Data
+
+[698] ['APPENDIX B']
+The results of unit, integration, system, PayMongo QR Ph integration, and penetration and security testing are presented in Tables 4.4 to 4.8, with supporting evidence provided in Appendix B. Unit testing was reported as passed in 6 of 6 cases, integration testing in 7 of 7 cases, and system testing in 12 of 12 cases.
+
+[724] ['eligibility estimates']
+In relation to the problem stated in Chapter I, FRAMS centralizes borrower registration, loan requests, eligibility estimates, agreements, released loans, installment schedules, and payment records in one database. Collectors access assigned accounts, while administrators manage approval, release, expenses, penalties, and reports. The estimate supports review by displaying debt-to-income and the maximum amount implied by configured limits; it is not the lending decision. The extent to which each
+
+[839] ['APPENDIX B']
+The literature reviewed in Chapter II provides context for FRAMS through discussions of manual credit assessment, microfinance operations, and predictive scoring approaches. Unlike systems that use machine learning to predict default, FRAMS applies configured eligibility rules to assess borrower information and support the administrator's review. The system was evaluated through documented unit, integration, system, PayMongo integration, and penetration and security testing. The testing summary 
+
+[840] ['30 borrowers']
+The User Acceptance Testing (UAT) response export contained 32 submissions, consisting of 30 borrowers, one administrator, and one collector. The evaluation instrument contained 20 statements grouped into five criteria: functionality, usability, reliability, security, and performance. Each criterion comprised four statements, resulting in 128 individual ratings per criterion and 640 individual ratings across the entire questionnaire.
+
+[844] ['Payment Intent']
+In relation to the third specific objective, FRAMS supports interest computation, installment schedules, loan agreement acceptance, collector assignment, loan release, payment recording, penalty computation, and repayment monitoring. PayMongo QR Ph repayments are recorded after Payment Intent confirmation, not merely because a QR image was displayed.
+
+[851] ['Payment Intent']
+3. Protect financial integrity by retaining the implemented payment-validation rules, Payment Intent confirmation for QR Ph collections, and the restriction against deleting a payment that is linked to a PayMongo QR Ph transaction. Reconcile pending QR attempts that remain open after the QR page is closed.
+
+[881] ['APPENDIX B']
+APPENDIX B
+
+[913] ['FRAMS work']
+Integration testing was conducted to verify whether connected modules of FRAMS worked together correctly and maintained consistent records across the system.
+
+[1213] ['30 borrowers']
+The supplied User Acceptance Testing (UAT) response export contains 32 submissions, consisting of 30 borrowers, one administrator, and one collector. The 20-item evaluation questionnaire covered five criteria: functionality, usability, reliability, security, and performance, with four statements assigned to each criterion.
+
+[1217] ['30 borrowers']
+The administered 20-item questionnaire is documented in Appendix I. The completed item-level answers and the recorded user-role field are retained in the supplied workbook. The respondent distribution used throughout this manuscript is 30 borrowers, one administrator, and one collector.
+
+[1281] ['30 borrowers']
+The response export contains 32 submissions, consisting of 30 borrowers, one administrator, and one collector. The questionnaire contains 20 statements grouped into five criteria, with four statements assigned to each criterion. Therefore, each criterion comprises 128 individual ratings, while the overall computation includes 640 individual ratings.
+
+[1322] ['APPENDIX L']
+APPENDIX L
+
+=== CH5 BLOCK ===
+[834] CHAPTER V
+[835] SUMMARY, CONCLUSIONS, AND RECOMMENDATIONS
+[836] Summary of Findings
+[837] This study designed and developed the Financial Risk Assessment and Micro-Lending System (FRAMS) for RJ and RR Finance Services. The locally hosted web application uses PHP and MySQL to organize borrower registration, loan applications, eligibility assessment, agreements, loan release, installment schedules, payments, penalties, and administrative reports.
+[838] Borrowers can register and, after administrator approval, submit loan applications with the required supporting documents. The eligibility estimate uses declared income, existing financial obligations, the requested loan amount, the loan term, and configured lending criteria, including the debt-to-income limit. The estimate serves as a decision-support tool and does not automatically approve or re
+[839] The literature reviewed in Chapter II provides context for FRAMS through discussions of manual credit assessment, microfinance operations, and predictive scoring approaches. Unlike systems that use machine learning to predict default, FRAMS applies configured eligibility rules to assess borrower information and support the administrator's review. The system was evaluated through documented unit, i
+[840] The User Acceptance Testing (UAT) response export contained 32 submissions, consisting of 30 borrowers, one administrator, and one collector. The evaluation instrument contained 20 statements grouped into five criteria: functionality, usability, reliability, security, and performance. Each criterion comprised four statements, resulting in 128 individual ratings per criterion and 640 individual rat
+[841] The calculated weighted means were 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean was 4.53, interpreted as Strongly Agree under the five-point Likert scale adopted in Chapter III. These results indicate that the respondents generally expressed positive assessments of FRAMS across the five evaluation criteria.
+[842] Conclusions
+[843] In relation to the second specific objective, FRAMS computes a rule-based eligibility estimate from declared income, existing obligations, requested amount, loan term, and configured limits. The estimate is a decision-support result and does not automatically approve or reject a loan.
+[844] In relation to the third specific objective, FRAMS supports interest computation, installment schedules, loan agreement acceptance, collector assignment, loan release, payment recording, penalty computation, and repayment monitoring. PayMongo QR Ph repayments are recorded after Payment Intent confirmation, not merely because a QR image was displayed.
+[845] In relation to the fourth specific objective, FRAMS sends in-application notifications for relevant application decisions, agreement updates, loan releases, and payment transactions, consistent with the notification functions available in the developed system.
+[846] In relation to the fifth specific objective, FRAMS generates financial reports that support monitoring of loan releases, collections, outstanding balances, overdue accounts, and related lending transactions.
+[847] Recommendations
+[848] Based on the system’s current scope and the limitations identified in the study, the researchers recommend the following, in order of priority.
+[849] 1. Establish a database backup and recovery procedure. Schedule regular MySQL backups of the production database and document how authorized personnel can restore a backup. Confirm the deployed database name before using it in any restore instructions.
+[850] 2. Improve auditability by recording important actions—such as account approvals, loan releases, payment edits, and role changes—in a dedicated activity log.
+[851] 3. Protect financial integrity by retaining the implemented payment-validation rules, Payment Intent confirmation for QR Ph collections, and the restriction against deleting a payment that is linked to a PayMongo QR Ph transaction. Reconcile pending QR attempts that remain open after the QR page is closed.
+[852] 4. Keep the debt-to-income limit, minimum and maximum loan amounts, interest rate, and penalty rates in controlled configuration so approved policy changes do not require undocumented edits to application files.
+[853] 5. Develop an administrator settings page, in a later enhancement, that allows authorized personnel to update loan limits and penalty rates, with validation and an audit trail. This page is not part of the current implementation.
+[854] 6. SMS notifications may be added later if the lending office needs them and can support the cost. They are not implemented in the current system.
+[855] 
+[856] 
+[857] 
+[858] 
+[859] 
+[860] 
+[861] 
+[862] 
+[863] 
+[864] 
+[865] 
+[866] References
+[866] References
+[867] The following references are presented in APA 7th edition format.
+[868] References
+[868] References
+[869] Bazarbash, M., & Beaton, K. (2020). Filling the gap: Digital credit and financial inclusion (IMF Working Paper No. WP/20/150). International Monetary Fund. https://doi.org/10.5089/9781513552477.001
+[870] Campos, R. B., Jr. (2024). The impact of digitalization on credit risk management in microfinance institutions in Nueva Ecija, Philippines. Indian Journal of Information Sources and Services, 14(3). https://doi.org/10.51983/ijiss-2024.14.3.20
+[871] Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. MIS Quarterly, 13(3), 319–340. https://doi.org/10.2307/249008
+[872] DeLone, W. H., & McLean, E. R. (2003). The DeLone and McLean model of information systems success: A ten-year update. Journal of Management Information Systems, 19(4), 9–30. https://doi.org/10.1080/07421222.2003.11045748
+[873] Estrellado, G. E. (2024). Financial inclusion of lending institutions on sustainability of micro-businesses. United International Journal for Research & Technology, 5(7). https://uijrt.com/paper/financial-inclusion-lending-institutions-sustainability-micro-businesses
+[874] International Organization for Standardization. (2011). Systems and software engineering—Systems and software Quality Requirements and Evaluation (SQuaRE)—System and software quality models (ISO/IEC 25010:2011).
+[875] Juventud, W. M., Matigas, E. A. O., Himongala, J., Galla, M. R., & Abiol, M. J. D. (2023). Perceived credit risk of micro finance loans among micro-enterprises business in Población Iligan City. International Journal of Multidisciplinary: Applied Business and Education Research, 4(10), 3697–3702. https://doi.org/10.11594/ijmaber.04.10.22
+[876] Khandani, A. E., Kim, A. J., & Lo, A. W. (2010). Consumer credit-risk models via machine-learning algorithms. Journal of Banking & Finance, 34(11), 2767–2787. https://doi.org/10.1016/j.jbankfin.2010.06.001
+[877] Mina, J. C. (2024). The credit risk management practices of lending companies in Nueva Ecija: Basis for risk mitigating plan. International Journal of Advanced and Applied Sciences, 11(9), 134–142. https://doi.org/10.21833/ijaas.2024.09.015
+[878] PayMongo. (n.d.). PayMongo API documentation. https://developers.paymongo.com/
+[879] Penaso, C. P., & Dagang, A. L. (2025). Loan management practices as key drivers for the operation efficiency of microfinance institutions in Northern Mindanao, Philippines. International Journal of Research and Scientific Innovation, 12(5), 1715–1724. https://doi.org/10.51244/ijrsi.2025.120500162
+[880] Ramirez, J. G. (2024). Establishment of gross loan portfolio risk-return questionnaire: Reliability and validity structure. Mindoro Journal of Social Sciences and Development Studies, 1(2), 18–26. https://journal.omsc.edu.ph/mjssds/article/view/11
+[881] APPENDIX B
+
+=== TITLE ===
+[4] Financial Risk Assessment and Micro-Lending System (FRAMS)
+[6] A Capstone Project Presented to the Faculty of
+[7] College Department of
+[8] West Prime Horizon Institute, Inc.
+[9] Pagadian City
+[11] In Partial Fulfilment
+[12] of the Requirements in Capstone Project
+[13] for the Degree of Bachelor of Science in Information Technology
+[14] Academic Year 2025-2026
+[16] by:
+[17] Cabaraban, John Lloyd M.
+[18] Mandawe, Mark Rexben S.
+[19] Andulog, Joann R.
+[20] Luy, Angel Ann S.
+[22] Mr. Antonio Llagas Jr.
+[23] Adviser
+[24] October 23, 2026
+[25] CHAPTER I
+[26] INTRODUCTION
+[27] Background of Study
+[28] Many lending offices maintain borrower files, loan computations, and payment records using paper-based documents or separate spreadsheets. This practice makes it difficult to access and monitor essential information in one place, including borrower applications, declared income, existing financial obligations, loan amounts released, and outstanding balances. When these records are not properly integrated, lending offices may experience delays in processing transactions, inconsistencies in financial records, and difficulties monitoring overdue accounts and repayment activities.
+[29] Credit risk in micro-lending involves more than determining whether an individual qualifies for a loan. Local studies of lending institutions indicate that lending officers continue to rely on borrower interviews, business verification, and checks for existing unpaid loans when evaluating applications. These practices are particularly relevant because many micro-borrowers have limited income and little formal credit history (Mina, 2024; Juventud et al., 2023). Furthermore, studies on digital lending and microfinance indicate the growing role of web-based systems and structured risk assessment tools in improving lending operations (Santos, 2023; Campos, 2024). These studies, discussed in detail in Chapter 2, support the development of an integrated system that connects borrower information, loan processing, and financial risk assessment.
+
+=== TABLE0 row5 ===
+Kou et al. (2022); Chen and Li (2023); Khandani et al. (2010)
+
+=== FORMULAS ===
+[516] MI represents monthly interest, P is the original loan principal, and r is the monthly interest rate expressed as a percentage.
+[558] Formula 9. Existing Debt-to-Income Ratio
+[561] E is existing monthly debt payments plus other monthly obligations, and I represents monthly gross income.
+[564] DTI_after = ((E + MP) / I) × 100

@@ -99,10 +99,9 @@ function calculateMaxPrincipalFromMonthlyPayment(float $maxMonthlyPayment, float
 
 function clampLoanAmountToPolicy(float $amount, array $policy): float
 {
-    $min = (float)($policy['min_loan_amount'] ?? 0);
     $max = (float)($policy['max_loan_amount'] ?? PHP_FLOAT_MAX);
 
-    return round(max($min, min($max, $amount)), 2);
+    return round(min($max, max(0.0, $amount)), 2);
 }
 
 /**
@@ -183,6 +182,8 @@ function assessLoanEligibility(array $input): array
     $maxAffordablePayment = max(0, $maxTotalDebtPayment - $totalExistingDebt);
     $maxPrincipalRaw = calculateMaxPrincipalFromMonthlyPayment($maxAffordablePayment, $rate, $termMonths);
     $maxEligibleLoan = clampLoanAmountToPolicy($maxPrincipalRaw, $policy);
+    $minimumLoan = (float)$policy['min_loan_amount'];
+    $belowProductMinimum = $maxEligibleLoan + 0.01 < $minimumLoan;
 
     $eligibleForRequested = min($requestedAmount, $maxEligibleLoan);
     $eligibleForRequested = clampLoanAmountToPolicy($eligibleForRequested, $policy);
@@ -211,9 +212,14 @@ function assessLoanEligibility(array $input): array
     if ($requestedAmount > (float)$policy['max_loan_amount']) {
         $reasons[] = 'Requested amount exceeds the maximum loan limit of ₱' . number_format((float)$policy['max_loan_amount'], 2) . '.';
     }
+    if ($belowProductMinimum) {
+        $reasons[] = 'The maximum principal within the debt-to-income limit is ₱' . number_format($maxEligibleLoan, 2) . ', which is below the minimum loan of ₱' . number_format($minimumLoan, 2) . '.';
+    }
 
     if ($dtiAfter > $maxDti + 0.001) {
         $reasons[] = 'Debt-to-income after the proposed loan (' . number_format($dtiAfter, 1) . '%) exceeds the maximum ' . number_format($maxDti, 1) . '% limit.';
+        $status = 'Not Eligible';
+    } elseif ($belowProductMinimum) {
         $status = 'Not Eligible';
     } elseif ($requestedAmount > $maxEligibleLoan + 0.01) {
         $status = 'Conditionally Eligible';
@@ -510,6 +516,11 @@ function loanEligibilityBlocksWizardProgress(array $assessment): ?string
     $policy = $assessment['policy'] ?? lendingCreditPolicy();
     $minLoan = (float)($policy['min_loan_amount'] ?? 0);
     $maxLoan = (float)($policy['max_loan_amount'] ?? PHP_FLOAT_MAX);
+
+    if ($maxEligible + 0.01 < $minLoan) {
+        return 'The largest amount that fits the ' . number_format($maxDti, 1) . '% debt-to-income guideline is '
+            . formatMoneyPhp($maxEligible) . ', which is below the minimum loan of ' . formatMoneyPhp($minLoan) . '.';
+    }
 
     if ($requested > 0 && $requested < $minLoan) {
         return 'The minimum loan amount is ' . formatMoneyPhp($minLoan) . '. Please increase your requested amount.';

@@ -1,0 +1,44 @@
+﻿APP_ENV=local
+DB_HOST=localhost
+DB_NAME=lending_management
+DB_USER=root
+DB_PASSWORD=empty
+PAYMONGO_MODE=live
+PAYMONGO_SECRET_KEY=present len=32 prefix=sk_live kind=LIVE
+PAYMONGO_PUBLIC_KEY=present len=32 prefix=pk_live kind=LIVE
+PAYMONGO_WEBHOOK_SECRET=empty
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+LENDING_MAX_DTI=40
+LENDING_MIN_LOAN=3000
+LENDING_MAX_LOAN=500000
+SERVER=10.4.32-MariaDB
+DATABASE=lending_management
+TABLE_COUNT=20
+TABLE borrower_applications rows=14
+TABLE clients rows=9
+TABLE contact_inquiries rows=1
+TABLE contact_inquiry_replies rows=1
+TABLE email_notifications rows=52
+TABLE expenses rows=3
+TABLE loan_agreements rows=16
+TABLE loan_application_documents rows=45
+TABLE loan_application_reviews rows=9
+TABLE loan_applications rows=12
+TABLE loan_payment_schedules rows=75
+TABLE loan_release_notifications rows=0
+TABLE loan_releases rows=10
+TABLE loans rows=11
+TABLE notifications rows=179
+TABLE password_resets rows=0
+TABLE payments rows=20
+TABLE paymongo_qrph_transactions rows=15
+TABLE paymongo_qrph_webhook_events rows=0
+TABLE users rows=15
+COLUMNS users user_id:int(11):NO:PRI:NULL|employee_id:varchar(50):YES:UNI:NULL|username:varchar(100):NO:UNI:NULL|password:varchar(255):NO:-:NULL|full_name:varchar(150):NO:-:NULL|email:varchar(150):YES:-:NULL|contact_number:varchar(30):YES:-:NULL|role:enum('Admin','Collector','Borrower'):NO:-:Borrower|status:varchar(50):NO:-:Active|date_created:datetime:NO:-:current_timestamp()|last_login:datetime:YES:-:NULL
+COLUMNS clients client_id:int(11):NO:PRI:NULL|user_id:int(11):YES:-:NULL|first_name:varchar(100):NO:-:NULL|last_name:varchar(100):NO:-:NULL|address:text:YES:-:NULL|contact:varchar(30):YES:-:NULL|email:varchar(150):YES:-:NULL|collector_id:int(11):YES:-:NULL|date_registered:date:YES:-:NULL
+COLUMNS loans loan_id:int(11):NO:PRI:NULL|client_id:int(11):NO:-:NULL|loan_amount:decimal(12,2):NO:-:0.00|interest:decimal(8,2):NO:-:0.00|total_payable:decimal(12,2):NO:-:0.00|daily_payment:decimal(12,2):NO:-:0.00|date_released:date:YES:-:NULL|due_date:date:YES:-:NULL|status:varchar(50):YES:-:Active|collector_id:int(11):YES:-:NULL|loan_number:varchar(100):YES:-:NULL|release_id:int(11):YES:-:NULL|payment_frequency:varchar(50):YES:-:Monthly|loan_term:varchar(50):YES:-:NULL|agreement_status:varchar(50):YES:-:Pending|released_by:varchar(150):YES:-:NULL|loan_type:varchar(80):YES:-:NULL|loan_purpose:text:YES:-:NULL
+COLUMNS payments payment_id:int(11):NO:PRI:NULL|receipt_number:varchar(50):YES:UNI:NULL|collector_id:int(11):YES:-:NULL|client_id:int(11):YES:-:NULL|receipt_generated_at:datetime:YES:-:NULL|payment_method:varchar(50):NO:-:Cash|reference_number:varchar(255):YES:-:NULL|paymongo_qrph_transaction_id:bigint(20) unsigned:YES:UNI:NULL|remarks:text:YES:-:NULL|loan_id:int(11):NO:-:NULL|payment_date:date:NO:-:NULL|amount_paid:decimal(12,2):NO:-:0.00|collector_name:varchar(150):YES:-:NULL|interest_paid:decimal(12,2):YES:-:0.00|penalty_paid:decimal(12,2):NO:-:0.00|principal_paid:decimal(12,2):YES:-:0.00|notes:text:YES:-:NULL
+COLUMNS loan_releases id:int(10) unsigned:NO:PRI:NULL|application_id:int(10) unsigned:NO:-:NULL|borrower_user_id:int(11):YES:-:NULL|collector_user_id:int(11):YES:-:NULL|loan_number:varchar(100):YES:-:NULL|loan_amount:decimal(12,2):YES:-:NULL|interest_rate:decimal(5,2):YES:-:NULL|loan_term:varchar(50):YES:-:NULL|payment_frequency:varchar(50):YES:-:Monthly|release_status:varchar(50):YES:-:Pending|released_at:datetime:YES:-:NULL|released_by:varchar(150):YES:-:NULL|created_at:datetime:YES:-:current_timestamp()
+COLUMNS loan_payment_schedules id:int(10) unsigned:NO:PRI:NULL|release_id:int(10) unsigned:NO:-:NULL|installment_number:int(11):YES:-:NULL|due_date:date:YES:-:NULL|principal_amount:decimal(12,2):YES:-:NULL|interest_amount:decimal(12,2):YES:-:NULL|total_amount_due:decimal(12,2):YES:-:NULL|status:varchar(50):YES:-:Upcoming|created_at:datetime:YES:-:current_timestamp()
+COLUMNS loan_applications id:int(10) unsigned:NO:PRI:NULL|user_id:int(11):YES:-:NULL|borrower_name:varchar(200):YES:-:NULL|date_of_birth:date:YES:-:NULL|gender:varchar(30):YES:-:NULL|civil_status:varchar(30):YES:-:NULL|nationality:varchar(100):YES:-:NULL|complete_address:text:YES:-:NULL|mobile_number:varchar(30):YES:-:NULL|email_address:varchar(150):YES:-:NULL|employment_status:varchar(80):YES:-:NULL|employer_name:varchar(150):YES:-:NULL|occupation:varchar(150):YES:-:NULL|monthly_income:decimal(12,2):YES:-:NULL|monthly_gross_income:decimal(12,2):YES:-:NULL|monthly_net_income:decimal(12,2):YES:-:NULL|monthly_debt_payments:decimal(12,2):YES:-:NULL|other_monthly_obligations:decimal(12,2):YES:-:NULL|number_of_dependents:int(10) unsigned:YES:-:NULL|credit_history_note:varchar(255):YES:-:NULL|collateral_note:varchar(255):YES:-:NULL|eligibility_status:varchar(40):YES:-:NULL|eligibility_assessment_json:longtext:YES:-:NULL|eligibility_assessed_at:datetime:YES:-:NULL|employment_length:varchar(80):YES:-:NULL|employer_address:text:YES:-:NULL|employer_contact:varchar(30):YES:-:NULL|agency_office:varchar(150):YES:-:NULL|position:varchar(150):YES:-:NULL|employment_type:varchar(100):YES:-:NULL|years_in_service:varchar(80):YES:-:NULL|business_name:varchar(150):YES:-:NULL|business_address:text:YES:-:NULL|nature_of_business:varchar(150):YES:-:NULL|years_in_business:varchar(80):YES:-:NULL|business_contact:varchar(30):YES:-:NULL|profession:varchar(150):YES:-:NULL|primary_client:varchar(150):YES:-:NULL|years_experience:varchar(80):YES:-:NULL|ofw_country:varchar(100):YES:-:NULL|years_abroad:varchar(80):YES:-:NULL|employer_contact_ofw:varchar(30):YES:-:NULL|pension_source:varchar(150):YES:-:NULL|monthly_pension:decimal(12,2):YES:-:NULL|pension_contact:varchar(30):YES:-:NULL|remarks:text:YES:-:NULL|payment_frequency:varchar(50):YES:-:Monthly|number_of_payments:int(11):YES:-:NULL|estimated_payment:decimal(12,2):YES:-:NULL|estimated_due_date:date:YES:-:NULL|monthly_interest_rate:decimal(5,4):YES:-:NULL|estimated_interest:decimal(12,2):YES:-:NULL|estimated_monthly_payment:decimal(12,2):YES:-:NULL|loan_type:varchar(80):YES:-:NULL|loan_amount:decimal(12,2):YES:-:NULL|loan_term:varchar(50):YES:-:NULL|loan_purpose:text:YES:-:NULL|government_id_type:varchar(100):YES:-:NULL|government_id_number:varchar(100):YES:-:NULL|approved_loan_amount:decimal(12,2):YES:-:NULL|approved_interest_rate:decimal(5,2):YES:-:NULL|approved_monthly_payment:decimal(12,2):YES:-:NULL|approved_loan_term:varchar(50):YES:-:NULL|approved_first_payment_date:date:YES:-:NULL|approved_due_date:date:YES:-:NULL|approval_conditions:text:YES:-:NULL|credit_evaluation:text:YES:-:NULL|risk_assessment:text:YES:-:NULL|internal_notes:text:YES:-:NULL|reviewed_by:varchar(150):YES:-:NULL|reviewed_at:datetime:YES:-:NULL|rejection_reason:text:YES:-:NULL|agreement_status:varchar(50):YES:-:Pending|status:varchar(50):YES:-:Pending Review|submitted_at:datetime:YES:-:current_timestamp()|office_address:text:YES:-:NULL|office_contact:varchar(30):YES:-:NULL

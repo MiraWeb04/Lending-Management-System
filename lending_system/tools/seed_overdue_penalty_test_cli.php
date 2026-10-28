@@ -48,7 +48,7 @@ $profiles = [
         'loan_amount' => 15000.0,
         'term_months' => 3,
         'payment_frequency' => 'Monthly',
-        'overdue_installments' => 2,
+        'overdue_installments' => 3,
     ],
     [
         'username' => 'overdue_juan',
@@ -60,7 +60,7 @@ $profiles = [
         'loan_amount' => 10000.0,
         'term_months' => 3,
         'payment_frequency' => 'Weekly',
-        'overdue_installments' => 4,
+        'overdue_installments' => 3,
     ],
     [
         'username' => 'overdue_ana',

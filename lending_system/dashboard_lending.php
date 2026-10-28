@@ -494,7 +494,7 @@ $loanStatusColorsJSON = json_encode($loanStatusColorsList ?? []);
                         </div>
                         <div class="chart-panel__body pt-0 px-0 pb-0">
                             <?php if (count($recentPayments) > 0): ?>
-                            <div class="table-responsive">
+                            <div class="table-responsive payment-history-scroll">
                                 <table class="table table-hover mb-0 data-table">
                                     <thead>
                                         <tr>

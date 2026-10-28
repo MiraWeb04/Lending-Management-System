@@ -1,0 +1,17 @@
+{
+    "IT-007": {
+        "login_returned_false": true,
+        "session_not_created": true,
+        "status": "PASS"
+    },
+    "SEC-002": {
+        "login_returned_false": true,
+        "session_not_created": true,
+        "status": "PASS"
+    },
+    "IT-013": {
+        "login_succeeded": true,
+        "logged_out": true,
+        "status": "PASS"
+    }
+}

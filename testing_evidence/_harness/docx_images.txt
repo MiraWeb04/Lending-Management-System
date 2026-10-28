@@ -1,0 +1,148 @@
+1 | media/image1.png | 
+2 | media/image2.png | The conceptual framework of this study shows how FRAMS work. It explains how the system handles loan applications, loan release, and collect
+3 | media/image3.png | Figure 2 is the Level 1 data flow diagram, with processes 1.0 through 5.0. The borrower, the collector, and the administrator send data into
+4 | media/image4.png | Figure 3 is the entity-relationship diagram of FRAMS. A user account owns the borrower registration, the client record, password-reset token
+5 | media/image5.png | Figure 4 Loan activity flow of FRAMS
+6 | media/image6.png | Figure 4 is the activity from registration through collection. The eligibility estimate sits before document review continues, and release s
+7 | media/image7.png | This section presents the operational flow of FRAMS with standard flowchart symbols. An oval marks the start or end. A rectangle marks a pro
+8 | media/image8.png | User Authentication Flow
+9 | media/image9.png | Borrower Registration Flow
+10 | media/image10.png | Loan Application Flow
+11 | media/image11.png | Figure 5.4 traces the loan application completed by an approved borrower. The borrower enters personal details, employment, and income. FRAM
+12 | media/image12.png | Loan Approval and Release Flow
+13 | media/image13.png | Payment and Collection Flow
+14 | media/image14.png | Report on Generation Flow
+15 | media/image15.png | Public portal of RJ and RR Finance Services
+16 | media/image16.png | Borrower registration page
+17 | media/image17.png | Borrower Login Page
+18 | media/image18.png | Admin/Staff Login page
+19 | media/image19.png | Administrator executive dashboard
+20 | media/image20.png | Collector dashboard
+21 | media/image21.png | Borrower dashboard
+22 | media/image22.png | Borrower approval page
+23 | media/image23.png | Step 1
+24 | media/image24.png | Step 2
+25 | media/image25.png | Step 3
+26 | media/image26.png | Step 4
+27 | media/image27.png | Step 5
+28 | media/image28.png | Eligibility estimate
+29 | media/image29.png | Review of a loan application
+30 | media/image30.png | Loan agreement
+31 | media/image31.png | Loan release
+32 | media/image32.png | Loan details and installment schedule
+33 | media/image33.png | Payment recording
+34 | media/image34.png | Penalty summary and reports
+35 | media/image35.png | User management and notifications
+36 | media/image36.png | Figure B1Evidence for UT-01: Valid Login
+37 | media/image37.png | Figure B1Evidence for UT-01: Valid Login
+38 | media/image38.png | Figure B2Evidence for UT-02: Incorrect Password or Inactive Account
+39 | media/image39.png | Figure B3Evidence for UT-03: Borrower Registration
+40 | media/image40.png | Figure B4Evidence for UT-04: Loan Details Exceed DTI or Loan Limits
+41 | media/image41.png | Note. The screenshot may show the permitted file types displayed in the file selection window or the system's validation message when an inv
+42 | media/image42.png | Figure B6Evidence for UT-06: Invalid Payment Amount
+43 | media/image43.png | Figure B7Evidence for IT-01: Registration, Account Approval, and Login
+44 | media/image44.png | Figure B7Evidence for IT-01: Registration, Account Approval, and Login
+45 | media/image39.png | Figure B8Evidence for IT-02: Registration and Borrower Records
+46 | media/image45.png | Figure B9Evidence for IT-03: Borrower Records and Loan Application
+47 | media/image46.png | Figure B11Evidence for IT-05: Payment Recording and Penalty Records
+48 | media/image47.png | Figure B12Evidence for IT-06: Payment Records and Reports
+49 | media/image48.png | Figure B12Evidence for IT-06: Payment Records and Reports
+50 | media/image49.png | Figure B13Evidence for IT-07: Role-Based Access Restriction
+51 | media/image50.png | Figure B14Evidence for ST-01: Borrower Registration
+52 | media/image51.png | Figure B15Evidence for ST-02: Account Approval and Login
+53 | media/image52.png | Figure B16Evidence for ST-03: Loan Application Submission
+54 | media/image53.png | Figure B17Evidence for ST-04: Loan Application Review
+55 | media/image54.png | Figure B18Evidence for ST-05: Loan Agreement Acceptance
+56 | media/image55.png | Figure B19Evidence for ST-06: Loan Release
+57 | media/image56.png | Figure B20Evidence for ST-07: Cash Payment Recording
+58 | media/image57.png | Figure B21Evidence for ST-08: Borrower Payment History and Receipt
+59 | media/image58.png | Figure B22Evidence for ST-09: Loan and Installment Status Update
+60 | media/image59.png | Figure B22Evidence for ST-09: Loan and Installment Status Update
+61 | media/image60.png | Figure B23Evidence for ST-10: Collector Dashboard and Assigned Accounts
+62 | media/image61.png | Figure B23Evidence for ST-10: Collector Dashboard and Assigned Accounts
+63 | media/image48.png | Figure B24Evidence for ST-11: Administrative Reports
+64 | media/image62.png | Figure B25Evidence for ST-12: Notification Management
+65 | media/image63.png | Status: PASS
+66 | media/image63.png | Status: PASS
+67 | media/image64.png | Status: PASS
+68 | media/image65.png | Status: PASS
+69 | media/image66.png | Figure B29 (B29_pm04_blank_amount.png)
+70 | media/image67.png | Figure B29 (B29_pm04_zero_amount.png)
+71 | media/image68.png | Status: PASS
+72 | media/image69.png | Status: PASS
+73 | media/image70.png | Status: PASS
+74 | media/image71.png | Figure B32 (B32_pm07_signed_out_redirect.png)
+75 | media/image72.png | Status: PASS
+76 | media/image73.png | Status: PASS
+77 | media/image74.png | Figure B34 (B34_pm09_receipt.png)
+78 | media/image74.png | Status: PASS
+79 | media/image75.png | Figure B35 (B34_pm09_simulated_payment_list.png)
+80 | media/image75.png | Status: PASS
+81 | media/image76.png | Status: PASS
+82 | media/image77.png | Status: PASS
+83 | media/image78.png | Figure B38. Staff sign-in after opening the administrator dashboard while signed out.
+84 | media/image79.png | Status: PASS
+85 | media/image80.png | Figure B39. Wrong password for the active administrator.
+86 | media/image81.png | Status: PASS
+87 | media/image82.png | Figure B40. Borrower dashboard after requesting user management.
+88 | media/image83.png | Status: PASS
+89 | media/image84.png | Status: PASS
+90 | media/image85.png | Status: PASS
+91 | media/image86.png | Figure B43. Quote-style sign-in probe rejected.
+92 | media/image87.png | Status: PASS
+93 | media/image82.png | Status: PASS
+94 | media/image88.png | Figure B45. Other-borrower receipt request returned to this borrower's own payment history.
+95 | media/image89.png | Status: PASS
+96 | media/image90.png | Figure B46. Collector A denied client 21.
+97 | media/image91.png | Figure B46. Collector A denied loan 30.
+98 | media/image92.png | Status: PASS
+99 | media/image93.png | Status: PASS
+100 | media/image94.png | Status: PASS
+101 | media/image95.png | Figure B49. The reset page sends a 6-digit code and does not issue a link.
+102 | media/image96.png | Figure B49. The code form states that the code expires in 10 minutes.
+103 | media/image97.png | Figure B49. An incorrect code does not change the password.
+104 | media/image98.png | Figure B49. The attempt after five incorrect codes is refused.
+105 | media/image99.png | Figure B49. An expired code is refused.
+106 | media/image98.png | Figure B49. A valid code can be used once.
+107 | media/image63.png | Status: PASS
+108 | media/image63.png | Status: PASS
+109 | media/image64.png | Status: PASS
+110 | media/image65.png | Status: PASS
+111 | media/image66.png | Figure B29 (B29_pm04_blank_amount.png)
+112 | media/image67.png | Figure B29 (B29_pm04_zero_amount.png)
+113 | media/image68.png | Status: PASS
+114 | media/image69.png | Status: PASS
+115 | media/image70.png | Status: PASS
+116 | media/image71.png | Figure B32 (B32_pm07_signed_out_redirect.png)
+117 | media/image72.png | Status: PASS
+118 | media/image73.png | Status: PASS
+119 | media/image74.png | Figure B34 (B34_pm09_receipt.png)
+120 | media/image74.png | Status: PASS
+121 | media/image75.png | Figure B35 (B34_pm09_simulated_payment_list.png)
+122 | media/image75.png | Status: PASS
+123 | media/image76.png | Status: PASS
+124 | media/image77.png | Status: PASS
+125 | media/image78.png | Figure B38. Staff sign-in after opening the administrator dashboard while signed out.
+126 | media/image79.png | Status: PASS
+127 | media/image80.png | Figure B39. Wrong password for the active administrator.
+128 | media/image81.png | Status: PASS
+129 | media/image82.png | Figure B40. Borrower dashboard after requesting user management.
+130 | media/image83.png | Status: PASS
+131 | media/image84.png | Status: PASS
+132 | media/image85.png | Status: PASS
+133 | media/image86.png | Figure B43. Quote-style sign-in probe rejected.
+134 | media/image87.png | Status: PASS
+135 | media/image82.png | Status: PASS
+136 | media/image88.png | Figure B45. Other-borrower receipt request returned to this borrower's own payment history.
+137 | media/image89.png | Status: PASS
+138 | media/image90.png | Figure B46. Collector A denied client 21.
+139 | media/image91.png | Figure B46. Collector A denied loan 30.
+140 | media/image92.png | Status: PASS
+141 | media/image93.png | Status: PASS
+142 | media/image94.png | Status: PASS
+143 | media/image95.png | Figure B49. The reset page sends a 6-digit code and does not issue a link.
+144 | media/image96.png | Figure B49. The code form states that the code expires in 10 minutes.
+145 | media/image97.png | Figure B49. An incorrect code does not change the password.
+146 | media/image98.png | Figure B49. The attempt after five incorrect codes is refused.
+147 | media/image99.png | Figure B49. An expired code is refused.
+148 | media/image98.png | Figure B49. A valid code can be used once.

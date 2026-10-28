@@ -1,0 +1,282 @@
+MS=C:\Users\HomePC\Downloads\FRAMS_MANUSCRIPT_AUDIT_CORRECTED.docx exists=True paras=1332 tables=24
+
+=== T13 ===
+Criterion | Weighted mean | Interpretation
+Functionality | 4.56 | Strongly Agree
+Usability | 4.54 | Strongly Agree
+Reliability | 4.56 | Strongly Agree
+Security | 4.46 | Strongly Agree
+Performance | 4.52 | Strongly Agree
+Overall Mean | 4.53 | Strongly Agree
+
+=== T21 28x11 ===
+R0: ['Strongly Agree', 'Strongly Agree', 'Agree', 'Agree', 'Neutral', 'Neutral', 'Neutral', 'Disagree', 'Disagree', 'Strongly Disagree', 'Strongly Disagree']
+R1: ['5', '5', '4', '4', '3', '3', '3', '2', '2', '1', '1']
+R2: ['No.', 'Evaluation Statement', 'Evaluation Statement', 'SA (5)', 'SA (5)', 'A (4)', 'N (3)', 'N (3)', 'D (2)', 'D (2)', 'SD (1)']
+R3: ['A. Functionality', 'A. Functionality', 'A. Functionality', 'A. Functionality', 'A. Functionality', 'A. Functionality', 'A. Functionality', 'A. Functionality', 'A. Functionality', 'A. Functionality', 'A. Functionality']
+R4: ['1', 'FRAMS allows authorized users to log in and access functions appropriate to their assigned roles.', 'FRAMS allows authorized users to log in and access functions appropriate to their assigned roles.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R5: ['2', 'FRAMS allows borrowers to submit the information required for loan applications.', 'FRAMS allows borrowers to submit the information required for loan applications.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R6: ['3', 'FRAMS calculates loan interest and repayment amounts according to the system’s implemented formula.', 'FRAMS calculates loan interest and repayment amounts according to the system’s implemented formula.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R7: ['4', 'FRAMS allows authorized personnel to record and monitor loan payments.', 'FRAMS allows authorized personnel to record and monitor loan payments.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R8: ['B. Usability', 'B. Usability', 'B. Usability', 'B. Usability', 'B. Usability', 'B. Usability', 'B. Usability', 'B. Usability', 'B. Usability', 'B. Usability', 'B. Usability']
+R9: ['5', 'The FRAMS interface is organized and easy to understand.', 'The FRAMS interface is organized and easy to understand.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R10: ['6', 'Menus and navigation help me find the functions needed for my role.', 'Menus and navigation help me find the functions needed for my role.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R11: ['7', 'Forms provide understandable instructions or validation messages when needed.', 'Forms provide understandable instructions or validation messages when needed.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R12: ['8', 'I can complete the tasks relevant to my role without unnecessary difficulty.', 'I can complete the tasks relevant to my role without unnecessary difficulty.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R13: ['C. Reliability', 'C. Reliability', 'C. Reliability', 'C. Reliability', 'C. Reliability', 'C. Reliability', 'C. Reliability', 'C. Reliability', 'C. Reliability', 'C. Reliability', 'C. Reliability']
+R14: ['9', 'FRAMS saves borrower, loan, and payment records consistently.', 'FRAMS saves borrower, loan, and payment records consistently.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R15: ['10', 'Loan balances and installment schedules reflect the recorded transactions.', 'Loan balances and installment schedules reflect the recorded transactions.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R16: ['11', 'FRAMS provides consistent information when I revisit a record or report.', 'FRAMS provides consistent information when I revisit a record or report.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R17: ['12', 'The system handles routine operations without unexpected interruption during my use.', 'The system handles routine operations without unexpected interruption during my use.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R18: ['D. Security', 'D. Security', 'D. Security', 'D. Security', 'D. Security', 'D. Security', 'D. Security', 'D. Security', 'D. Security', 'D. Security', 'D. Security']
+R19: ['13', 'FRAMS restricts pages and records according to the user’s assigned role.', 'FRAMS restricts pages and records according to the user’s assigned role.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R20: ['14', 'I can access only the information and functions permitted for my account.', 'I can access only the information and functions permitted for my account.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R21: ['15', 'The system requires authentication before protected pages can be accessed.', 'The system requires authentication before protected pages can be accessed.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R22: ['16', 'FRAMS provides appropriate protection for borrower and loan information during normal use.', 'FRAMS provides appropriate protection for borrower and loan information during normal use.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R23: ['E. Performance', 'E. Performance', 'E. Performance', 'E. Performance', 'E. Performance', 'E. Performance', 'E. Performance', 'E. Performance', 'E. Performance', 'E. Performance', 'E. Performance']
+R24: ['17', 'FRAMS loads the pages needed for my tasks within a reasonable time.', 'FRAMS loads the pages needed for my tasks within a reasonable time.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R25: ['18', 'The system processes routine forms and transactions within a reasonable time.', 'The system processes routine forms and transactions within a reasonable time.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R26: ['19', 'FRAMS displays reports and loan information without excessive delay.', 'FRAMS displays reports and loan information without excessive delay.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+R27: ['20', 'The system remains responsive while I perform normal tasks.', 'The system remains responsive while I perform normal tasks.', '☐', '☐', '☐', '☐', '☐', '☐', '☐', '☐']
+
+=== CAPTIONS ===
+[150] Table 1 Comparison of the reviewed focus and the FRAMS implementation
+[160] Figure 1 Conceptual framework of the FRAMS
+[161] Figure 1 presents the conceptual framework of the proposed FRAMS using the Input–Process–Output (IPO) model. The framework illustrates how data are collected as inputs, processed through the system, and transformed into meaningful outputs t
+[242] Figure 2 is the Level 1 data flow diagram, with processes 1.0 through 5.0. The borrower, the collector, and the administrator send data into those processes and receive the records that belong to their role. Process 4.0 is a payment recorde
+[259] Figure 2 Level 1 Data Flow Diagram of FRAMS
+[261] Figure 3 is the entity-relationship diagram of FRAMS. A user account owns the borrower registration, the client record, password-reset tokens, and in-application notifications. A client is assigned to one collector through collector_id and 
+[263] Figure 3 Entity-Relationship Diagram of FRAMS
+[285] Figure 4 Loan activity flow of FRAMS
+[286] Figure 4 is the activity from registration through collection. The eligibility estimate sits before document review continues, and release sits only after the borrower accepts the agreement. Figure 5 is the sequence for that estimate. The b
+[287] Figure 5 Sequence of an eligibility check and administrator review
+[305] Figure 5.1 presents the overall operational flow of FRAMS. The process begins when a user opens the staff login or borrower login page and enters a username or email address and password. FRAMS checks the credentials and account status. If 
+[320] Figure 5.2 FRAMS User Authentication Flowchart
+[321] Figure 5.2 shows how FRAMS authenticates a user. The process starts on the staff login page or the borrower login page. The user enters a username or email and password. If either field is empty, the page asks for both fields and returns to
+[350] Figure 5.3 FRAMS Borrower Registration Flowchart
+[351] Figure 5.3 presents borrower registration. The applicant enters identity, contact, government identification, username, and password, and gives consent. If a required field is missing or the passwords do not match, the page shows a validati
+[367] Figure 5.4 FRAMS Loan Application Flowchart
+[368] Figure 5.4 traces the loan application completed by an approved borrower. The borrower enters personal details, employment, and income. FRAMS opens the loan-details step when employment status and income are present, existing debt is within
+[399] Figure 5.5 Financial Risk Assessment Flow
+[401] Figure 5.5 shows the eligibility estimate used during the application and again on the administrator review page. The process reads income, existing debt, the requested amount, and the term. If a required value is missing, the status is Not
+[427] Figure 5.6 FRAMS Loan Approval, Agreement, and Release Flowchart
+[429] Figure 5.6 shows administrator review through release of funds. The process starts when the administrator opens the application, the documents, and the stored eligibility estimate, and marks each document verified or rejected. If the applic
+[456] Figure 5.7 FRAMS Payment and Collection Flowchart
+[458] Figure 5.7 shows how an administrator or the assigned collector records a cash, bank transfer, or e-wallet payment on a released loan. A staff member selects the loan, and the page shows the remaining balance and the penalty due. Penalty du
+[459] Figure 5.7 is the immediate recording path for cash, bank transfer, and e-wallet. An administrator or the assigned collector can save that payment as soon as the amount is valid. PayMongo Dynamic QR Ph waits for later confirmation. The Crea
+[473] Figure 5.8 FRAMS Report Generation Flowchart
+[474] Figure 5.8 shows report generation, which is available to the administrator. The process starts when the administrator opens Reports and selects the report type and the period. The report types are dashboard analytics, loan reports, payment
+[478] Table 2 Hardware used for FRAMS
+[481] Table 3 Software used for FRAMS
+[507] Table 4.1
+[626] Table 4.2
+[633] Table 4.3
+[653] Table 4.4
+[658] Table 4.5
+[662] Table 4.6
+[665] Table 4.7
+[675] Table 4.8
+[703] Table 4.9
+[706] Table 4.10
+[737] Figure 4.1
+[740] Figure 4.2
+[745] Figure 4.3
+[754] Figure 4.4
+[757] Figure 4.5
+[764] Figure 4.6
+[768] Figure 4.7
+[773] Figure 4.8
+[797] Figure 4.9
+[808] Figure 4.10
+[811] Figure 4.11
+[815] Figure 4.12
+[818] Figure 4.13
+[822] Figure 4.14
+[827] Figure 4.15
+[830] Figure 4.16
+[884] APPENDIX B
+[890] Table B1
+[894] Figure B1
+[898] Figure B2
+Evidence for UT-02: Incorrect Password or Inactive Account
+[905] Figure B3
+Evidence for UT-03: Borrower Registration
+[907] Figure B4
+Evidence for UT-04: Loan Details Exceed DTI or Loan Limits
+[912] Figure B5
+Evidence for UT-05: Valid JPG, PNG, and PDF selection
+[913] Figure B6
+Evidence for UT-06: Invalid Payment Amount
+[917] Table B2
+[930] Figure B7
+[935] Figure B8
+Evidence for IT-02: Registration and Borrower Records
+[943] Figure B9
+[946] Figure B10
+[959] Figure B11
+[961] Figure B12
+[964] Figure B13
+Evidence for IT-07: Borrower Username on the Staff Sign-In
+[973] Figure B14
+[976] Figure B15
+[979] Figure B16
+[982] Figure B17
+[989] Figure B18
+[992] Figure B19
+[998] Figure B20
+[1001] Figure B21
+[1004] Figure B22
+[1013] Figure B23
+[1022] Figure B24
+[1025] Figure B25
+Evidence for ST-12: Notification Management
+[1029] Figure B26 — PM-01
+[1033] Figure B26 (B26_pm01_qr_rejected.png)
+[1035] Figure B27 — PM-02
+[1039] Figure B27 (B26_pm01_qr_rejected.png)
+[1041] Figure B28 — PM-03
+[1045] Figure B28 (B28_pm03_cash_no_qr_button.png)
+[1046] Figure B29 — PM-04
+[1051] Figure B29(a) (B29_pm04_zero_amount.png)
+[1055] Figure B29(b) (B29_pm04_nonnumeric.png)
+[1057] Figure B30 — PM-05
+[1061] Figure B30 (B30_pm05_amount_too_high.png)
+[1063] Figure B31 — PM-06
+[1067] Figure B31 (B31_pm06_other_collector.png)
+[1068] Figure B32 — PM-07
+[1074] Figure B32 (B32_pm07_borrower_history.png)
+[1075] Figure B33 — PM-08
+[1079] Figure B33 (B33_pm08_unconfirmed_pending_refused.png)
+[1080] Figure B34 — PM-09
+[1087] Figure B34 (B34_pm09_receipt.png)
+[1089] Figure B35 — PM-10
+[1094] Figure B35 (Payments Management list screenshot)
+[1095] Figure B36 — excluded from official PayMongo scope
+[1101] Figure B36 (excluded from official PayMongo scope)
+[1102] Figure B37 — PM-12
+[1109] Figure B37 (Payments Management summary and payment list screenshot)
+[1110] Table B5
+[1114] Figure B38 — PT-01
+[1119] Figure B38. Staff sign-in after opening the administrator dashboard while signed out.
+[1121] Figure B38. Borrower sign-in after opening the borrower dashboard while signed out.
+[1122] Figure B39 — PT-02
+[1128] Figure B39. Wrong password for the active administrator.
+[1130] Figure B39. Inactive administrator. The message matches the wrong-password trial.
+[1133] Figure B40 — PT-03
+[1138] Figure B40. Borrower dashboard after requesting user management.
+[1140] Figure B40. Borrower payment history after requesting the staff payments page.
+[1141] Figure B41 — PT-04
+[1146] Figure B41. Collector dashboard after requesting user management. Reports, borrower approval, and loan release returned to this same dashboard.
+[1147] Figure B42 — PT-05
+[1152] Figure B42. Registration submitted without the security token. The other four posts returned to this same page with HTTP 419.
+[1153] Figure B43 — PT-06
+[1158] Figure B43. Quote-style sign-in probe rejected.
+[1160] Figure B43. Quote-style user search returned no accounts.
+[1161] Figure B44 — PT-07
+[1166] Figure B44. The markup marker remains visible as text in the search box.
+[1167] Figure B45 — PT-08
+[1172] Figure B45. Other-borrower receipt request returned to this borrower's own payment history.
+[1174] Figure B45. Other-borrower document request. The response text is Access denied.
+[1175] Figure B46 — PT-09
+[1180] Figure B46. Collector A denied client 21.
+[1182] Figure B46. Collector A denied loan 30.
+[1184] Figure B46. Collector A denied payment 44.
+[1185] Figure B47 — PT-10
+[1190] Figure B47. After the invalid uploads, step 4 still shows every document as not uploaded.
+[1191] Figure B48 — PT-11
+[1196] Figure B48. Protected collector dashboard reloaded after sign-out.
+[1197] Figure B49 — PT-12
+[1202] Figure B49. The reset page sends a 6-digit code and does not issue a link.
+[1204] Figure B49. The code form states that the code expires in 10 minutes.
+[1206] Figure B49. An incorrect code does not change the password.
+[1208] Figure B49. The attempt after five incorrect codes is refused.
+[1210] Figure B49. An expired code is refused.
+[1212] Figure B49. A valid code can be used once.
+[1214] Figure B49. The same code is refused after the password change.
+[1244] APPENDIX I
+FRAMS USER ACCEPTANCE TESTING (UAT)
+[1281] APPENDIX J
+USER ACCEPTANCE TESTING (UAT) EVIDENCE
+[1288] Table J1
+[1316] APPENDIX K
+[1323] Figure K1. Loan amount field validation for a negative input. Note. The message indicates that the entered value must be at least 1,000; this screenshot is frontend evidence only.
+[1325] APPENDIX L
+
+NEEDLE ISO: 1
+
+NEEDLE PayMongo API: 2
+
+NEEDLE PayMongo.: 10
+
+NEEDLE International Organization: 1
+
+=== ORIG REFS paras=1685 ===
+[865] References
+[866] Entries in A.1 follow APA 7th edition and were checked against the published work. Journal titles and volume numbers are italicized in the usual APA way. A hanging indent is used.
+[867] A.1 References matched to published works
+[868] Bazarbash, M., & Beaton, K. (2020). Filling the gap: Digital credit and financial inclusion (IMF Working Paper No. WP/20/150). International Monetary Fund. https://doi.org/10.5089/9781513552477.001
+[869] Campos, R. B., Jr. (2024). The impact of digitalization on credit risk management in microfinance institutions in Nueva Ecija, Philippines. Indian Journal of Information Sources and Services, 14(3). https://doi.org/10.51983/ijiss-2024.14.3.20
+[870] Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. MIS Quarterly, 13(3), 319–340. https://doi.org/10.2307/249008
+[871] DeLone, W. H., & McLean, E. R. (2003). The DeLone and McLean model of information systems success: A ten-year update. Journal of Management Information Systems, 19(4), 9–30. https://doi.org/10.1080/07421222.2003.11045748
+[872] Estrellado, G. E. (2024). Financial inclusion of lending institutions on sustainability of micro-businesses. United International Journal for Research & Technology, 5(7). https://uijrt.com/paper/financial-inclusion-lending-institutions-sustainability-micro-businesses
+[873] International Organization for Standardization. (2011). Systems and software engineering—Systems and software Quality Requirements and Evaluation (SQuaRE)—System and software quality models (ISO/IEC 25010:2011).
+[874] Juventud, W. M., Matigas, E. A. O., Himongala, J., Galla, M. R., & Abiol, M. J. D. (2023). Perceived credit risk of micro finance loans among micro-enterprises business in Población Iligan City. International Journal of Multidisciplinary: Applied Business and Education Research, 4(10), 3697–3702. ht
+[875] Khandani, A. E., Kim, A. J., & Lo, A. W. (2010). Consumer credit-risk models via machine-learning algorithms. Journal of Banking & Finance, 34(11), 2767–2787. https://doi.org/10.1016/j.jbankfin.2010.06.001
+[876] Mina, J. C. (2024). The credit risk management practices of lending companies in Nueva Ecija: Basis for risk mitigating plan. International Journal of Advanced and Applied Sciences, 11(9), 134–142. https://doi.org/10.21833/ijaas.2024.09.015
+[877] PayMongo. (n.d.). PayMongo API documentation. https://developers.paymongo.com/
+[878] Penaso, C. P., & Dagang, A. L. (2025). Loan management practices as key drivers for the operation efficiency of microfinance institutions in Northern Mindanao, Philippines. International Journal of Research and Scientific Innovation, 12(5), 1715–1724. https://doi.org/10.51244/ijrsi.2025.120500162
+[879] Ramirez, J. G. (2024). Establishment of gross loan portfolio risk-return questionnaire: Reliability and validity structure. Mindoro Journal of Social Sciences and Development Studies, 1(2), 18–26. https://journal.omsc.edu.ph/mjssds/article/view/11
+
+=== XLSX sheets ['Form Responses 1', 'UAT-10 Response Dataset', 'UAT-11 Weighted Mean Computatio', 'UAT-10 Role Summary', 'Sheet1'] ===
+HEADERS: Timestamp || Respondent Code (Optional) || User Role || 1. FRAMS allows authorized users to log in and access functions appropriate to t || 2. FRAMS allows borrowers to submit the information required for loan applicatio || 3. FRAMS calculates loan interest and repayment amounts according to the system’ || 4. FRAMS allows authorized personnel to record and monitor loan payments. || 5. The FRAMS interface is organized and easy to understand. || 6. Menus and navigation help me find the functions needed for my role. || 7. Forms provide understandable instructions or validation messages when needed. || 8. I can complete the tasks relevant to my role without unnecessary difficulty. || 9. FRAMS saves borrower, loan, and payment records consistently. || 10. Loan balances and installment schedules reflect the recorded transactions. || 11. FRAMS provides consistent information when I revisit a record or report. || 12. The system handles routine operations without unexpected interruption during || 13. FRAMS restricts pages and records according to the user’s assigned role. || 14. I can access only the information and functions permitted for my account. || 15. The system requires authentication before protected pages can be accessed. || 16. FRAMS provides appropriate protection for borrower and loan information duri || 17. FRAMS loads the pages needed for my tasks within a reasonable time. || 18. The system processes routine forms and transactions within a reasonable time || 19. FRAMS displays reports and loan information without excessive delay. || 20. The system remains responsive while I perform normal tasks.
+ROW2: 2026-10-16 01:42:45 || R1 || Borrower || 5 - Strongly Agree || 4 - Agree || 4 - Agree || 5 - Strongly Agree || 4 - Agree || 5 - Strongly Agree || 5 - Strongly Agree || 5 - Strongly Agree || 5 - Strongly Agree || 5 - Strongly Agree || 5 - Strongly Agree || 4 - Agree || 5 - Strongly Agree || 5 - Strongly Agree || 5 - Strongly Agree || 4 - Agree || 5 - Strongly Agree || 5 - Strongly Agree || 4 - Agree || 5 - Strongly Agree
+
+=== QDOC paras=28 tables=7 ===
+[0] FINANCIAL RISK ASSESSMENT AND MICRO-LENDING SYSTEM (FRAMS)
+[1] USER EVALUATION QUESTIONNAIRE
+[2] Purpose: This form gathers feedback from users after they have used FRAMS for tasks appropriate to their role.
+[3] Researcher note: This is a template, not an original completed response form. Use it as an attachment only if it matches the questionnaire actually administered. Do not represent blank forms as completed responses.
+[4] Respondent code: ____________________    Date: ____________________
+[5] Role:  ☐ Borrower   ☐ Administrator   ☐ Collector   ☐ Other: __________
+[6] Instructions: Select one rating per statement: 5 = Strongly Agree; 4 = Agree; 3 = Neutral; 2 = Disagree; 1 = Strongly Disagree.
+[7] Functionality
+[8] Usability
+[9] Reliability
+[10] Security
+[11] Performance
+[12] Overall Acceptance (optional)
+[13] Overall, I accept FRAMS as suitable for the lending tasks relevant to my role.   ☐ 5   ☐ 4   ☐ 3   ☐ 2   ☐ 1
+[14] Comments or suggestions:
+[15] ________________________________________________________________________________
+[16] ________________________________________________________________________________
+[17] ________________________________________________________________________________
+[18] Respondent confirmation (if required): __________________________   Researcher initials: __________
+[20] RESPONSE TALLY SHEET
+[21] Transcribe each response from an actual completed questionnaire. Do not infer individual responses from the overall tally.
+[22] Reported overall tally provided by the research team: 25 Strongly Agree and 7 Agree (32 respondents). Verify against original forms.
+[23] Aggregate response tally
+[24] Researcher verification
+[25] I verified that this tally was transcribed from the actual completed evaluation forms.
+[26] Researcher name/signature: __________________________________   Date: ______________
+[27] Important: Attach the actual completed questionnaires after this sheet if available. The reported 25/7 aggregate alone cannot verify the five criterion-level weighted means.
+
+QDOC T0 4x7
+  R0: ['Item', 'Statement', '5', '4', '3', '2', '1']
+  R1: ['FU-1', 'The system provides the functions needed for lending tasks relevant to my role.', '☐', '☐', '☐', '☐', '☐']
+  R2: ['FU-2', 'The system processes borrower, loan, and payment information as expected.', '☐', '☐', '☐', '☐', '☐']
+  R3: ['FU-3', 'The system displays the appropriate status or result after an action.', '☐', '☐', '☐', '☐', '☐']
+
+QDOC T1 4x7
+  R0: ['Item', 'Statement', '5', '4', '3', '2', '1']
+  R1: ['US-1', 'The pages, menus, and forms are easy to understand.', '☐', '☐', '☐', '☐', '☐']
+  R2: ['US-2', 'The system provides clear instructions or validation messages.', '☐', '☐', '☐', '☐', '☐']
+  R3: ['US-3', 'I can complete tasks relevant to my role without unnecessary difficulty.', '☐', '☐', '☐', '☐', '☐']
+
+QDOC T2 4x7
+  R0: ['Item', 'Statement', '5', '4', '3', '2', '1']
+  R1: ['RE-1', 'The system behaves consistently when I perform the same valid task.', '☐', '☐', '☐', '☐', '☐']
+  R2: ['RE-2', 'The system saves and displays recorded information consistently.', '☐', '☐', '☐', '☐', '☐']
+  R3: ['RE-3', 'The system handles routine tasks without unexpected errors during my use.', '☐', '☐', '☐', '☐', '☐']
+
+=== IMAGE RELS COUNT ===
+images=97

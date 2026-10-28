@@ -126,6 +126,16 @@
     font-size: 0.9rem;
 }
 
+.qrph-payment-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid #e8edf4;
+}
+
 @media (max-width: 767.98px) {
     .qrph-payment-card__heading {
         align-items: flex-start;

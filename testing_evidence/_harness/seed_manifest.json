@@ -1,0 +1,98 @@
+{
+    "source_database": "lending_management",
+    "test_database": "frams_capstone_test",
+    "source_row_counts_before": {
+        "borrower_applications": 14,
+        "clients": 9,
+        "contact_inquiries": 1,
+        "contact_inquiry_replies": 1,
+        "email_notifications": 52,
+        "expenses": 3,
+        "loan_agreements": 16,
+        "loan_application_documents": 45,
+        "loan_application_reviews": 9,
+        "loan_applications": 12,
+        "loan_payment_schedules": 75,
+        "loan_release_notifications": 0,
+        "loan_releases": 10,
+        "loans": 11,
+        "notifications": 179,
+        "password_resets": 0,
+        "payments": 20,
+        "paymongo_qrph_transactions": 15,
+        "paymongo_qrph_webhook_events": 0,
+        "users": 15
+    },
+    "source_row_counts_after": {
+        "borrower_applications": 14,
+        "clients": 9,
+        "contact_inquiries": 1,
+        "contact_inquiry_replies": 1,
+        "email_notifications": 52,
+        "expenses": 3,
+        "loan_agreements": 16,
+        "loan_application_documents": 45,
+        "loan_application_reviews": 9,
+        "loan_applications": 12,
+        "loan_payment_schedules": 75,
+        "loan_release_notifications": 0,
+        "loan_releases": 10,
+        "loans": 11,
+        "notifications": 179,
+        "password_resets": 0,
+        "payments": 20,
+        "paymongo_qrph_transactions": 15,
+        "paymongo_qrph_webhook_events": 0,
+        "users": 15
+    },
+    "source_unchanged": true,
+    "test_row_counts": {
+        "borrower_applications": 0,
+        "clients": 2,
+        "contact_inquiries": 0,
+        "contact_inquiry_replies": 0,
+        "email_notifications": 0,
+        "expenses": 0,
+        "loan_agreements": 0,
+        "loan_application_documents": 0,
+        "loan_application_reviews": 0,
+        "loan_applications": 2,
+        "loan_payment_schedules": 5,
+        "loan_release_notifications": 0,
+        "loan_releases": 2,
+        "loans": 2,
+        "notifications": 0,
+        "password_resets": 0,
+        "payments": 0,
+        "paymongo_qrph_transactions": 0,
+        "paymongo_qrph_webhook_events": 0,
+        "users": 6
+    },
+    "users": {
+        "frams_test_admin": 40,
+        "frams_test_collector": 41,
+        "frams_test_collector_b": 42,
+        "frams_test_borrower": 43,
+        "frams_test_borrower_b": 44,
+        "frams_test_inactive": 45
+    },
+    "clients": {
+        "a": 20,
+        "b": 21
+    },
+    "loans": {
+        "a": {
+            "loan_id": 29,
+            "release_id": 27,
+            "application_id": 35,
+            "client_id": 20
+        },
+        "b": {
+            "loan_id": 30,
+            "release_id": 28,
+            "application_id": 36,
+            "client_id": 21
+        }
+    },
+    "password_note": "Synthetic password is stored only in this harness, not printed here."
+}

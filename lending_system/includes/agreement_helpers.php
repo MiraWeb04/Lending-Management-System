@@ -35,7 +35,11 @@ function ensureLoanAgreementGeneratedWithLenderAcceptance(int $applicationId, ar
 
     $existing = executeQuery('SELECT id FROM loan_agreements WHERE application_id = ? ORDER BY id DESC LIMIT 1', [$applicationId])->fetch(PDO::FETCH_ASSOC);
     if (!$existing) {
-        $agreementText = generateLoanAgreementText($applicationRow);
+        try {
+            $agreementText = generateLoanAgreementText($applicationRow);
+        } catch (InvalidArgumentException $e) {
+            return false;
+        }
         executeQuery(
             'INSERT INTO loan_agreements (application_id, borrower_user_id, agreement_status, agreement_text, lender_agreement_status, lender_signed_by, lender_signed_at, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW())',
             [
@@ -123,13 +127,29 @@ function isLenderAgreementAccepted(?array $agreementRow): bool
 
 function generateLoanAgreementText(array $applicationRow): string {
     $loanAmountValue = (float)($applicationRow['approved_loan_amount'] ?? $applicationRow['loan_amount'] ?? 0);
-    $loanTerm = trim((string)($applicationRow['approved_loan_term'] ?? $applicationRow['loan_term'] ?? '12'));
-    $loanTermMonths = resolveLoanTermMonths($loanTerm, $applicationRow['approved_first_payment_date'] ?? null, $applicationRow['approved_due_date'] ?? null);
+    $termChoice = resolveApplicationLoanTerm(
+        isset($applicationRow['approved_loan_term']) ? (string)$applicationRow['approved_loan_term'] : null,
+        isset($applicationRow['loan_term']) ? (string)$applicationRow['loan_term'] : null
+    );
+    if (!$termChoice['valid']) {
+        throw new InvalidArgumentException($termChoice['message']);
+    }
+    $loanTerm = $termChoice['label'];
+    $loanTermMonths = $termChoice['months'];
     $interestRateValue = getStandardMonthlyInterestRatePercent();
     $paymentFrequencyValue = trim((string)($applicationRow['payment_frequency'] ?? $applicationRow['approved_payment_frequency'] ?? 'Monthly'));
     $numberOfPayments = getNumberOfPayments($paymentFrequencyValue, $loanTermMonths, $applicationRow['approved_first_payment_date'] ?? null, $applicationRow['approved_due_date'] ?? null);
-    $interestBreakdown = calculateLoanInterestBreakdown($loanAmountValue, $interestRateValue, $loanTermMonths);
-    $installmentAmount = $numberOfPayments > 0 ? number_format($interestBreakdown['total_payable'] / $numberOfPayments, 2) : '0.00';
+    if ($loanAmountValue < 0 || $loanTermMonths < 1) {
+        $interestBreakdown = ['monthly_interest' => 0.0, 'total_interest' => 0.0, 'total_payable' => 0.0];
+    } else {
+        $interestBreakdown = calculateLoanInterestBreakdown($loanAmountValue, $interestRateValue, $loanTermMonths);
+    }
+    $installmentRows = $numberOfPayments > 0
+        ? allocateEvenMoneyRows($loanAmountValue, (float)$interestBreakdown['total_interest'], (float)$interestBreakdown['total_payable'], $numberOfPayments)
+        : [];
+    $regularInstallment = $installmentRows[0]['total_amount_due'] ?? 0.0;
+    $finalInstallment = $installmentRows !== [] ? $installmentRows[count($installmentRows) - 1]['total_amount_due'] : 0.0;
+    $installmentAmount = number_format($regularInstallment, 2);
     $loanAmount = number_format($loanAmountValue, 2);
     $interestRate = number_format($interestRateValue, 2);
     $paymentFrequency = formatPaymentFrequencyLabel($paymentFrequencyValue);
@@ -145,6 +165,9 @@ function generateLoanAgreementText(array $applicationRow): string {
     $agreementText .= "Payment Frequency: {$paymentFrequency}\n";
     $agreementText .= "Number of Payments: {$numberOfPayments}\n";
     $agreementText .= "Installment Amount: ₱{$installmentAmount}\n";
+    if (round($finalInstallment, 2) !== round($regularInstallment, 2)) {
+        $agreementText .= 'Final Installment Amount: ₱' . number_format($finalInstallment, 2) . "\n";
+    }
     $agreementText .= "Loan Purpose: {$loanPurpose}\n";
     if ($firstPaymentDate !== '') {
         $agreementText .= "First Payment Date: {$firstPaymentDate}\n";

@@ -422,9 +422,6 @@ function displayStatusText($value) {
                 </div>
                 <div class="quick-actions">
                     <a href="<?php echo htmlspecialchars($heroButton['href']); ?>" class="btn btn-primary btn-sm"><i class="fas <?php echo htmlspecialchars($heroButton['icon']); ?> me-1"></i><?php echo htmlspecialchars($heroButton['label']); ?></a>
-                    <?php if ($borrowerCanApplyForLoan): ?>
-                        <a href="borrower_loan_application_lending.php" class="btn btn-outline-primary btn-sm">Apply for loan</a>
-                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -544,7 +541,7 @@ function displayStatusText($value) {
                 <?php else: ?>
                 <div class="panel-card panel-card--flush h-100">
                     <div class="chart-panel__body d-flex align-items-center">
-                        <?php echo renderEmptyState('fa-file-signature', htmlspecialchars($heroTitle), 'Use the button above to start your borrowing journey.'); ?>
+                        <?php echo renderEmptyState('fa-file-signature', $heroTitle, 'Use the button above to start your borrowing journey.'); ?>
                     </div>
                 </div>
                 <?php endif; ?>
@@ -640,7 +637,7 @@ function displayStatusText($value) {
                     </div>
                     <div class="chart-panel__body pt-0 px-0 pb-0">
                         <?php if ($historyLoan && count($recentPayments) > 0): ?>
-                            <div class="table-responsive">
+                            <div class="table-responsive payment-history-scroll">
                                 <table class="table table-hover mb-0 data-table">
                                     <thead>
                                         <tr>

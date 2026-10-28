@@ -2,15 +2,71 @@
 
 function parseLoanTermMonthsValue($loanTerm): int
 {
-    if (is_numeric($loanTerm)) {
-        return max(1, (int)$loanTerm);
+    if (is_int($loanTerm) || is_float($loanTerm)) {
+        return (int)$loanTerm;
     }
 
-    if (preg_match('/(\d+)/', (string)$loanTerm, $matches)) {
-        return max(1, (int)$matches[1]);
+    $loanTerm = trim((string)$loanTerm);
+    if ($loanTerm !== '' && is_numeric($loanTerm)) {
+        return (int)$loanTerm;
+    }
+
+    if (preg_match('/-?\d+/', $loanTerm, $matches)) {
+        return (int)$matches[0];
     }
 
     return 0;
+}
+
+function loanTermValidationMessage(): string
+{
+    return 'A loan term of at least 1 month is required.';
+}
+
+/**
+ * An entered approved term is used as written. A blank approved term uses the requested term.
+ * Missing, zero, negative, and non-numeric terms stay invalid. Nothing here substitutes 12 months.
+ *
+ * @return array{label: string, months: int, valid: bool, message: string}
+ */
+function resolveApplicationLoanTerm(?string $approvedTerm, ?string $requestedTerm = null): array
+{
+    $approved = trim((string)$approvedTerm);
+    $requested = trim((string)$requestedTerm);
+    $label = $approved !== '' ? $approved : $requested;
+    $months = parseLoanTermMonthsValue($label);
+
+    return [
+        'label' => $label,
+        'months' => $months,
+        'valid' => $months >= 1,
+        'message' => $months >= 1 ? '' : loanTermValidationMessage(),
+    ];
+}
+
+/**
+ * Due date shown for an application that has not been released.
+ * A valid term uses a stored approved due date, or today plus that term.
+ * Missing, zero, negative, and non-numeric terms, including "Select", return an empty string.
+ * An explicit invalid approved term does not fall back to the requested term.
+ */
+function estimatePendingApplicationDueDate(?string $approvedTerm, ?string $requestedTerm = null, ?string $storedDueDate = null, ?DateTimeInterface $asOf = null): string
+{
+    $choice = resolveApplicationLoanTerm($approvedTerm, $requestedTerm);
+    if (!$choice['valid']) {
+        return '';
+    }
+
+    $stored = trim((string)$storedDueDate);
+    if ($stored !== '') {
+        return $stored;
+    }
+
+    $start = $asOf instanceof DateTimeInterface
+        ? DateTimeImmutable::createFromInterface($asOf)
+        : new DateTimeImmutable('today');
+
+    return $start->modify('+' . $choice['months'] . ' months')->format('Y-m-d');
 }
 
 function getStandardMonthlyInterestRatePercent(): float
@@ -20,9 +76,16 @@ function getStandardMonthlyInterestRatePercent(): float
 
 function calculateLoanInterestBreakdown(float $loanAmount, float $monthlyInterestRatePercent, int $loanTermMonths): array
 {
-    $principal = max(0.0, $loanAmount);
+    if ($loanAmount < 0) {
+        throw new InvalidArgumentException('Loan principal cannot be negative.');
+    }
+    if ($loanTermMonths < 1) {
+        throw new InvalidArgumentException('Loan term must be at least 1 month.');
+    }
+
+    $principal = $loanAmount;
     $monthlyRatePercent = max(0.0, $monthlyInterestRatePercent);
-    $termMonths = max(1, $loanTermMonths);
+    $termMonths = $loanTermMonths;
     $monthlyInterest = $principal * ($monthlyRatePercent / 100);
     $totalInterest = $monthlyInterest * $termMonths;
     $collectablePayment = $principal + $totalInterest;
@@ -34,10 +97,109 @@ function calculateLoanInterestBreakdown(float $loanAmount, float $monthlyInteres
     ];
 }
 
+/**
+ * Split principal, interest, and payable into count rows.
+ * Earlier rows use the truncated centavo share. The last row receives the remainder
+ * so each component sums to its rounded total.
+ *
+ * @return array<int, array{principal_amount: float, interest_amount: float, total_amount_due: float}>
+ */
+function allocateEvenMoneyRows(float $principal, float $totalInterest, float $totalPayable, int $count): array
+{
+    if ($count < 1) {
+        throw new InvalidArgumentException('At least one installment is required.');
+    }
+
+    $principalCents = (int) round($principal * 100);
+    $interestCents = (int) round($totalInterest * 100);
+    $payableCents = (int) round($totalPayable * 100);
+    $principalBase = intdiv($principalCents, $count);
+    $interestBase = intdiv($interestCents, $count);
+    $rows = [];
+    $usedPrincipal = 0;
+    $usedInterest = 0;
+    $usedPayable = 0;
+
+    for ($i = 1; $i <= $count; $i++) {
+        $last = $i === $count;
+        if ($last) {
+            $principalRow = $principalCents - $usedPrincipal;
+            $interestRow = $interestCents - $usedInterest;
+            $payableRow = $payableCents - $usedPayable;
+        } else {
+            $principalRow = $principalBase;
+            $interestRow = $interestBase;
+            $payableRow = $principalRow + $interestRow;
+        }
+        $usedPrincipal += $principalRow;
+        $usedInterest += $interestRow;
+        $usedPayable += $payableRow;
+        $rows[] = [
+            'principal_amount' => $principalRow / 100,
+            'interest_amount' => $interestRow / 100,
+            'total_amount_due' => $payableRow / 100,
+        ];
+    }
+
+    return $rows;
+}
+
+/**
+ * Regular and final installment from the shared centavo split.
+ * The rows sum to total payable. The regular amount is the earlier row, not an equal rounding of the total.
+ *
+ * @return array{regular: float, final: float, total_payable: float, total_interest: float, count: int}
+ */
+function describeEvenInstallments(float $principal, float $monthlyRatePercent, int $termMonths, int $paymentCount): array
+{
+    $breakdown = calculateLoanInterestBreakdown($principal, $monthlyRatePercent, $termMonths);
+    $rows = allocateEvenMoneyRows($principal, (float)$breakdown['total_interest'], (float)$breakdown['total_payable'], $paymentCount);
+    $last = count($rows) - 1;
+
+    return [
+        'regular' => (float)$rows[0]['total_amount_due'],
+        'final' => (float)$rows[$last]['total_amount_due'],
+        'total_payable' => (float)$breakdown['total_payable'],
+        'total_interest' => (float)$breakdown['total_interest'],
+        'count' => $paymentCount,
+    ];
+}
+
+function buildPublicLoanQuote(float $principal, float $monthlyRatePercent, int $months): array
+{
+    $breakdown = calculateLoanInterestBreakdown($principal, $monthlyRatePercent, $months);
+    $rows = allocateEvenMoneyRows($principal, (float)$breakdown['total_interest'], (float)$breakdown['total_payable'], $months);
+
+    return [
+        'principal' => round($principal, 2),
+        'months' => $months,
+        'monthly_rate_percent' => $monthlyRatePercent,
+        'monthly_interest' => $breakdown['monthly_interest'],
+        'total_interest' => $breakdown['total_interest'],
+        'total_payable' => $breakdown['total_payable'],
+        'installment' => $rows[0]['total_amount_due'],
+        'final_installment' => $rows[$months - 1]['total_amount_due'],
+    ];
+}
+
+function outstandingReceivableJoinSql(): string
+{
+    return 'LEFT JOIN (SELECT loan_id, SUM(amount_paid) AS total_paid FROM payments GROUP BY loan_id) paid ON paid.loan_id = l.loan_id';
+}
+
+function outstandingReceivableSelectSql(): string
+{
+    return "SUM(CASE WHEN l.status = 'Paid' THEN 0 ELSE GREATEST(0, ROUND(l.total_payable - COALESCE(paid.total_paid, 0), 2)) END)";
+}
+
 function resolveLoanTermMonths(?string $loanTerm, ?string $dateReleased, ?string $dueDate): int
 {
-    $termMonths = parseLoanTermMonthsValue($loanTerm ?? '');
+    $rawTerm = trim((string)($loanTerm ?? ''));
+    $termMonths = parseLoanTermMonthsValue($rawTerm);
     if ($termMonths > 0) {
+        return $termMonths;
+    }
+    if ($rawTerm !== '' && is_numeric($rawTerm)) {
         return $termMonths;
     }
 
@@ -50,6 +212,8 @@ function resolveLoanTermMonths(?string $loanTerm, ?string $dateReleased, ?string
         }
     }
 
+    // Display fallback for a released loan that has neither a term nor usable dates.
+    // New applications, approvals, and agreements use resolveApplicationLoanTerm().
     return 12;
 }
 
@@ -285,35 +449,75 @@ function calculateOverduePenaltyDue(int $loanId, ?string $asOfDate = null): floa
     return max(0.0, round($outstanding, 2));
 }
 
-function validatePaymentAmounts(int $loanId, float $totalReceived, float $penaltyPaid): void
+function validatePaymentAmounts(int $loanId, mixed $totalReceived, mixed $penaltyPaid): array
 {
-    $penaltyPaid = max(0.0, round($penaltyPaid, 2));
-    $totalReceived = max(0.0, round($totalReceived, 2));
+    $normalizeAmount = static function (mixed $amount, string $label): float {
+        if (!is_numeric($amount) || !is_finite((float)$amount)) {
+            throw new InvalidArgumentException($label . ' must be a valid finite amount.');
+        }
+
+        $amount = (float)$amount;
+        if ($amount < 0) {
+            throw new InvalidArgumentException($label . ' cannot be negative.');
+        }
+
+        $rounded = round($amount, 2);
+        if (abs($amount - $rounded) > 0.000001) {
+            throw new InvalidArgumentException($label . ' cannot have more than two decimal places.');
+        }
+
+        return $rounded;
+    };
+
+    $totalReceived = $normalizeAmount($totalReceived, 'Payment amount');
+    $penaltyPaid = $normalizeAmount($penaltyPaid, 'Penalty portion');
 
     if ($totalReceived <= 0) {
         throw new InvalidArgumentException('Payment amount must be greater than zero.');
     }
 
-    if ($penaltyPaid > $totalReceived + 0.009) {
+    $totalReceivedCents = (int)round($totalReceived * 100);
+    $penaltyPaidCents = (int)round($penaltyPaid * 100);
+    if ($penaltyPaidCents > $totalReceivedCents) {
         throw new InvalidArgumentException('Penalty portion cannot exceed total payment received.');
     }
 
+    if ($loanId <= 0) {
+        throw new InvalidArgumentException('Select a valid loan before recording a payment.');
+    }
+
     $summary = calculateLoanBalanceSummary($loanId);
-    $maxPenalty = (float)($summary['penalty_due'] ?? 0);
-    $effectivePenalty = min($penaltyPaid, $maxPenalty);
-    $installmentPortion = round($totalReceived - $effectivePenalty, 2);
+    $maxPenalty = round((float)($summary['penalty_due'] ?? 0), 2);
+    $remainingBalance = round((float)($summary['remaining_balance'] ?? 0), 2);
+    $totalAmountDue = round((float)($summary['total_amount_due'] ?? 0), 2);
+    $maxPenaltyCents = (int)round($maxPenalty * 100);
+    $remainingBalanceCents = (int)round($remainingBalance * 100);
+    $totalAmountDueCents = (int)round($totalAmountDue * 100);
 
-    if ($totalReceived > ($summary['total_amount_due'] ?? 0) + 0.009) {
+    if ($penaltyPaidCents > $maxPenaltyCents) {
         throw new InvalidArgumentException(
-            'Payment cannot exceed the total amount due of ₱' . number_format((float)($summary['total_amount_due'] ?? 0), 2) . ' (balance + penalties).'
+            'Penalty portion cannot exceed the outstanding penalty due of ₱' . number_format($maxPenalty, 2) . '.'
         );
     }
 
-    if ($installmentPortion > ($summary['remaining_balance'] ?? 0) + 0.009) {
+    if ($totalReceivedCents > $totalAmountDueCents) {
         throw new InvalidArgumentException(
-            'Installment portion cannot exceed the remaining loan balance of ₱' . number_format((float)($summary['remaining_balance'] ?? 0), 2) . '.'
+            'Payment cannot exceed the total amount due of ₱' . number_format($totalAmountDue, 2) . ' (balance + penalties).'
         );
     }
+
+    $installmentCents = $totalReceivedCents - $penaltyPaidCents;
+    if ($installmentCents > $remainingBalanceCents) {
+        throw new InvalidArgumentException(
+            'Installment portion cannot exceed the remaining loan balance of ₱' . number_format($remainingBalance, 2) . '.'
+        );
+    }
+
+    return [
+        'total_received' => $totalReceivedCents / 100,
+        'penalty_paid' => $penaltyPaidCents / 100,
+        'loan_payment' => $installmentCents / 100,
+    ];
 }
 
 function calculateLoanBalanceSummary(int $loanId): array

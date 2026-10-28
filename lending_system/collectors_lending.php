@@ -88,6 +88,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errorMsg = 'Please complete all required fields.';
         } elseif ($password !== $confirmPassword) {
             $errorMsg = 'Passwords do not match.';
+        } elseif (($passwordError = lendingValidatePassword($password)) !== '') {
+            $errorMsg = $passwordError;
         } else {
             $existing = executeQuery('SELECT user_id FROM users WHERE username = ? LIMIT 1', [$username]);
             if ($existing->rowCount() > 0) {
@@ -153,6 +155,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errorMsg = 'Please enter and confirm a new password.';
         } elseif ($password !== $confirmPassword) {
             $errorMsg = 'Passwords do not match.';
+        } elseif (($passwordError = lendingValidatePassword($password)) !== '') {
+            $errorMsg = $passwordError;
         } else {
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             try {
@@ -427,7 +431,8 @@ $currentUser = getCurrentUser();
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password <span class="text-danger">*</span></label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <input type="password" class="form-control" id="password" name="password" <?php echo lendingPasswordInputAttributes(); ?> required>
+                            <?php echo lendingPasswordHintHtml(); ?>
                         </div>
                         <div class="mb-3">
                             <label for="confirm_password" class="form-label">Confirm Password <span class="text-danger">*</span></label>
@@ -493,7 +498,8 @@ $currentUser = getCurrentUser();
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label class="form-label">New Password <span class="text-danger">*</span></label>
-                                <input type="password" class="form-control" name="password" required>
+                                <input type="password" class="form-control" name="password" <?php echo lendingPasswordInputAttributes(); ?> required>
+                                <?php echo lendingPasswordHintHtml(); ?>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Confirm Password <span class="text-danger">*</span></label>

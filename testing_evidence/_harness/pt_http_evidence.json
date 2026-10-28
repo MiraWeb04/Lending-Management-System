@@ -1,0 +1,198 @@
+{
+    "pt01": {
+        "dashboard_lending.php": {
+            "status": 302,
+            "location": "login_lending.php",
+            "shows_loan_number": false,
+            "shows_username": false
+        },
+        "collector_dashboard_lending.php": {
+            "status": 302,
+            "location": "login_lending.php",
+            "shows_loan_number": false,
+            "shows_username": false
+        },
+        "payments_lending.php": {
+            "status": 302,
+            "location": "login_lending.php",
+            "shows_loan_number": false,
+            "shows_username": false
+        },
+        "reports_lending.php": {
+            "status": 302,
+            "location": "login_lending.php",
+            "shows_loan_number": false,
+            "shows_username": false
+        },
+        "borrower_dashboard_lending.php": {
+            "status": 302,
+            "location": "borrower_login_lending.php",
+            "shows_loan_number": false,
+            "shows_username": false
+        },
+        "borrower_my_loan_lending.php": {
+            "status": 302,
+            "location": "borrower_login_lending.php",
+            "shows_loan_number": false,
+            "shows_username": false
+        },
+        "borrower_payment_history_lending.php": {
+            "status": 302,
+            "location": "borrower_login_lending.php",
+            "shows_loan_number": false,
+            "shows_username": false
+        }
+    },
+    "pt02": {
+        "wrong": {
+            "status": 200,
+            "location": "",
+            "message": "Invalid username or password"
+        },
+        "inactive": {
+            "status": 200,
+            "location": "",
+            "message": "Invalid username or password"
+        }
+    },
+    "pt03": {
+        "users_lending.php": {
+            "status": 302,
+            "location": "borrower_dashboard_lending.php",
+            "shows_admin_user": false,
+            "shows_add_user": false
+        },
+        "reports_lending.php": {
+            "status": 302,
+            "location": "borrower_dashboard_lending.php",
+            "shows_admin_user": false,
+            "shows_add_user": false
+        },
+        "loan_release_lending.php": {
+            "status": 302,
+            "location": "borrower_dashboard_lending.php",
+            "shows_admin_user": false,
+            "shows_add_user": false
+        },
+        "expenses_lending.php": {
+            "status": 302,
+            "location": "borrower_dashboard_lending.php",
+            "shows_admin_user": false,
+            "shows_add_user": false
+        },
+        "payments_lending.php": {
+            "status": 302,
+            "location": "borrower_payment_history_lending.php",
+            "shows_admin_user": false,
+            "shows_add_user": false
+        }
+    },
+    "pt04": {
+        "users_lending.php": {
+            "status": 302,
+            "location": "collector_dashboard_lending.php",
+            "shows_add_user": false
+        },
+        "reports_lending.php": {
+            "status": 302,
+            "location": "collector_dashboard_lending.php",
+            "shows_add_user": false
+        },
+        "borrower_approval_lending.php": {
+            "status": 302,
+            "location": "collector_dashboard_lending.php",
+            "shows_add_user": false
+        },
+        "loan_release_lending.php": {
+            "status": 302,
+            "location": "collector_dashboard_lending.php",
+            "shows_add_user": false
+        }
+    },
+    "pt05": {
+        "before": {
+            "users": 6,
+            "payments": 4,
+            "expenses": 0,
+            "releases": 3,
+            "applications": 0
+        },
+        "after": {
+            "users": 6,
+            "payments": 4,
+            "expenses": 0,
+            "releases": 3,
+            "applications": 0,
+            "probe_user": 0
+        },
+        "responses": {
+            "registration": {
+                "status": 419,
+                "location": "",
+                "title": "Session expired",
+                "heading": "Invalid or expired session"
+            },
+            "payment": {
+                "status": 419,
+                "location": "",
+                "title": "Session expired",
+                "heading": "Invalid or expired session"
+            },
+            "expense": {
+                "status": 419,
+                "location": "",
+                "title": "Session expired",
+                "heading": "Invalid or expired session"
+            },
+            "user": {
+                "status": 419,
+                "location": "",
+                "title": "Session expired",
+                "heading": "Invalid or expired session"
+            },
+            "release": {
+                "status": 419,
+                "location": "",
+                "title": "Session expired",
+                "heading": "Invalid or expired session"
+            }
+        }
+    },
+    "pt06": {
+        "login_status": 200,
+        "login_location": "",
+        "login_message": "Invalid username or password",
+        "search_status": 200,
+        "search_users": []
+    },
+    "pt07": {
+        "status": 200,
+        "raw_marker_in_html": false,
+        "encoded_marker_in_html": true,
+        "users_listed": []
+    },
+    "pt08": {
+        "receipt_status": 302,
+        "receipt_location": "borrower_payment_history_lending.php",
+        "receipt_body_has_borrower_b": false,
+        "document_status": 403,
+        "document_body": "Access denied."
+    },
+    "pt09": {
+        "client_details_lending.php?id=21": {
+            "status": 403,
+            "location": "",
+            "snippet": "Unauthorized AccessUnauthorized AccessYou do not have permission to view this client.Return to Dashboard"
+        },
+        "loan_details_lending.php?id=30": {
+            "status": 403,
+            "location": "",
+            "snippet": "Unauthorized AccessUnauthorized AccessYou do not have permission to view this loan.Return to Dashboard"
+        },
+        "payments_lending.php?view=44": {
+            "status": 403,
+            "location": "",
+            "snippet": "You do not have access to this receipt."
+        }
+    }
+}

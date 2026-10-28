@@ -5,6 +5,7 @@
 
 require_once 'includes/auth_lending.php';
 require_once 'includes/contact_inquiry_helpers.php';
+require_once 'includes/loan_helpers.php';
 
 if (isLoggedIn()) {
     header('Location: ' . getDashboardRedirectUrl(getCurrentUser()));
@@ -243,13 +244,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_inquiry_submi
                             </div>
                             <div class="mb-3">
                                 <label class="form-label" for="interestRate">Sample rate (% per month)</label>
-                                <input type="number" class="form-control" id="interestRate" value="5" min="1" max="30" step="0.1" readonly>
+                                <input type="number" class="form-control" id="interestRate" value="<?php echo htmlspecialchars(number_format(getStandardMonthlyInterestRatePercent(), 1, '.', ''), ENT_QUOTES, 'UTF-8'); ?>" min="1" max="30" step="0.1" readonly>
                             </div>
                             <div class="result-box">
-                                <div class="small text-muted">Estimated monthly payment</div>
+                                <div class="small text-muted">Estimated installment</div>
                                 <div class="result-amount" id="monthlyPayment">₱0.00</div>
+                                <div class="small mt-3" id="loanQuoteDetails">Enter an amount and a term of at least 1 month.</div>
                             </div>
-                            <p class="calculator-disclaimer mb-0">Illustration only. Actual schedules follow your approved loan agreement.</p>
+                            <p class="calculator-disclaimer mb-0" id="loanQuoteMessage">Flat interest on the original principal. The final installment may differ by a few centavos so the schedule equals total payable. Final terms are confirmed during loan review.</p>
                         </div>
                     </div>
                 </div>
@@ -369,12 +371,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['contact_inquiry_submi
             const interestRate = document.getElementById('interestRate');
             const monthlyPayment = document.getElementById('monthlyPayment');
 
+            const loanQuoteDetails = document.getElementById('loanQuoteDetails');
+            const loanQuoteMessage = document.getElementById('loanQuoteMessage');
+            const money = new Intl.NumberFormat('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
             function calculatePayment() {
-                const principal = parseFloat(loanAmount.value) || 0;
-                const months = parseInt(loanTerm.value) || 1;
-                const rate = (parseFloat(interestRate.value) || 0) / 100;
-                const monthly = principal * (rate / 12) / (1 - Math.pow(1 + rate / 12, -months));
-                monthlyPayment.textContent = '₱' + monthly.toLocaleString('en-PH', {maximumFractionDigits: 2});
+                const principal = loanAmount.value.trim();
+                const months = loanTerm.value.trim();
+                const params = new URLSearchParams({ principal: principal, months: months });
+                fetch('loan_quote_lending.php?' + params.toString(), { headers: { 'Accept': 'application/json' } })
+                    .then(function (response) {
+                        return response.json().then(function (payload) {
+                            return { ok: response.ok, payload: payload };
+                        });
+                    })
+                    .then(function (result) {
+                        if (!result.ok) {
+                            monthlyPayment.textContent = '₱0.00';
+                            loanQuoteDetails.textContent = '';
+                            loanQuoteMessage.textContent = result.payload.error || 'Enter a valid amount and a term of at least 1 month.';
+                            return;
+                        }
+                        const quote = result.payload;
+                        monthlyPayment.textContent = '₱' + money.format(quote.installment);
+                        let details = 'Principal ₱' + money.format(quote.principal)
+                            + ' · Term ' + quote.months + ' months'
+                            + ' · Monthly interest ₱' + money.format(quote.monthly_interest)
+                            + ' · Total interest ₱' + money.format(quote.total_interest)
+                            + ' · Total payable ₱' + money.format(quote.total_payable);
+                        if (Number(quote.final_installment) !== Number(quote.installment)) {
+                            details += ' · Final installment ₱' + money.format(quote.final_installment);
+                        }
+                        loanQuoteDetails.textContent = details;
+                        loanQuoteMessage.textContent = 'Flat interest at ' + Number(quote.monthly_rate_percent).toFixed(1) + '% of the original principal each month. Final terms are confirmed during loan review.';
+                    })
+                    .catch(function () {
+                        monthlyPayment.textContent = '₱0.00';
+                        loanQuoteDetails.textContent = '';
+                        loanQuoteMessage.textContent = 'The estimate could not be calculated. Please try again.';
+                    });
             }
 
             [loanAmount, loanTerm, interestRate].forEach(function (field) {

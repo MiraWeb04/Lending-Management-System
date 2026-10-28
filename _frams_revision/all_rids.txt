@@ -1,0 +1,429 @@
+rId26	image19.png	297870
+rId21	image14.png	118301
+rId42	image35.png	216908
+rId47	image39.png	204244
+rId63	image55.png	178625
+rId68	image60.png	359287
+rId84	image76.png	908486
+rId89	image81.png	32592
+rId16	image9.png	210396
+rId11	image4.png	1527962
+rId32	image25.png	320454
+rId37	image30.png	148922
+rId53	image45.png	394753
+rId58	image50.png	231233
+rId74	image66.png	468722
+rId79	image71.png	485461
+rId102	image94.png	1254537
+rId90	image82.png	909251
+rId95	image87.png	34559
+rId22	image15.png	422131
+rId27	image20.png	439997
+rId48	image40.png	359253
+rId64	image56.png	105762
+rId69	image61.png	219444
+rId80	image72.png	329251
+rId85	image77.png	908601
+rId12	image5.png	44753
+rId17	image10.png	313726
+rId33	image26.png	200787
+rId38	image31.png	202667
+rId59	image51.png	262481
+rId103	image95.png	1262299
+rId54	image46.png	180475
+rId70	image62.png	157156
+rId75	image67.png	466333
+rId91	image83.png	242503
+rId96	image88.png	23804
+rId15	image8.png	210734
+rId23	image16.png	709743
+rId28	image21.png	403761
+rId36	image29.png	115462
+rId49	image41.png	86571
+rId57	image49.png	45240
+rId10	image3.png	235429
+rId31	image24.png	200169
+rId44	image36.png	106931
+rId52	image44.png	104293
+rId60	image52.png	581421
+rId65	image57.png	139619
+rId73	image65.png	404285
+rId78	image70.png	852907
+rId81	image73.png	128521
+rId86	image78.png	588164
+rId94	image86.png	34734
+rId99	image91.png	1224359
+rId101	image93.png	1273866
+rId9	image2.png	61868
+rId13	image6.png	24365
+rId18	image11.png	305168
+rId39	image32.png	377691
+rId34	image27.png	227638
+rId50	image42.png	298495
+rId55	image47.png	115389
+rId76	image68.png	473065
+rId97	image89.png	442094
+rId104	image96.png	1219229
+rId71	image63.png	428131
+rId92	image84.png	245406
+rId29	image22.png	246916
+rId24	image17.png	566848
+rId40	image33.png	170621
+rId45	image37.png	273706
+rId66	image58.png	237220
+rId87	image79.png	316665
+rId61	image53.png	58313
+rId82	image74.png	851811
+rId19	image12.png	343691
+rId14	image7.png	192674
+rId30	image23.png	246939
+rId35	image28.png	243839
+rId56	image48.png	309511
+rId77	image69.png	373403
+rId100	image92.png	1233636
+rId105	image97.png	50044
+rId8	image1.png	218820
+rId51	image43.png	58152
+rId72	image64.png	221436
+rId93	image85.png	17173
+rId98	image90.png	852141
+rId25	image18.png	704905
+rId46	image38.png	94717
+rId67	image59.png	189052
+rId20	image13.png	161140
+rId41	image34.png	263110
+rId62	image54.png	166993
+rId83	image75.png	1247367
+rId88	image80.png	513315
+
+=== DRAW PARAS ===
+[880] rids=[] Mina, J. C. (2024). The credit risk management practices of lending companies in Nueva Ecija: Basis for risk mitigating plan. International Journal of Advanced and Applied Sciences
+[881] rids=[] PayMongo. (n.d.). PayMongo API documentation. https://developers.paymongo.com/
+[882] rids=[] Penaso, C. P., & Dagang, A. L. (2025). Loan management practices as key drivers for the operation efficiency of microfinance institutions in Northern Mindanao, Philippines. Interna
+[883] rids=[] Ramirez, J. G. (2024). Establishment of gross loan portfolio risk-return questionnaire: Reliability and validity structure. Mindoro Journal of Social Sciences and Development Studi
+[884] rids=[] APPENDIX B
+[885] rids=[] TEST CASE EVIDENCE AND USER ACCEPTANCE TESTING
+[886] rids=[] Financial Risk Assessment and Micro-Lending System (FRAMS)
+[887] rids=[] Purpose. This appendix organizes software test cases and user acceptance testing evidence for the Financial Risk Assessment and Micro-Lending System (FRAMS). It records the test sc
+[888] rids=[] A. UNIT TESTING
+[889] rids=[] Unit testing was conducted to verify whether individual functions and components of FRAMS performed according to their intended specifications.
+[890] rids=[] Table B1
+[891] rids=[] Unit Testing Test Evidence of FRAMS
+[893] rids=[] Screenshot Evidence for Unit Testing
+[894] rids=[] Figure B1
+[895] rids=[] Evidence for UT-01: Valid Login
+[896] rids=['rId44'] 
+[897] rids=['rId45'] 
+[898] rids=[] Figure B2 | Evidence for UT-02: Incorrect Password or Inactive Account
+[899] rids=['rId46'] 
+[905] rids=[] Figure B3 | Evidence for UT-03: Borrower Registration
+[906] rids=['rId47'] 
+[907] rids=[] Figure B4 | Evidence for UT-04: Loan Details Exceed DTI or Loan Limits
+[908] rids=['rId48'] 
+[912] rids=[] Figure B5 | Evidence for UT-05: Valid JPG, PNG, and PDF selection
+[913] rids=['rId49'] Figure B6 | Evidence for UT-06: Invalid Payment Amount
+[914] rids=['rId50'] 
+[915] rids=[] B. INTEGRATION TESTING
+[916] rids=[] Integration testing was conducted to verify whether connected modules of FRAMS worked together correctly and maintained consistent records across the system.
+[917] rids=[] Table B2
+[918] rids=[] Integration Testing Test Evidence of FRAMS
+[929] rids=[] Screenshot Evidence for Integration Testing
+[930] rids=[] Figure B7
+[931] rids=[] Evidence for IT-01: Registration, Account Approval, and Login
+[932] rids=['rId51'] 
+[933] rids=['rId52'] 
+[934] rids=['rId53'] 
+[935] rids=[] Figure B8 | Evidence for IT-02: Registration and Borrower Records
+[936] rids=['rId47'] 
+[943] rids=[] Figure B9
+[944] rids=[] Evidence for IT-03: Borrower Records and Loan Application
+[945] rids=['rId54'] 
+[946] rids=[] Figure B10
+[947] rids=[] Evidence for IT-04: Payment Recording and Remaining Balance. The paid installment and remaining balance are shown in Figure B22.
+[948] rids=['rId55'] 
+[949] rids=['rId56'] 
+[950] rids=['rId57'] 
+[959] rids=[] Figure B11
+[960] rids=[] Evidence for IT-05: Loan Application and Eligibility Assessment
+[961] rids=['rId58'] Figure B12
+[962] rids=[] Evidence for IT-06: Reports for the Payment Period
+[963] rids=['rId59'] 
+[964] rids=[] Figure B13 | Evidence for IT-07: Borrower Username on the Staff Sign-In
+[965] rids=['rId60'] 
+[969] rids=[] C. SYSTEM TESTING
+[970] rids=[] System testing is documented here for borrower registration, loan application and release, payment processing, collector access, report generation, and notifications. All 12 system
+[972] rids=[] Screenshot Evidence for System Testing
+[973] rids=[] Figure B14
+[974] rids=[] Evidence for ST-01: Borrower Registration
+[975] rids=['rId61'] 
+[976] rids=[] Figure B15
+[977] rids=[] Evidence for ST-02: Account Approval and Login
+[978] rids=['rId62'] 
+[979] rids=[] Figure B16
+[980] rids=[] Evidence for ST-03: Loan Application Submission
+[981] rids=['rId63'] 
+[982] rids=[] Figure B17
+[983] rids=[] Evidence for ST-04: Loan Application Review
+[984] rids=['rId64'] 
+[989] rids=[] Figure B18
+[990] rids=[] Evidence for ST-05: Loan Agreement Acceptance
+[991] rids=['rId65'] 
+[992] rids=[] Figure B19
+[993] rids=[] Evidence for ST-06: Loan Release
+[994] rids=['rId66'] 
+[998] rids=[] Figure B20
+[999] rids=[] Evidence for ST-07: Cash Payment Recording
+[1000] rids=['rId55'] 
+[1001] rids=[] Figure B21
+[1002] rids=[] Evidence for ST-08: Borrower Payment History and Receipt
+[1003] rids=['rId67'] 
+[1004] rids=[] Figure B22
+[1005] rids=['rId56'] Evidence for ST-09: Loan and Installment Status Update
+[1006] rids=['rId57'] 
+[1013] rids=[] Figure B23
+[1014] rids=[] Evidence for ST-10: Collector Dashboard and Assigned Accounts
+[1015] rids=['rId68'] 
+[1016] rids=['rId69'] 
+[1022] rids=[] Figure B24
+[1023] rids=[] Evidence for ST-11: Administrative Reports
+[1024] rids=['rId59'] 
+[1025] rids=[] Figure B25 | Evidence for ST-12: Notification Management
+[1026] rids=['rId70'] 
+[1027] rids=[] D. PAYMONGO TESTING
+[1028] rids=[] The official PayMongo evidence for PM-01 to PM-10 and PM-12 is attached as Figures B26–B35 and B37. The test descriptions and results below are aligned to the behaviors shown in th
+[1029] rids=[] Figure B26 — PM-01
+[1030] rids=[] Scenario: The assigned collector creates a QR Ph payment for a valid amount on a disposable unpaid loan.
+[1031] rids=[] Expected result: With the isolated invalid test key, PayMongo rejects QR creation. No QR page opens, no repayment is stored, and the loan balance stays unchanged. The attempt is sa
+[1032] rids=[] Actual result: The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 while the balance was PHP 3,150.00. PayMongo returned HTTP 401 and rejected the isolated test key. T
+[1033] rids=['rId71'] Figure B26 (B26_pm01_qr_rejected.png)
+[1035] rids=[] Figure B27 — PM-02
+[1036] rids=[] Scenario: The pending QR page is compared with the loan balance before payment.
+[1037] rids=[] Expected result: When QR creation is rejected, the payment form stays open. No QR, QR amount, method, or expiry is shown. The balance and loan status stay unchanged.
+[1038] rids=[] Actual result: The same screen as Figure B26 stayed on Record Payment. No QR image, QR amount, method block, or expiry was displayed. FRAMS-DISP-01 remained Active with remaining b
+[1039] rids=['rId71'] Figure B27 (B26_pm01_qr_rejected.png)
+[1041] rids=[] Figure B28 — PM-03
+[1042] rids=[] Scenario: Cash is selected on the payment form.
+[1043] rids=[] Expected result: Create Dynamic QR Ph stays hidden. The ordinary cash payment action remains available.
+[1044] rids=[] Actual result: With Cash selected, the Create Dynamic QR Ph button was hidden and disabled. Cancel and Record Payment remained available. The loan and amount sections collapsed onl
+[1045] rids=['rId72'] Figure B28 (B28_pm03_cash_no_qr_button.png)
+[1046] rids=[] Figure B29 — PM-04
+[1047] rids=[] Scenario: Blank, zero, and nonnumeric QR amounts are submitted.
+[1048] rids=[] Expected result: No QR transaction is stored. A blank amount is stopped by the required field. Zero is rejected because the amount must be greater than zero. A nonnumeric value is 
+[1049] rids=['rId73'] Actual result: Blank was stopped in the browser with "Please fill out this field." Zero reached the server and returned "Payment amount must be greater than zero." The nonnumeric v
+[1051] rids=['rId74'] Figure B29(a) (B29_pm04_zero_amount.png)
+[1055] rids=[] Figure B29(b) (B29_pm04_nonnumeric.png)
+[1056] rids=['rId75'] 
+[1057] rids=[] Figure B30 — PM-05
+[1058] rids=[] Scenario: The QR amount is greater than the current total due.
+[1059] rids=[] Expected result: The request is rejected and no QR transaction is stored.
+[1060] rids=[] Actual result: An amount of 4000.00 against a total due of PHP 3,150.00 was rejected: "Payment cannot exceed the current total amount due of PHP 3,150.00." No repayment was created
+[1061] rids=[] Figure B30 (B30_pm05_amount_too_high.png)
+[1062] rids=['rId76'] 
+[1063] rids=[] Figure B31 — PM-06
+[1064] rids=[] Scenario: A test collector submits a QR Ph request for a disposable loan assigned to another collector.
+[1065] rids=[] Expected result: The server rejects the request. No pending QR transaction and no repayment are created.
+[1066] rids=[] Actual result: Collector A submitted loan 30, which is assigned to Collector B. The server responded, "You are not assigned to this loan." The loan was not in Collector A's list, a
+[1067] rids=['rId77'] Figure B31 (B31_pm06_other_collector.png)
+[1068] rids=[] Figure B32 — PM-07
+[1069] rids=[] Scenario: A signed-out visitor opens the payments page, and a borrower attempts to meet the collector QR request.
+[1070] rids=[] Expected result: The visitor is redirected to the staff sign-in page. The borrower is redirected to payment history and cannot start a QR payment.
+[1071] rids=[] Actual result: A signed-out request for the payments page opened the staff sign-in page. The signed-in borrower was redirected to Payment History. That page has no QR action. The b
+[1074] rids=['rId78'] Figure B32 (B32_pm07_borrower_history.png)
+[1075] rids=[] Figure B33 — PM-08
+[1076] rids=[] Scenario: A second QR Ph request is created while an earlier attempt for the same loan is unresolved.
+[1077] rids=[] Expected result: A second request is refused when a pending QR has not expired and PayMongo cannot confirm it.
+[1078] rids=[] Actual result: An unresolved pending attempt on FRAMS-TEST-A could not be confirmed with PayMongo. The second request was refused: "The previous PayMongo QR Ph attempt could not be
+[1079] rids=['rId79'] Figure B33 (B33_pm08_unconfirmed_pending_refused.png)
+[1080] rids=[] Figure B34 — PM-09
+[1081] rids=[] Scenario: An authorized user opens the receipt for a recorded E-Wallet repayment in the isolated test environment.
+[1082] rids=[] Expected result: The receipt should display the recorded repayment details and the remaining balance after payment.
+[1083] rids=[] Actual result: The receipt showed RJRR-20261018-000004, E-Wallet, PHP 100.00 paid, PHP 3,150.00 before payment, and PHP 3,050.00 remaining. This check confirms receipt contents for
+[1087] rids=[] Figure B34 (B34_pm09_receipt.png)
+[1088] rids=['rId80'] 
+[1089] rids=[] Figure B35 — PM-10
+[1090] rids=[] Scenario: An authorized staff member reviews the Payments Management page to verify that a recorded E-Wallet repayment appears in the payment list.
+[1091] rids=[] Expected result: The payment list should display the recorded repayment with its visible payment ID, date, borrower, loan ID, amount, payment method, reference number, and collecto
+[1092] rids=[] Actual result: The Payments Management screenshot displayed Payment ID 46 for Synthetic Borrower A, Loan ID 31, an amount of PHP 100.00, E-Wallet as the payment method, reference n
+[1094] rids=[] Figure B35 (Payments Management list screenshot)
+[1095] rids=[] Figure B36 — excluded from official PayMongo scope
+[1096] rids=[] Scope note: Figure B36 is excluded from the official PayMongo evaluation. It shows local endpoint responses and is not a Payment Intent polling test, not a staff Check with PayMong
+[1097] rids=[] This figure is not counted in Table 4.7.
+[1098] rids=[] The screenshot is retained in the appendix file only so that the excluded evidence is not silently discarded. It is not treated as a passed official test case.
+[1101] rids=['rId81'] Figure B36 (excluded from official PayMongo scope)
+[1102] rids=[] Figure B37 — PM-12
+[1103] rids=[] Scenario: An authorized staff member views the Payments Management page and reviews the displayed payment summaries and recorded payment entries.
+[1104] rids=[] Expected result: The page should display the selected reporting period, payment summary information, and recorded payment entries.
+[1105] rids=[] Actual result: The screenshot showed October 2026, collected and all-time collection totals of PHP 10,516.66, four payments for the period, and Payment ID 46 for PHP 100.00 in the 
+[1106] rids=[] Remarks: The screenshot supports the display of summary cards and payment entries; it does not test payment deletion restrictions.
+[1109] rids=[] Figure B37 (Payments Management summary and payment list screenshot)
+[1110] rids=[] Table B5
+[1111] rids=[] Penetration Testing Test Evidence of FRAMS
+[1113] rids=[] Screenshot Evidence for Penetration Testing
+[1114] rids=[] Figure B38 — PT-01
+[1115] rids=[] Scenario: Open the administrator dashboard, collector dashboard, payments, reports, and borrower pages while signed out.
+[1116] rids=[] Expected result: Staff pages redirect to the staff sign-in page. Borrower pages redirect to the borrower sign-in page. No records are shown.
+[1117] rids=[] Actual result: Signed-out requests for dashboard_lending.php, collector_dashboard_lending.php, payments_lending.php, and reports_lending.php each returned HTTP 302 to login_lending
+[1118] rids=['rId82'] 
+[1119] rids=[] Figure B38. Staff sign-in after opening the administrator dashboard while signed out.
+[1120] rids=['rId83'] 
+[1121] rids=[] Figure B38. Borrower sign-in after opening the borrower dashboard while signed out.
+[1122] rids=[] Figure B39 — PT-02
+[1123] rids=[] Scenario: Sign in with a wrong password and with an inactive account.
+[1124] rids=[] Expected result: No protected page opens. The inactive trial uses the same staff message as a wrong password, and the account status supports that trial.
+[1125] rids=[] Actual result: frams_test_admin with a wrong password stayed on the staff sign-in page and showed "Invalid username or password." frams_test_inactive, whose users.status is Inactiv
+[1126] rids=[] Status: PASS
+[1127] rids=['rId84'] 
+[1128] rids=[] Figure B39. Wrong password for the active administrator.
+[1129] rids=['rId85'] 
+[1130] rids=[] Figure B39. Inactive administrator. The message matches the wrong-password trial.
+[1133] rids=[] Figure B40 — PT-03
+[1134] rids=[] Scenario: A borrower opens the users, reports, loan-release, expenses, and payments pages.
+[1135] rids=[] Expected result: Users, reports, loan release, and expenses return the borrower to the borrower dashboard. The payments page returns the borrower to that borrower payment history.
+[1136] rids=[] Actual result: Signed in as frams_test_borrower. users_lending.php, reports_lending.php, loan_release_lending.php, and expenses_lending.php each returned HTTP 302 to borrower_dashb
+[1137] rids=['rId86'] 
+[1138] rids=[] Figure B40. Borrower dashboard after requesting user management.
+[1139] rids=['rId87'] 
+[1140] rids=[] Figure B40. Borrower payment history after requesting the staff payments page.
+[1141] rids=[] Figure B41 — PT-04
+[1142] rids=[] Scenario: A collector opens users, reports, borrower approval, and loan release.
+[1143] rids=[] Expected result: Each request returns to the collector dashboard, and no administrator record is changed.
+[1144] rids=[] Actual result: Signed in as frams_test_collector. users_lending.php, reports_lending.php, borrower_approval_lending.php, and loan_release_lending.php each returned HTTP 302 to coll
+[1145] rids=['rId88'] 
+[1146] rids=[] Figure B41. Collector dashboard after requesting user management. Reports, borrower approval, and loan release returned to this same dashboard.
+[1147] rids=[] Figure B42 — PT-05
+[1148] rids=[] Scenario: Submit registration, payment recording, expense recording, user management, or loan release without the security token.
+[1149] rids=[] Expected result: The request ends with HTTP 419 and the message that the session is invalid or expired. No record is saved.
+[1150] rids=[] Actual result: Registration, payment recording, expense recording, user management, and loan release were each posted without the security token. Borrower approval was not used. Al
+[1151] rids=['rId89'] 
+[1152] rids=[] Figure B42. Registration submitted without the security token. The other four posts returned to this same page with HTTP 419.
+[1153] rids=[] Figure B43 — PT-06
+[1154] rids=[] Scenario: Enter a quote-style probe in sign-in and in a search box.
+[1155] rids=[] Expected result: Sign-in fails. Search does not reveal additional accounts, loans, or payments.
+[1156] rids=[] Actual result: The staff sign-in username frams_test_admin' OR '1'='1 was rejected with "Invalid username or password" and stayed on the sign-in page. The same quote in user search
+[1157] rids=['rId90'] 
+[1158] rids=[] Figure B43. Quote-style sign-in probe rejected.
+[1159] rids=['rId91'] 
+[1160] rids=[] Figure B43. Quote-style user search returned no accounts.
+[1161] rids=[] Figure B44 — PT-07
+[1162] rids=[] Scenario: Enter a harmless markup marker in an encoded search field and display it.
+[1163] rids=[] Expected result: The marker is shown as ordinary text.
+[1164] rids=[] Actual result: The user-search value <b>pt07marker</b> was returned in the page as encoded text. The search box showed the marker as ordinary characters, including the angle bracke
+[1165] rids=['rId92'] 
+[1166] rids=[] Figure B44. The markup marker remains visible as text in the search box.
+[1167] rids=[] Figure B45 — PT-08
+[1168] rids=[] Scenario: A borrower requests another borrower receipt address and document address.
+[1169] rids=[] Expected result: The receipt is refused or redirected, and the document request returns Access denied.
+[1170] rids=[] Actual result: Signed in as frams_test_borrower. Requesting payments_lending.php?view=44, the receipt for Borrower B, returned HTTP 302 to borrower_payment_history_lending.php. The
+[1171] rids=['rId87'] 
+[1172] rids=[] Figure B45. Other-borrower receipt request returned to this borrower's own payment history.
+[1173] rids=['rId93'] 
+[1174] rids=[] Figure B45. Other-borrower document request. The response text is Access denied.
+[1175] rids=[] Figure B46 — PT-09
+[1176] rids=[] Scenario: A collector opens a client, loan, or payment assigned to another collector.
+[1177] rids=[] Expected result: The unassigned record is not opened for collection.
+[1178] rids=[] Actual result: Signed in as frams_test_collector. Client 21, which is assigned to Collector B, returned HTTP 403: "You do not have permission to view this client." Loan 30, FRAMS-T
+[1179] rids=['rId94'] 
+[1180] rids=[] Figure B46. Collector A denied client 21.
+[1181] rids=['rId95'] 
+[1182] rids=[] Figure B46. Collector A denied loan 30.
+[1183] rids=['rId96'] 
+[1184] rids=[] Figure B46. Collector A denied payment 44.
+[1185] rids=[] Figure B47 — PT-10
+[1186] rids=[] Scenario: Upload a file that is not JPG, PNG, or PDF, and a file larger than 8 MB.
+[1187] rids=[] Expected result: The file is rejected and is not stored. A PDF is an allowed file and was not used as the invalid sample.
+[1188] rids=[] Actual result: On loan-application step 4, pt10-probe.txt was checked and rejected with "Allowed file types: JPG, PNG, PDF." A file of 8,389,633 bytes was rejected with "File must 
+[1189] rids=['rId97'] 
+[1190] rids=[] Figure B47. After the invalid uploads, step 4 still shows every document as not uploaded.
+[1191] rids=[] Figure B48 — PT-11
+[1192] rids=[] Scenario: After signing out, reload a protected page.
+[1193] rids=[] Expected result: The reloaded page redirects to the sign-in page.
+[1194] rids=[] Actual result: The collector signed out, which opened the staff sign-in page. Opening collector_dashboard_lending.php again returned HTTP 302 to login_lending.php. The browser show
+[1195] rids=['rId98'] 
+[1196] rids=[] Figure B48. Protected collector dashboard reloaded after sign-out.
+[1197] rids=[] Figure B49 — PT-12
+[1198] rids=[] Scenario: Submit an incorrect, expired, and already used six-digit password-reset code.
+[1199] rids=[] Expected result: The password is not changed by an invalid code. The live reset flow uses a six-digit code that expires after ten minutes, allows five incorrect attempts, and is re
+[1200] rids=[] Actual result: The forgot-password page asks for a username and says it will email a 6-digit code. It does not offer a reset link. The code form says the code expires in 10 minutes
+[1201] rids=['rId99'] 
+[1202] rids=[] Figure B49. The reset page sends a 6-digit code and does not issue a link.
+[1203] rids=['rId100'] 
+[1204] rids=[] Figure B49. The code form states that the code expires in 10 minutes.
+[1205] rids=['rId101'] 
+[1206] rids=[] Figure B49. An incorrect code does not change the password.
+[1207] rids=['rId102'] 
+[1208] rids=[] Figure B49. The attempt after five incorrect codes is refused.
+[1209] rids=['rId103'] 
+[1210] rids=[] Figure B49. An expired code is refused.
+[1211] rids=['rId104'] 
+[1212] rids=[] Figure B49. A valid code can be used once.
+[1213] rids=['rId103'] 
+[1214] rids=[] Figure B49. The same code is refused after the password change.
+[1215] rids=[] F. USER ACCEPTANCE TESTING
+[1216] rids=[] The supplied User Acceptance Testing (UAT) response export contains 32 submissions, consisting of 30 borrowers, one administrator, and one collector. The 20-item evaluation questio
+[1217] rids=[] The criterion-level weighted means are 4.56 for functionality, 4.54 for usability, 4.56 for reliability, 4.46 for security, and 4.52 for performance. The overall weighted mean acro
+[1218] rids=[] The response export serves as the supporting source for the reported calculations. The original spreadsheet and administered questionnaire should be retained as research records. T
+[1219] rids=[] Source of the tally. The frequencies and weighted means below were computed from the 20 individual item responses recorded for each of the 32 respondents in the supplied workbook. 
+[1220] rids=[] The administered 20-item questionnaire is documented in Appendix I. The completed item-level answers and the recorded user-role field are retained in the supplied workbook. The res
+
+=== FRONT 0-80 ===
+[4] Financial Risk Assessment and Micro-Lending System (FRAMS)
+[6] A Capstone Project Presented to the Faculty of
+[7] College Department of
+[8] West Prime Horizon Institute, Inc.
+[9] Pagadian City
+[11] In Partial Fulfilment
+[12] of the Requirements in Capstone Project
+[13] for the Degree of Bachelor of Science in Information Technology
+[14] Academic Year 2025-2026
+[16] by:
+[17] Cabaraban, John Lloyd M.
+[18] Mandawe, Mark Rexben S.
+[19] Andulog, Joann R.
+[20] Luy, Angel Ann S.
+[22] Mr. Antonio Llagas Jr.
+[23] Adviser
+[24] October 23, 2026
+[25] CHAPTER I
+[26] INTRODUCTION
+[27] Background of the Study
+[28] Many lending offices maintain borrower files, loan computations, and payment records using paper-based documents or separate spreadsheets. This practice makes it difficult to access and monitor essent
+[29] Credit risk in micro-lending involves more than determining whether an individual qualifies for a loan. Local studies of lending institutions indicate that lending officers continue to rely on borrowe
+[30] The system developed in this study is the Financial Risk Assessment and Micro-Lending System (FRAMS) for RJ and RR Finance Services, located at Purok San Francisco, Poblacion, Sominot, Zamboanga del S
+[32] In addition to payments recorded at the lending office, FRAMS includes PayMongo Dynamic QR Ph. A collector starts the code for an assigned loan when the method is bank transfer or e-wallet. The borrow
+[34] Therefore, this study focuses on developing a practical web-based system that integrates borrower management, loan application processing, eligibility assessment, loan approval, loan release, online a
+[36] Statement of the Problem
+[37] The lending institution, RJ and RR Finance Services, faces challenges in managing borrower information, processing loan applications, monitoring repayments, and assessing borrower eligibility using ma
+[38] To address these concerns, the study aims to develop the Financial Risk Assessment and Micro-Lending System (FRAMS), a web-based application designed to centralize borrower records, support loan proce
+[40] Specifically, the study seeks to answer the following questions:
+[42] How can FRAMS improve the management of borrower information and loan applications?
+[44] How can FRAMS assist in assessing borrower eligibility using declared income, existing financial obligations, requested loan amount, loan term, and configured lending criteria without treating the ass
+[46] How can FRAMS facilitate the monitoring of loan repayments, outstanding balances, installment schedules, and overdue accounts?
+[48] How can FRAMS support the delivery of notifications concerning loan application decisions, agreement acceptance, loan releases, and payment transactions?
+[50] How can FRAMS generate financial reports that support the monitoring of lending transactions and management decision-making?
+[52] How acceptable is the developed system in terms of functionality, usability, reliability, security, and performance based on the evaluation of its intended users?
+[53] Objectives of the Study
+[54] The general objective of this study is to design, develop, and evaluate a secure web-based Financial Risk Assessment and Micro-Lending System (FRAMS) for RJ and RR Finance Services to support borrower
+[55] Specifically, the study aims to:
+[56] Develop a borrower management module that supports borrower registration, administrator approval, client record management, online loan applications, and supporting document submission and review.
+[57] Implement a rule-based eligibility assessment that evaluates borrower information, declared income, existing financial obligations, requested loan amount, loan term, and configured lending criteria to
+[58] Develop loan processing and repayment monitoring functions that support interest computation, installment schedule generation, loan agreement acceptance, collector assignment, loan release, payment re
+[59] Implement notifications for relevant loan application decisions, agreement updates, loan releases, and payment transactions, consistent with the notification functions available in the developed syste
+[60] Develop financial reporting functions that support the monitoring of loan releases, collections, outstanding balances, overdue accounts, and other relevant lending transactions.
+[61] Evaluate the developed system in terms of functionality, usability, reliability, security, and performance using the evaluation instrument and verified responses of the intended users.
+[63] Scope and Delimitations
+[64] This study covers the design, development, and evaluation of the Financial Risk Assessment and Micro-Lending System (FRAMS) for RJ and RR Finance Services, located at Purok San Francisco, Poblacion, S
+[65] The system is intended for three primary user roles: administrator, collector, and borrower. Borrowers can register, submit loan applications, and provide the required supporting documents. Administra
+[66] FRAMS provides a rule-based eligibility estimate using borrower information, declared monthly income, existing financial obligations, employment or business duration, requested loan amount, loan term,
+[67] The loan-amount field on the application form uses an HTML minimum of PHP 1,000 so that the browser can reject nonnumeric or negative entry. The eligibility function, however, still applies the config
+[68] The eligibility estimate serves as a decision-support tool and does not automatically approve or reject a loan. The final approval decision remains under the administrator's authority. Dependents and 
+[69] The system includes PayMongo Dynamic QR Ph for supported non-cash collection transactions. According to the selected implementation, an authorized collector initiates a QR payment for an assigned loan
+[70] The study does not include credit bureau integration, SMS integration, loan restructuring, deposits, savings, or investment accounts. Although the system records relevant lending transactions, this st
+[71] The evaluation of FRAMS is limited to the respondents, evaluation instruments, testing procedures, and evidence documented in Chapter III and Chapter IV. The conclusions are therefore based on the ver
+[72] Significance of the Study
+[73] Lending office. FRAMS gives RJ and RR Finance Services one application for applications, eligibility review, release, collection, and reports, in place of disconnected files.
+[74] Administrators. The system supports approval of borrowers, review of documents, release of loans, assignment of collectors, and reading of dashboards and period reports.
+[75] Collectors. The system limits collection work to assigned clients and loans and provides the schedule and payment form for those accounts.
+[76] Borrowers. An approved borrower can apply, upload requirements, accept or decline the agreement, and view the loan, the schedule, and the payment history.
+[77] Educational institutions. The project may be used in teaching systems analysis, database design, and web development.
+[78] Future researchers. The study may be a reference for later work on micro-lending systems and rule-based eligibility estimates.
+[79] The researchers. The project provides practice in analysis, web development, database design, and the implementation of a lending workflow.

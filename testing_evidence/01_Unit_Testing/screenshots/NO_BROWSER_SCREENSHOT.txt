@@ -1,0 +1,1 @@
+No browser screenshot was captured for this category. These cases ran in the PHP CLI and their evidence is the execution log and JSON result files.

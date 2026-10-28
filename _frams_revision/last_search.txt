@@ -1,0 +1,19 @@
+HITS
+
+P282: paymongo_qrph_webhook_events. This table exists in the operational schema and stores provider event rows when they are present. It is not part of the selected payment-confirmation workflow or of the official PayMongo evaluation scope. In the selected workflow, a repayment is posted after Payment Intent status polling or staff-initiated Check with PayMongo confirms success and the amount matches.
+
+P700: PM-09 and PM-10 document receipt contents and the listing of a recorded E-Wallet repayment in the isolated test environment. They confirm payment recording and receipt access for that stored record. They do not demonstrate Payment Intent polling, staff-initiated Check with PayMongo, or a live PayMongo charge. Formerly numbered PM-11 (Figure B36) is excluded from Table 4.7 because it tested local endpoint signatures, which are outside the selected confirmation workflow.
+
+P1329: Declared relationships. The dump contains one foreign key: paymongo_qrph_webhook_events.transaction_id references paymongo_qrph_transactions.id with ON DELETE SET NULL. Relationships among users, clients, loans, releases, schedules, and payments are enforced in application queries. A deleted parent row is not stopped by a database foreign key on those core tables.
+
+P1330: Required tables in the dump: users, clients, borrower_applications, loan_applications, loan_application_documents, loan_application_reviews, loan_agreements, loan_releases, loan_release_notifications, loans, loan_payment_schedules, payments, expenses, notifications, password_resets, contact_inquiries, contact_inquiry_replies, email_notifications, paymongo_qrph_transactions, and paymongo_qrph_webhook_events.
+
+T5R19C0: paymongo_qrph_webhook_events
+
+COUNTS
+T10 12x6 R4=PM-04 | Verify validation of blank, zero, and no | 1. Submit a blank amount. 2. Submit zero | Blank input should trigger required-fiel | Blank input was stopped by browser valid | PASSED — Figure B29(a) and B29(b) show z
+T12 7x5 R4=PayMongo Testing | 11 | 11 | 0 | 11/11 official cases passed in the isola
+  TOTAL Total | 48 | 48 | 0 | 48 listed official test cases passed: 6 unit, 7 in
+T17 12x6 R4=PM-04 | Verify validation of blank, zero, and no | 1. Submit a blank amount. 2. Submit zero | Blank input should trigger required-fiel | Blank input was stopped by browser valid | PASSED — Figure B29(a) and B29(b) show z
+T20 7x6 R4=PayMongo testing | 11 | 11 | 0 | 0 | 0
+  TOTAL Total | 48 | 48 | 0 | 0 | 0

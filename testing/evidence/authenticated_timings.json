@@ -1,0 +1,72 @@
+{
+    "login_status": 302,
+    "samples": {
+        "clients_lending.php": [
+            {
+                "status": 200,
+                "ms": 112.23
+            },
+            {
+                "status": 200,
+                "ms": 79.78
+            },
+            {
+                "status": 200,
+                "ms": 55.72
+            },
+            {
+                "status": 200,
+                "ms": 101.56
+            },
+            {
+                "status": 200,
+                "ms": 104.75
+            }
+        ],
+        "reports_lending.php": [
+            {
+                "status": 200,
+                "ms": 66.2
+            },
+            {
+                "status": 200,
+                "ms": 85.51
+            },
+            {
+                "status": 200,
+                "ms": 63.04
+            },
+            {
+                "status": 200,
+                "ms": 76.1
+            },
+            {
+                "status": 200,
+                "ms": 96.67
+            }
+        ],
+        "dashboard_lending.php": [
+            {
+                "status": 200,
+                "ms": 73.99
+            },
+            {
+                "status": 200,
+                "ms": 137.85
+            },
+            {
+                "status": 200,
+                "ms": 98.22
+            },
+            {
+                "status": 200,
+                "ms": 109.22
+            },
+            {
+                "status": 200,
+                "ms": 107.09
+            }
+        ]
+    },
+    "note": "Five sequential samples after one synthetic administrator login on the isolated server."
+}

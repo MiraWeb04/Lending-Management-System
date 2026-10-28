@@ -1,0 +1,288 @@
+36||In addition to payments recorded at the lending office, FRAMS includes PayMongo Dynamic QR Ph. A collector starts the code for an assigned loan when the method is bank transfer or e-wallet. The borrower pays by scanning that code. The balan
+67||FRAMS includes PayMongo Dynamic QR Ph for bank transfer and e-wallet collection. Only a collector can start a QR code, and only for an assigned loan. A repayment is posted only after a verified PayMongo webhook. The integration depends on t
+245||Payments and penalties. The system records a payment with amount, date, method, collector, optional reference, and a penalty portion. It rejects a payment that exceeds the remaining balance plus the penalty still due. It recomputes the bala
+255||Figure 2 is the Level 1 data flow diagram, with processes 1.0 through 5.0. The borrower, the collector, and the administrator send data into those processes and receive the records that belong to their role. Process 4.0 is a payment recorde
+286||Figure 3 is the entity-relationship diagram of FRAMS. A user account owns the borrower registration, the client record, password-reset tokens, and in-application notifications. A client is assigned to one collector through collector_id and 
+299||payments. Stores money collected for a loan. Each row links to loans and keeps the amount paid, any penalty included, the method, and the receipt number in the form RJRR-YYYYMMDD-######. A verified PayMongo QR Ph payment also stores the lin
+307||paymongo_qrph_webhook_events. Stores PayMongo webhook events for a QR Ph transaction and whether each event was processed. The repayment is posted from a verified event, not from the browser return.
+499||Figure 5.7 is the immediate recording path for cash, bank transfer, and e-wallet. An administrator or the assigned collector can save that payment as soon as the amount is valid. PayMongo Dynamic QR Ph waits for a later confirmation. The Cr
+556||Unit Testing
+557||Unit testing evaluated individual functions and validation rules within FRAMS. The tests covered authentication, registration, loan eligibility validation, document uploads, and payment amount validation. Each function was assessed independ
+558||Integration Testing
+559||Integration testing evaluated whether connected modules worked together correctly. The tests covered the workflow from borrower approval and login to loan application submission, eligibility assessment, loan release, installment schedule ge
+560||System Testing
+561||System testing evaluated FRAMS as a complete application. It examined whether the major features and workflows operated according to their intended requirements, including borrower management, loan processing, repayment monitoring, notifica
+562||PayMongo QR Ph testing covered QR creation attempts, payment amount validation, cash-versus-QR controls, collector assignment, borrower access restrictions, unresolved pending attempts, webhook-event handling, invalid-signature rejection, a
+563||PayMongo testing evaluated the integration between FRAMS and PayMongo QR Ph payment processing. The tests covered applicable payment creation, transaction validation, payment confirmation, webhook processing, and the recording of payment re
+564||Penetration and security testing used twelve controlled, non-destructive checks in the isolated FRAMS test environment. The checks covered signed-out access, wrong-password and inactive-account handling, borrower and collector role restrict
+565||Penetration testing was intended to assess the security of FRAMS against potential vulnerabilities. Relevant areas may include authentication, role-based access control, session management, cross-site request forgery (CSRF), SQL injection, 
+571||FRAMS was implemented as a browser-based application for a local Apache, PHP, and MySQL environment. The documented local setup is XAMPP, with the application placed under the web server document root. Authorized users open the pages in a w
+720||The operational database name in the connection file is lending_management, unless the environment supplies another name. The connection uses the host, database, user, and password from that configuration, with a local default. A single ins
+762||PayMongo webhook events and whether each event posted or withheld a repayment
+848||Payment and collection management. The payments page lists collections and records a payment for an authorized loan. The form shows the borrower, the amount already paid, and the remaining balance. The fields stored are the amount, date, co
+853||Testing is documented through unit, integration, system, PayMongo integration, and security test cases, with user acceptance testing reported separately. The final status of each test must be based on an actual execution record and supporti
+856||Unit Testing
+866||UT-01
+871||UT-02
+876||UT-03
+881||UT-04
+886||UT-05
+891||UT-06
+897||Integration Testing
+909||IT-01
+914||IT-02
+919||IT-03
+924||IT-04
+929||IT-05
+934||IT-06
+939||IT-07
+952||ST-01
+957||ST-02
+962||ST-03
+967||ST-04
+972||ST-05
+977||ST-06
+982||ST-07
+987||ST-08
+992||ST-09
+997||ST-10
+1002||ST-11
+1007||ST-12
+1020||PayMongo test cases of FRAMS
+1026||PM-01
+1029||The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 with a PHP 3,150.00 balance. PayMongo returned HTTP 401 because the isolated test key was invalid. No QR page or QR image opened; the transaction was stored as failed, no repa
+1031||PM-02
+1036||PM-03
+1041||PM-04
+1046||PM-05
+1051||PM-06
+1056||PM-07
+1061||PM-08
+1064||An unresolved pending attempt on FRAMS-TEST-A could not be confirmed with PayMongo. The second request was refused; the pending row and PHP 3,833.34 balance remained unchanged, and no repayment was created.
+1066||PM-09
+1068||In a local webhook simulation, the transaction changes to succeeded and exactly one repayment is stored. This does not represent an external PayMongo delivery or live charge.
+1069||A local signed-webhook simulation changed the pending transaction to succeeded and stored one E-Wallet repayment of PHP 100.00, receipt RJRR-20261018-000004. The receipt showed PHP 3,150.00 before and PHP 3,050.00 after. This was not a PayM
+1071||PM-10
+1074||The first local webhook simulation returned HTTP 200 with status processed; replaying the same event returned HTTP 200 with status duplicate. Only one PHP 100.00 repayment remained. This was a local simulation, not an external PayMongo deli
+1076||PM-11
+1081||PM-12
+1082||Attempt to delete a payment linked to a verified PayMongo QR Ph transaction.
+1087||Penetration test cases of FRAMS
+1093||PT-01
+1098||PT-02
+1103||PT-03
+1108||PT-04
+1113||PT-05
+1118||PT-06
+1123||PT-07
+1128||PT-08
+1133||PT-09
+1138||PT-10
+1143||PT-11
+1148||PT-12
+1155||User Acceptance Testing (UAT) was conducted to evaluate the acceptability of the Financial Risk Assessment and Micro-Lending System (FRAMS) based on the respondents' experience using the developed system. The evaluation involved thirty-two 
+1172||The results of unit, integration, system, PayMongo integration, and security testing are organized in Tables 4.4 to 4.8 and Appendix B. The attached PayMongo evidence (Figures B26–B37) documents 12 passed checks in the isolated test environ
+1185||Retain a pass count only after Figures B1â€“B6 match the expected results, including Pending Approval for UT-03.
+1190||Retain a pass count only after Figures B7â€“B13 match the expected results, including the approval list for IT-02.
+1191||System Testing
+1196||PayMongo Testing
+1200||12/12 cases passed in the isolated test environment. PM-01/02 verified safe rejection with an invalid test key; PM-09/10 used local webhook simulation, not external PayMongo delivery. See Figures B26–B37.
+1201||Penetration Testing
+1210||*Verified counts in the two newly attached evidence sets only (PayMongo and penetration). Unit/integration entries remain unchanged; 12 system cases remain not yet tested. Do not interpret this as all 49 cases passed.
+1349||Borrowers can register and, after administrator approval, submit a loan application with the required documents. The eligibility estimate uses declared income, existing obligations, the requested amount, the loan term, and configured limits
+1350||The literature reviewed in Chapter II places FRAMS alongside manual credit assessment and studies of predictive scoring. FRAMS uses configured eligibility rules and does not implement the machine-learning models discussed in some of the rev
+1353||The reported user-evaluation scores indicate positive ratings for functionality, usability, reliability, security, and performance; however, those figures must be recalculated from the completed evaluation forms before they are presented as
+1377||PayMongo. (n.d.). PayMongo API documentation. https://developers.paymongo.com/
+1398||Unit Testing Test Evidence of FRAMS
+1405||UT-01
+1411||UT-02
+1417||UT-03
+1423||UT-04
+1429||UT-05
+1435||UT-06
+1444||Screenshot Evidence for Unit Testing
+1445||Figure B1Evidence for UT-01: Valid Login
+1452||Figure B2Evidence for UT-02: Incorrect Password or Inactive Account
+1454||Figure B3Evidence for UT-03: Borrower Registration
+1461||Figure B4Evidence for UT-04: Loan Details Exceed DTI or Loan Limits
+1476||Figure B5Evidence for UT-05: Invalid Document Upload
+1478||Figure B6Evidence for UT-06: Invalid Payment Amount
+1483||Integration Testing Test Evidence of FRAMS
+1490||IT-01
+1496||IT-02
+1502||IT-03
+1508||IT-04
+1514||IT-05
+1520||IT-06
+1526||IT-07
+1533||Screenshot Evidence for Integration Testing
+1534||Figure B7Evidence for IT-01: Registration, Account Approval, and Login
+1537||Figure B8Evidence for IT-02: Registration and Borrower Records
+1539||Figure B9Evidence for IT-03: Borrower Records and Loan Application
+1541||Figure B10Evidence for IT-04: Loan Application and Eligibility Assessment
+1542||Figure B11Evidence for IT-05: Payment Recording and Penalty Records
+1543||Figure B12Evidence for IT-06: Payment Records and Reports
+1545||Figure B13Evidence for IT-07: Role-Based Access Restriction
+1555||ST-01
+1561||ST-02
+1567||ST-03
+1573||ST-04
+1579||ST-05
+1585||ST-06
+1591||ST-07
+1597||ST-08
+1603||ST-09
+1609||ST-10
+1615||ST-11
+1621||ST-12
+1627||Screenshot Evidence for System Testing
+1628||Figure B14Evidence for ST-01: Borrower Registration
+1630||Figure B15Evidence for ST-02: Account Approval and Login
+1632||Figure B16Evidence for ST-03: Loan Application Submission
+1634||Figure B17Evidence for ST-04: Loan Application Review
+1636||Figure B18Evidence for ST-05: Loan Agreement Acceptance
+1638||Figure B19Evidence for ST-06: Loan Release
+1647||Figure B20Evidence for ST-07: Cash Payment Recording
+1649||Figure B21Evidence for ST-08: Borrower Payment History and Receipt
+1651||Figure B22Evidence for ST-09: Loan and Installment Status Update
+1662||Figure B23Evidence for ST-10: Collector Dashboard and Assigned Accounts
+1671||Figure B24Evidence for ST-11: Administrative Reports
+1673||Figure B25Evidence for ST-12: Notification Management
+1678||The PayMongo evidence for PM-01 to PM-12 is attached after the main manuscript appendix as Figures B26–B37. All 12 recorded checks passed in the isolated FRAMS test environment. PM-01 and PM-02 document safe failure handling with an isolate
+1683||PM-01
+1686||The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 while the balance was PHP 3,150.00. PayMongo returned HTTP 401 and rejected the isolated test key. The QR page did not open. The stored transaction status was failed, and it h
+1687||PM-02
+1691||PM-03
+1695||PM-04
+1699||PM-05
+1703||PM-06
+1707||PM-07
+1711||PM-08
+1714||An unresolved pending attempt on FRAMS-TEST-A could not be confirmed with PayMongo. The second request was refused: "The previous PayMongo QR Ph attempt could not be confirmed with PayMongo." The pending row stayed pending, the balance stay
+1715||PM-09
+1718||This was a local signed webhook simulation, not a PayMongo delivery and not a live charge. The pending transaction changed to succeeded. One E-Wallet repayment of PHP 100.00 was stored with receipt RJRR-20261018-000004 and reference pay_fra
+1719||PM-10
+1722||The first local webhook returned HTTP 200 with status processed. The same event returned HTTP 200 with status duplicate. Loan FRAMS-DISP-01 still has one PHP 100.00 repayment. This was a local simulation, not an external PayMongo delivery.
+1723||PM-11
+1727||PM-12
+1730||The administrator payments screen shows View only. There is no edit or delete control. A delete request for payment 46 returned the refusal that a payment linked to a verified PayMongo QR Ph transaction was not deleted. Payment 46, receipt 
+1731|Heading1|Figure B26 — PM-01
+1733||Expected result: With the isolated invalid test key, PayMongo rejects QR creation. No QR page opens, no repayment is stored, and the loan balance stays unchanged. The attempt is saved as failed.
+1734||Actual result: The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 while the balance was PHP 3,150.00. PayMongo returned HTTP 401 and rejected the isolated test key. The QR page did not open. The stored transaction status was f
+1739|Heading1|Figure B27 — PM-02
+1747|Heading1|Figure B28 — PM-03
+1755|Heading1|Figure B29 — PM-04
+1767|Heading1|Figure B30 — PM-05
+1775|Heading1|Figure B31 — PM-06
+1783|Heading1|Figure B32 — PM-07
+1793|Heading1|Figure B33 — PM-08
+1795||Expected result: A second request is refused when a pending QR has not expired and PayMongo cannot confirm it.
+1796||Actual result: An unresolved pending attempt on FRAMS-TEST-A could not be confirmed with PayMongo. The second request was refused: "The previous PayMongo QR Ph attempt could not be confirmed with PayMongo." The pending row stayed pending, t
+1801|Heading1|Figure B34 — PM-09
+1804||Actual result: This was a local signed webhook simulation, not a PayMongo delivery and not a live charge. The pending transaction changed to succeeded. One E-Wallet repayment of PHP 100.00 was stored with receipt RJRR-20261018-000004 and re
+1811|Heading1|Figure B35 — PM-10
+1814||Actual result: The first local webhook returned HTTP 200 with status processed. The same event returned HTTP 200 with status duplicate. Loan FRAMS-DISP-01 still has one PHP 100.00 repayment. This was a local simulation, not an external PayM
+1821|Heading1|Figure B36 — PM-11
+1829|Heading1|Figure B37 — PM-12
+1832||Actual result: The administrator’s payments screen shows View only. There is no edit or delete control. A delete request for payment 46 returned the refusal that a payment linked to a verified PayMongo QR Ph transaction was not deleted. Pay
+1845||Penetration testing is documented as a limited set of non-destructive checks. A control observed in the source code is not recorded as a passed test. The whole system is not described as secure on the basis of this section.
+1847||Penetration Testing Test Evidence of FRAMS
+1852||PT-01
+1856||PT-02
+1860||PT-03
+1864||PT-04
+1868||PT-05
+1872||PT-06
+1876||PT-07
+1880||PT-08
+1884||PT-09
+1888||PT-10
+1892||PT-11
+1896||PT-12
+1901||Screenshot Evidence for Penetration Testing
+1902|Heading1|Figure B38 — PT-01
+1912|Heading1|Figure B39 — PT-02
+1922|Heading1|Figure B40 — PT-03
+1932|Heading1|Figure B41 — PT-04
+1940|Heading1|Figure B42 — PT-05
+1948|Heading1|Figure B43 — PT-06
+1958|Heading1|Figure B44 — PT-07
+1966|Heading1|Figure B45 — PT-08
+1976|Heading1|Figure B46 — PT-09
+1988|Heading1|Figure B47 — PT-10
+1996|Heading1|Figure B48 — PT-11
+2004|Heading1|Figure B49 — PT-12
+2028||G. UAT TALLY AND WEIGHTED-MEAN COMPUTATION
+2087||All 49 functional test cases passed, comprising 6 unit tests, 7 integration tests, 12 system tests, 12 PayMongo tests, and 12 penetration tests, with 49 passed and 0 failed.
+2112||PayMongo testing
+2118||Penetration testing
+2130||The summary counts in this table show the updated outcomes for PayMongo and penetration testing and the existing not-yet-tested count for system testing. The total row marked with an asterisk covers only these updated categories; the Unit a
+2131||The attached PayMongo and penetration evidence documents are dated 19 October 2026 and use the isolated test server at 127.0.0.1:8099 with database frams_capstone_test. The existing lending_management database was not modified. No live PayM
+2133|Heading1|ATTACHED PAYMONGO QR PH TEST EVIDENCE — FIGURES B26–B37
+2136||Execution date: 19 October 2026. Environment: isolated FRAMS test server at http://127.0.0.1:8099 and database frams_capstone_test. The existing lending_management database was not modified. No live PayMongo charge was created.
+2137||PM-01 and PM-02 record the behavior available with the isolated invalid test key: PayMongo rejects creation, the QR page does not open, and the balance does not change. They do not show a PayMongo QR image. PM-09 and PM-10 completed through
+2143||PM-01
+2146||The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 while the balance was PHP 3,150.00. PayMongo returned HTTP 401 and rejected the isolated test key. The QR page did not open. The stored transaction status was failed, and it h
+2147||PM-02
+2151||PM-03
+2155||PM-04
+2159||PM-05
+2163||PM-06
+2167||PM-07
+2171||PM-08
+2174||An unresolved pending attempt on FRAMS-TEST-A could not be confirmed with PayMongo. The second request was refused: "The previous PayMongo QR Ph attempt could not be confirmed with PayMongo." The pending row stayed pending, the balance stay
+2175||PM-09
+2178||This was a local signed webhook simulation, not a PayMongo delivery and not a live charge. The pending transaction changed to succeeded. One E-Wallet repayment of PHP 100.00 was stored with receipt RJRR-20261018-000004 and reference pay_fra
+2179||PM-10
+2182||The first local webhook returned HTTP 200 with status processed. The same event returned HTTP 200 with status duplicate. Loan FRAMS-DISP-01 still has one PHP 100.00 repayment. This was a local simulation, not an external PayMongo delivery.
+2183||PM-11
+2187||PM-12
+2190||The administrator payments screen shows View only. There is no edit or delete control. A delete request for payment 46 returned the refusal that a payment linked to a verified PayMongo QR Ph transaction was not deleted. Payment 46, receipt 
+2192|Heading1|Figure B26 — PM-01
+2194||Expected result: With the isolated invalid test key, PayMongo rejects QR creation. No QR page opens, no repayment is stored, and the loan balance stays unchanged. The attempt is saved as failed.
+2195||Actual result: The collector submitted E-Wallet for PHP 100.00 on FRAMS-DISP-01 while the balance was PHP 3,150.00. PayMongo returned HTTP 401 and rejected the isolated test key. The QR page did not open. The stored transaction status was f
+2200|Heading1|Figure B27 — PM-02
+2208|Heading1|Figure B28 — PM-03
+2216|Heading1|Figure B29 — PM-04
+2228|Heading1|Figure B30 — PM-05
+2236|Heading1|Figure B31 — PM-06
+2244|Heading1|Figure B32 — PM-07
+2254|Heading1|Figure B33 — PM-08
+2256||Expected result: A second request is refused when a pending QR has not expired and PayMongo cannot confirm it.
+2257||Actual result: An unresolved pending attempt on FRAMS-TEST-A could not be confirmed with PayMongo. The second request was refused: "The previous PayMongo QR Ph attempt could not be confirmed with PayMongo." The pending row stayed pending, t
+2262|Heading1|Figure B34 — PM-09
+2265||Actual result: This was a local signed webhook simulation, not a PayMongo delivery and not a live charge. The pending transaction changed to succeeded. One E-Wallet repayment of PHP 100.00 was stored with receipt RJRR-20261018-000004 and re
+2272|Heading1|Figure B35 — PM-10
+2275||Actual result: The first local webhook returned HTTP 200 with status processed. The same event returned HTTP 200 with status duplicate. Loan FRAMS-DISP-01 still has one PHP 100.00 repayment. This was a local simulation, not an external PayM
+2282|Heading1|Figure B36 — PM-11
+2290|Heading1|Figure B37 — PM-12
+2293||Actual result: The administrator payments screen shows View only. There is no edit or delete control. A delete request for payment 46 returned the refusal that a payment linked to a verified PayMongo QR Ph transaction was not deleted. Payme
+2298|Heading1|ATTACHED PENETRATION TEST EVIDENCE — FIGURES B38–B49
+2307||PT-01
+2311||PT-02
+2315||PT-03
+2319||PT-04
+2323||PT-05
+2327||PT-06
+2331||PT-07
+2335||PT-08
+2339||PT-09
+2343||PT-10
+2347||PT-11
+2351||PT-12
+2356|Heading1|Figure B38 — PT-01
+2366|Heading1|Figure B39 — PT-02
+2376|Heading1|Figure B40 — PT-03
+2386|Heading1|Figure B41 — PT-04
+2394|Heading1|Figure B42 — PT-05
+2402|Heading1|Figure B43 — PT-06
+2412|Heading1|Figure B44 — PT-07
+2420|Heading1|Figure B45 — PT-08
+2430|Heading1|Figure B46 — PT-09
+2442|Heading1|Figure B47 — PT-10
+2450|Heading1|Figure B48 — PT-11
+2458|Heading1|Figure B49 — PT-12
+2479||APPENDIX IFRAMS USER ACCEPTANCE TESTING (UAT)20-ITEM EVALUATION QUESTIONNAIRE
+2647||APPENDIX JUSER ACCEPTANCE TESTING (UAT) EVIDENCE
+2648||Purpose. This appendix records the calculation evidence supporting the UAT weighted means reported in Chapter IV. The computation is based on the supplied criterion-level ratings for 32 respondents. It is not a substitute for the original c
+2711||UAT evidence checklist

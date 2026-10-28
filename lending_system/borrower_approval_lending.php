@@ -9,6 +9,8 @@ require_once 'includes/db_lending.php';
 ensureNotificationsSchema();
 require_once 'includes/loan_email_helpers.php';
 require_once 'includes/ui_helpers.php';
+require_once 'includes/borrower_registration_helpers.php';
+ensureBorrowerApplicationsTable();
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -136,7 +138,7 @@ $borrowers = executeQuery($borrowersQuery)->fetchAll(PDO::FETCH_ASSOC);
                                         <td><span class="badge bg-warning text-dark"><?php echo htmlspecialchars($borrower['status'] ?? 'Pending Approval'); ?></span></td>
                                         <td>
                                             <div class="d-flex flex-wrap gap-2">
-                                                <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#detailModal<?php echo (int)$borrower['id']; ?>">View Details</button>
+                                                <button type="button" class="btn btn-sm btn-outline-primary js-view-borrower" data-borrower-id="<?php echo (int)$borrower['id']; ?>">View Details</button>
                                                 <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#approveModal<?php echo (int)$borrower['id']; ?>">Approve</button>
                                                 <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal<?php echo (int)$borrower['id']; ?>">Reject</button>
                                             </div>
@@ -155,49 +157,31 @@ $borrowers = executeQuery($borrowersQuery)->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
 
-    <?php foreach ($borrowers as $borrower): ?>
-        <div class="modal fade" id="detailModal<?php echo (int)$borrower['id']; ?>" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title"><i class="fas fa-user me-2"></i>Borrower Details</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal fade" id="borrowerDetailModal" tabindex="-1" aria-labelledby="borrowerDetailTitle" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="borrowerDetailTitle"><i class="fas fa-user me-2"></i>Borrower Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="borrowerDetailLoading" class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading borrower information</span></div>
+                        <p class="mt-3 mb-0 text-muted">Loading borrower information…</p>
                     </div>
-                    <div class="modal-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <div class="consent-card">
-                                    <div class="text-muted small">Full Name</div>
-                                    <div class="fw-semibold"><?php echo htmlspecialchars(trim($borrower['full_name'] ?? '')); ?></div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="consent-card">
-                                    <div class="text-muted small">Email</div>
-                                    <div class="fw-semibold"><?php echo htmlspecialchars($borrower['email'] ?? ''); ?></div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="consent-card">
-                                    <div class="text-muted small">Phone Number</div>
-                                    <div class="fw-semibold"><?php echo htmlspecialchars($borrower['mobile_number'] ?? ''); ?></div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="consent-card">
-                                    <div class="text-muted small">Registration Date</div>
-                                    <div class="fw-semibold"><?php echo htmlspecialchars(date('M d, Y', strtotime($borrower['created_at']))); ?></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
+                    <div id="borrowerDetailError" class="alert alert-danger d-none" role="alert"></div>
+                    <div id="borrowerDetailContent" class="d-none"></div>
+                </div>
+                <div class="modal-footer flex-wrap gap-2">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="borrowerDetailApprove" disabled>Approve</button>
+                    <button type="button" class="btn btn-danger" id="borrowerDetailReject" disabled>Reject</button>
                 </div>
             </div>
         </div>
+    </div>
 
+    <?php foreach ($borrowers as $borrower): ?>
         <div class="modal fade" id="approveModal<?php echo (int)$borrower['id']; ?>" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
@@ -252,5 +236,222 @@ $borrowers = executeQuery($borrowersQuery)->fetchAll(PDO::FETCH_ASSOC);
 
     <script src="assets/vendor/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="assets/pwa.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const detailModalEl = document.getElementById('borrowerDetailModal');
+            const detailModal = bootstrap.Modal.getOrCreateInstance(detailModalEl);
+            const loadingEl = document.getElementById('borrowerDetailLoading');
+            const errorEl = document.getElementById('borrowerDetailError');
+            const contentEl = document.getElementById('borrowerDetailContent');
+            const titleEl = document.getElementById('borrowerDetailTitle');
+            const approveBtn = document.getElementById('borrowerDetailApprove');
+            const rejectBtn = document.getElementById('borrowerDetailReject');
+            const allowedIcons = ['fa-user', 'fa-address-book', 'fa-key', 'fa-id-card', 'fa-clipboard-list'];
+            let requestToken = 0;
+            let activeBorrowerId = 0;
+
+            function setState(state) {
+                loadingEl.classList.toggle('d-none', state !== 'loading');
+                errorEl.classList.toggle('d-none', state !== 'error');
+                contentEl.classList.toggle('d-none', state !== 'ready');
+            }
+
+            function showError(message) {
+                errorEl.textContent = '';
+                const text = document.createElement('div');
+                text.textContent = message;
+                const retry = document.createElement('button');
+                retry.type = 'button';
+                retry.className = 'btn btn-sm btn-outline-danger mt-3';
+                retry.textContent = 'Try again';
+                retry.addEventListener('click', function () {
+                    if (activeBorrowerId > 0) {
+                        loadBorrower(activeBorrowerId);
+                    }
+                });
+                errorEl.appendChild(text);
+                errorEl.appendChild(retry);
+                setState('error');
+            }
+
+            function fieldCard(field) {
+                const card = document.createElement('div');
+                card.className = 'consent-card borrower-detail-item' + (field.wide ? ' borrower-detail-item--wide' : '');
+                const label = document.createElement('div');
+                label.className = 'borrower-detail-label';
+                label.textContent = field.label || '';
+                const value = document.createElement('div');
+                const display = field.value && String(field.value).trim() !== '' ? String(field.value) : 'Not provided';
+                value.className = 'borrower-detail-value' + (display === 'Not provided' ? ' is-empty' : '');
+                value.textContent = display;
+                card.appendChild(label);
+                card.appendChild(value);
+                return card;
+            }
+
+            function renderBorrower(borrower) {
+                contentEl.textContent = '';
+                const name = borrower.full_name && String(borrower.full_name).trim() !== '' ? borrower.full_name : 'Borrower';
+                titleEl.textContent = '';
+                const icon = document.createElement('i');
+                icon.className = 'fas fa-user me-2';
+                titleEl.appendChild(icon);
+                titleEl.appendChild(document.createTextNode('Borrower Details — ' + name));
+
+                (borrower.sections || []).forEach(function (section) {
+                    const wrap = document.createElement('section');
+                    wrap.className = 'borrower-detail-section';
+                    const heading = document.createElement('h6');
+                    if (allowedIcons.indexOf(section.icon) !== -1) {
+                        const sectionIcon = document.createElement('i');
+                        sectionIcon.className = 'fas ' + section.icon + ' me-2';
+                        heading.appendChild(sectionIcon);
+                    }
+                    heading.appendChild(document.createTextNode(section.title || 'Details'));
+                    wrap.appendChild(heading);
+
+                    const grid = document.createElement('div');
+                    grid.className = 'borrower-detail-grid';
+                    (section.fields || []).forEach(function (field) {
+                        grid.appendChild(fieldCard(field));
+                    });
+                    wrap.appendChild(grid);
+
+                    if (section.image) {
+                        const imageBlock = document.createElement('div');
+                        imageBlock.className = 'borrower-id-block mt-3';
+                        if (section.image.available) {
+                            const frame = document.createElement('div');
+                            frame.className = 'borrower-id-frame';
+                            const imageLoading = document.createElement('div');
+                            imageLoading.className = 'borrower-id-frame__status text-muted';
+                            imageLoading.textContent = 'Loading ID image…';
+                            const imageError = document.createElement('div');
+                            imageError.className = 'alert alert-warning d-none mb-0';
+                            imageError.textContent = 'The ID image could not be displayed.';
+                            const image = document.createElement('img');
+                            image.className = 'borrower-id-preview d-none';
+                            image.alt = 'Uploaded valid identification card for ' + name;
+                            const imageUrl = 'view_borrower_id_lending.php?id=' + encodeURIComponent(String(borrower.id));
+                            const actions = document.createElement('div');
+                            actions.className = 'd-flex flex-wrap gap-2 mt-3';
+                            image.addEventListener('load', function () {
+                                imageLoading.classList.add('d-none');
+                                image.classList.remove('d-none');
+                            });
+                            image.addEventListener('error', function () {
+                                imageLoading.classList.add('d-none');
+                                image.classList.add('d-none');
+                                imageError.classList.remove('d-none');
+                                actions.classList.add('d-none');
+                            });
+                            frame.appendChild(imageLoading);
+                            frame.appendChild(imageError);
+                            frame.appendChild(image);
+                            const enlarge = document.createElement('button');
+                            enlarge.type = 'button';
+                            enlarge.className = 'btn btn-sm btn-outline-primary';
+                            enlarge.textContent = 'Enlarge ID image';
+                            enlarge.addEventListener('click', function () {
+                                const enlarged = image.classList.toggle('borrower-id-preview--full');
+                                enlarge.textContent = enlarged ? 'Show smaller preview' : 'Enlarge ID image';
+                            });
+                            const openFull = document.createElement('a');
+                            openFull.className = 'btn btn-sm btn-outline-primary';
+                            openFull.href = imageUrl;
+                            openFull.target = '_blank';
+                            openFull.rel = 'noopener noreferrer';
+                            openFull.textContent = 'Open full size';
+                            actions.appendChild(enlarge);
+                            actions.appendChild(openFull);
+                            image.src = imageUrl;
+                            imageBlock.appendChild(frame);
+                            imageBlock.appendChild(actions);
+                        } else {
+                            const empty = document.createElement('div');
+                            empty.className = 'alert alert-warning mb-0';
+                            empty.textContent = section.image.message || 'No ID image was uploaded with this registration.';
+                            imageBlock.appendChild(empty);
+                        }
+                        wrap.appendChild(imageBlock);
+                    }
+
+                    contentEl.appendChild(wrap);
+                });
+                setState('ready');
+            }
+
+            function switchToDecision(targetId) {
+                const target = document.getElementById(targetId);
+                if (!target) {
+                    showError('The approval action could not be opened. Use the buttons in the registration list.');
+                    return;
+                }
+                detailModalEl.addEventListener('hidden.bs.modal', function openNext() {
+                    detailModalEl.removeEventListener('hidden.bs.modal', openNext);
+                    bootstrap.Modal.getOrCreateInstance(target).show();
+                });
+                detailModal.hide();
+            }
+
+            function loadBorrower(borrowerId) {
+                const token = ++requestToken;
+                activeBorrowerId = borrowerId;
+                approveBtn.disabled = true;
+                rejectBtn.disabled = true;
+                titleEl.textContent = 'Borrower Details';
+                contentEl.textContent = '';
+                setState('loading');
+                detailModal.show();
+
+                fetch('borrower_approval_details_lending.php?id=' + encodeURIComponent(String(borrowerId)), {
+                    headers: { 'Accept': 'application/json' },
+                    credentials: 'same-origin'
+                }).then(function (response) {
+                    return response.json().then(function (payload) {
+                        return { ok: response.ok, payload: payload };
+                    }).catch(function () {
+                        return { ok: false, payload: { error: 'Borrower information could not be retrieved.' } };
+                    });
+                }).then(function (result) {
+                    if (token !== requestToken) {
+                        return;
+                    }
+                    if (!result.ok || !result.payload || !result.payload.ok || !result.payload.borrower) {
+                        showError((result.payload && result.payload.error) ? result.payload.error : 'Borrower information could not be retrieved.');
+                        return;
+                    }
+                    if (Number(result.payload.borrower.id) !== borrowerId) {
+                        showError('Borrower information could not be retrieved.');
+                        return;
+                    }
+                    renderBorrower(result.payload.borrower);
+                    approveBtn.disabled = false;
+                    rejectBtn.disabled = false;
+                    approveBtn.onclick = function () {
+                        switchToDecision('approveModal' + borrowerId);
+                    };
+                    rejectBtn.onclick = function () {
+                        switchToDecision('rejectModal' + borrowerId);
+                    };
+                }).catch(function () {
+                    if (token !== requestToken) {
+                        return;
+                    }
+                    showError('Borrower information could not be retrieved.');
+                });
+            }
+
+            document.querySelectorAll('.js-view-borrower').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const borrowerId = Number(button.getAttribute('data-borrower-id'));
+                    if (!Number.isInteger(borrowerId) || borrowerId <= 0) {
+                        return;
+                    }
+                    loadBorrower(borrowerId);
+                });
+            });
+        });
+    </script>
 </body>
 </html>

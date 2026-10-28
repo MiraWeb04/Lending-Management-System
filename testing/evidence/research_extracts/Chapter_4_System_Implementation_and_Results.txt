@@ -1,0 +1,327 @@
+CHAPTER 4
+SYSTEM IMPLEMENTATION AND RESULTS
+This chapter presents the actual implementation, testing, and results of the Financial Risk Assessment and Micro-Lending System (FRAMS) for RJ and RR Finance Services. In the running interface the organization is identified as RJ and RR Finance Services, and several page titles use the label Lending Management System. The discussion is limited to functions that exist in the source code. Test scores, respondent counts, and a declaration that every objective in Chapter 1 has been met are not supplied by the program files. Those items are identified in the testing tables so they can be completed from the approved Chapter 1, Chapter 3, and the recorded test sheets.
+4.1 System Implementation
+FRAMS was implemented as a browser-based application for a local Apache, PHP, and MySQL environment. The documented local setup is XAMPP, with the application placed under the web server document root. Authorized users open the pages in a web browser. The server renders each page, checks the signed-in role, reads and writes the database, and returns HTML. There is no separate mobile application and no separate public web service for the screens. One JSON lookup on the payments page loads the selected loan and its remaining balance into the payment form.
+4.1.1 Programming Logic and Coding Standards
+Server-side processing is written in PHP. The user interface is HTML, CSS, and JavaScript, with Bootstrap, Font Awesome, and Bootstrap Icons stored in the application assets. Chart.js draws the dashboard and report charts. Report export uses a CSV download on the reports page, with SheetJS and html2pdf.js available in the browser for Excel and PDF. The project dependency file requires PHP 8.1 or newer and PHPMailer for selected email messages. MySQL, accessed through PHP Data Objects, stores the records.
+Table 4.1
+Technologies used in the implementation of FRAMS
+Component
+Tool or technology
+Purpose in the implemented system
+Server-side language
+PHP
+Processes forms, roles, loan computations, and page output
+User interface
+HTML, CSS, JavaScript, Bootstrap
+Renders forms, navigation, tables, and messages
+Database
+MySQL through PDO
+Stores users, applications, loans, schedules, and payments
+Charts
+Chart.js
+Displays dashboard and report charts from query results
+Mail
+PHPMailer and the project mail helpers
+Sends selected account, application, release, and payment messages when mail is configured
+Local server
+Apache with PHP and MySQL; XAMPP is the documented local setup
+Hosts the application during development
+The source is organized by responsibility. Each major screen is a PHP page. Shared files under the includes directory handle the database connection, session and role checks, cross-site request tokens, loan interest and schedules, the eligibility estimate, navigation, mail, and document checks. Pages that change data call the token check before the update is saved. Text written back into a page is escaped in the templates that were inspected. Database statements that receive user input use prepared statements, with emulated prepares turned off. A failed database connection is written to the error log and the user sees a short failure message rather than the connection details.
+Authentication starts at a login page. Borrowers use the borrower login. Administrators and collectors use the staff login. The program looks up the account by username or email and checks the password with password_verify. New passwords are stored with password_hash. An account must be active. A borrower must also be approved before the borrower login continues. A successful login stores the user and role in the PHP session and opens the dashboard for that role. Logout destroys the session. Pages that require a signed-in user redirect an anonymous visitor to the staff login. Administrator-only pages stop a collector or a borrower. Borrower queries add the signed-in user. Collector queries add the assigned collector.
+Loan amounts are computed in shared functions rather than typed as a finished total. The standard monthly interest rate in the code is 5 percent. For a principal P, a monthly rate r in percent, and a term of n months, monthly interest equals P multiplied by r/100, total interest equals that monthly interest multiplied by n, and total payable equals P plus total interest. This is a flat charge on the original principal for each month of the term. It is not a declining-balance amortization. The number of installments is the term in months for a monthly loan, the term in months multiplied by 2 for semi-monthly, multiplied by 4 for weekly, and multiplied by 30 for daily when start and end dates are not both available. Principal and total interest are divided evenly across that count. Due dates move by one day, seven days, fifteen days, or one month. The last due date is then set to the release date plus the term in months.
+Monthly interest = P x (r / 100)
+Total interest = monthly interest x n
+Total payable = P + total interest
+The financial risk function is an eligibility estimate, not an approval and not a prediction of default. It reads monthly gross income, or another monthly income field when gross income is missing, existing debt payments, other monthly obligations, employment status, employment or business length, requested amount, term, and interest rate. Number of dependents and a collateral note are stored with the application and are not variables in the formula. An empty credit-history note does not change the numeric result. It adds a request for a credit history or bureau report. If required fields are missing, the status is Not Eligible and the missing fields are listed. The program does not guess those amounts.
+The policy values used by the estimate come from the environment or from the defaults in the code: a maximum debt-to-income ratio of 40 percent, a minimum loan of 3,000, a maximum loan of 500,000, and a minimum employment or business length of 3 months. Debt-to-income before the loan is existing monthly obligations divided by gross income, multiplied by 100. The proposed monthly payment is total payable divided by the term in months. Debt-to-income after the loan adds that payment to the existing obligations before dividing by gross income. The maximum affordable new payment is gross income multiplied by the maximum ratio, minus existing obligations. The maximum principal is that payment multiplied by the term, then divided by 1 plus (r/100 multiplied by n), and then limited to the minimum and maximum loan. The status is Not Eligible when debt-to-income after the request is above the limit, Conditionally Eligible when the request is above the maximum affordable amount or when other policy reasons remain, and Eligible when the affordability figures fall within the limits. The stored disclaimer states that the estimate is for reviewer use and is not a final lending decision or an automatic approval. The wizard blocks the next step when existing debt already exceeds the limit, or when the requested amount fails the minimum, the maximum, or the debt-to-income check. The administrator still approves, rejects, or asks for more documents on the review page.
+A payment must be greater than zero. The penalty portion cannot exceed the amount received. The amount received cannot exceed the remaining loan balance plus the penalty still due, and the installment portion cannot exceed the remaining balance. Remaining balance is total payable minus the sum of amounts paid. For an overdue installment that is not yet paid, the penalty is the installment total multiplied by 1 percent for a daily loan, 2 percent for weekly, 3 percent for semi-monthly, and 5 percent for monthly. Penalty amounts already recorded on payments are applied against those installment penalties in schedule order. Uploaded requirements are limited to 8 MB and to JPG, PNG, and PDF, and the server checks the detected file type.
+4.1.2 Database Implementation
+The operational database name in the connection file is lending_management, unless the environment supplies another name. The connection uses the host, database, user, and password from that configuration, with a local default. A single installation script that creates every table was not found in the repository. The pages expect core tables for users, clients, loans, and payments, and several feature tables and columns are created or extended when the related page runs. Eligibility results are columns on the loan application, not a separate risk table. Passwords are stored as hashes. This section does not list credentials.
+Table 4.2
+Implemented database entities of FRAMS
+Entity
+Purpose
+users
+Accounts, roles, status, profile data, and the password hash
+borrower_applications
+Public registration and the approval decision
+clients
+Borrower records used for loans and collector assignment
+loan_applications
+Requested terms, income fields, status, remarks, and the saved eligibility estimate
+loan_application_documents
+Uploaded requirements and verification status
+loan_application_reviews
+Administrator decisions and review notes
+loan_agreements
+Agreement text, acceptance, signature name, and time
+loan_releases
+Loan number, released amount, borrower, collector, and terms
+loan_payment_schedules
+Installment due date, principal, interest, amount due, and status
+loans
+Operational loan, total payable, frequency, and status
+payments
+Amount, penalty portion, date, method, reference, collector, and receipt number
+expenses
+Office expense description, amount, date, and category
+notifications
+In-application messages and read state
+password_resets
+Password-reset token and expiry
+The queries join these records in the lending order. A user links to a borrower application, a client, loan applications, notifications, and payments recorded by a collector. A client links to loans and to an assigned collector. A loan application links to documents, reviews, an agreement, and a release. A release links to the loan and to the installment rows. A loan links to payments. Dashboard, report, and loan-detail pages follow those links. Contact messages from the public page are stored and answered through the inquiry helpers.
+4.1.3 User Interface Design and System Modules
+The signed-in interface uses a sidebar for navigation, a top bar for the page title, search where the role has a search target, the unread-notification count, and the user menu, and a content area for cards, forms, and tables. The sidebar changes with the role. Labels follow lending terms already used by the office: clients, loans, payments, loan applications, loan release, expenses, penalties, and reports. Required fields are marked on the forms that were inspected, and a failed validation returns a message on the same page. A separate settings screen was not implemented. Profile and password change are on the profile page. Policy limits for the eligibility estimate are environment values, not fields on a settings form.
+Table 4.3
+Implemented modules, purpose, and user access
+Module
+Purpose
+Administrator
+Collector
+Borrower
+Login and logout
+Starts and ends the session for the correct role
+Yes
+Yes
+Yes
+Dashboard
+Summarizes the records the role may see
+Yes
+Yes
+Yes
+Users and collectors
+Creates and updates accounts, roles, and collector status
+Yes
+No
+No
+Borrower approval
+Approves or rejects a public registration
+Yes
+No
+No
+Clients
+Lists borrowers and assigns a collector
+Yes
+Assigned only
+No
+Loan application
+Collects the request, documents, and eligibility estimate
+Reviews
+No
+Submits
+Agreement and release
+Records acceptance and creates the loan and schedule
+Releases
+No
+Accepts or declines
+Loans
+Shows terms, status, balance, and schedule
+All loans
+Assigned only
+Own loan
+Payments
+Records a collection and updates the balance
+Yes
+Assigned loans
+Own history
+Penalties and expenses
+Shows overdue penalties and office expenses
+Yes
+No
+No
+Reports
+Summarizes activity for a selected period and exports it
+Yes
+No
+No
+Notifications and profile
+Lists events for the user and updates the password
+Yes
+Yes
+Yes
+Login interface. The borrower login and the staff login are separate pages. Each verifies the account, creates the session, and opens the matching dashboard. A borrower who is not yet approved does not enter the borrower pages. A forgotten-password page can send a time-limited reset when mail is configured.
+Public portal and registration. The public page introduces RJ and RR Finance Services and the loan products shown there: salary, business, emergency, and vehicle financing. Registration stores a pending account. A success page tells the applicant to wait for review. The contact form stores an inquiry that an administrator can answer.
+Dashboard monitoring. After login, the administrator sees the executive dashboard: total loans, active loans, amount released, amount collected, outstanding balance, and overdue loans, with charts of collections, releases, loan status, and expenses. The collector dashboard is limited to assigned clients, loans, schedules, and pending collections. The borrower dashboard summarizes that borrower's own application or loan.
+User, collector, and profile management. Administrators add and edit users, assign the administrator, collector, or borrower role, and set an account active or inactive. The collectors page creates, edits, activates, and deactivates collector accounts and can search by name, username, email, or employee identifier. The profile page lets the signed-in user review the account and change the password. Passwords entered on these pages are hashed before they are stored.
+Borrower approval and client management. The approval page lists registrations and records an approval or a rejection. Approval is what allows the borrower login to continue, and an approval email can be sent when mail is configured. The client list supports search. Client details show the borrower, loan history, and the assigned collector. The administrator search box in the top bar opens the client list.
+Loan application management. An approved borrower who is allowed to apply completes five steps: personal information, employment and income, loan details, requirements, and review. Identity fields taken from registration stay locked. Address and mobile number can be updated. Required files are a valid government ID, proof of income, proof of billing, a selfie holding a valid ID, and any additional document. Submission stores the application as pending review, stores the files, and saves the eligibility estimate. The administrator verifies or rejects each file and can approve the application, reject it, or ask for more documents. Remarks are stored. The borrower can open a loan-status page when a trackable application exists. Submission does not release funds.
+Financial risk assessment display. The estimate appears on the loan-details step and again on the administrator's review of the saved application. The panel shows the status, income, existing debt, both debt-to-income figures, the requested amount, the estimated eligible amount, the maximum eligible amount, the proposed payment, the term, the interest rate, the reasons, and any documents still requested. The status labels are Eligible, Conditionally Eligible, and Not Eligible. The same disclaimer shown in the calculation is printed on the panel.
+Agreement, release, and loan monitoring. The administrator generates the agreement. The borrower accepts it by entering the borrower name or declines it. Acceptance stores the name and the date and time. Release requires an active collector. It creates a loan number in the form RJRR-LOAN, the year, and a six-digit sequence, together with the release record, the loan, and the installment rows. A release invoice can be opened. The loan list and loan details show the amount, term, frequency, status, balance, schedule, and payments. Status values used for loans include Active, Overdue, and Paid. The borrower sees only the released loan on My Loan.
+Payment and collection management. The payments page lists collections and records a payment for an authorized loan. The form shows the borrower, the amount already paid, and the remaining balance. The stored fields are the amount, date, collector, method, an optional reference number, and a penalty portion. The receipt number uses the prefix RJRR, the date, and a numeric sequence. The borrower can view that borrower's payment history and download a receipt for that borrower's own payment. The collector works from assigned accounts. A payment that fails the amount checks in Section 4.1.1 is rejected.
+Penalties, expenses, and reports. The penalty page shows the outstanding penalty and the penalty amounts collected in the selected period. A collected penalty appears when the penalty portion was entered with the payment. Expenses store a description, amount, date, and category. Reports are limited to the administrator and contain six views: dashboard analytics, loan reports, payment reports, borrower reports, collector performance, and financial summary. The period may be daily, monthly, yearly, or a custom range. The current view can be exported.
+Notifications. The notifications page lists messages for the signed-in user and can mark them read. The top bar shows the unread count. Events such as approval, an application decision, an agreement action, and loan release create an in-application notice. Matching email functions exist for account approval and rejection, application submission and decision, agreement decision, release, payment received, and a fully paid loan. The in-application notice does not depend on mail delivery.
+4.2 Testing Strategy
+Testing for this chapter follows the methods required for the capstone report: unit testing, integration testing, and user acceptance testing. No completed test log, automated test report, or scored questionnaire was found in the project files. The cases below state the result the source code is written to produce. The actual-result and status columns are left for the researchers to complete during testing. Raw test sheets and questionnaires are to be placed in Appendix B. Until those cells are filled, this chapter does not report a pass count or a weighted mean.
+4.2.1 Unit Testing
+Unit testing examines whether a single function or page accepts valid input, rejects input that breaks its own rule, and shows or stores the intended result. The cases cover login, registration, the eligibility gate, document upload, and payment amount checks, because those rules are implemented as discrete checks.
+Table 4.4
+Unit test cases of FRAMS
+Test case
+Expected result
+Actual result
+Status
+Staff or borrower login with an active account and a matching password
+The session starts and the role dashboard opens
+To be recorded
+To be recorded
+Login with a wrong password or an inactive account
+The protected pages do not open
+To be recorded
+To be recorded
+Borrower registration
+A pending account is stored and the success page is shown
+To be recorded
+To be recorded
+Loan details that exceed the debt-to-income limit or the loan limits
+The wizard stops the next step and states the limit that failed
+To be recorded
+To be recorded
+Upload that is not JPG, PNG, or PDF, or that is larger than 8 MB
+The file is refused
+To be recorded
+To be recorded
+Payment above the remaining balance plus penalty due
+The payment is rejected and is not stored
+To be recorded
+To be recorded
+4.2.2 Integration Testing
+Integration testing checks that connected modules use the same records. Registration must become an approved login. A submitted application must carry its documents and its saved eligibility estimate into the review page. Agreement acceptance and release must create the loan and the schedule that later appear on the borrower loan page. A payment must change the balance shown to the borrower and the totals available to reports. A penalty portion entered with a payment must appear on the penalty page.
+Table 4.5
+Integration test cases of FRAMS
+Test case
+Expected result
+Actual result
+Status
+Approve a pending registration, then sign in as that borrower
+Borrower login reaches the borrower dashboard
+To be recorded
+To be recorded
+Submit a five-step application
+The review page shows the documents, status, and saved eligibility estimate
+To be recorded
+To be recorded
+Accept the agreement and release the loan to an active collector
+A loan number, loan row, and installment schedule are created
+To be recorded
+To be recorded
+Record a valid payment
+The loan balance and the borrower payment history change together
+To be recorded
+To be recorded
+Enter a penalty portion on an overdue loan
+The penalty page includes that collected amount for the period
+To be recorded
+To be recorded
+Open a report for a period that contains the payment
+The payment report and financial summary use the stored collection
+To be recorded
+To be recorded
+Open an administrator page as a collector or a borrower
+The page is refused or the user is returned to that user's own dashboard
+To be recorded
+To be recorded
+4.2.3 User Acceptance Testing
+User acceptance testing uses the respondents and the instrument identified in Chapter 3. The number of respondents, their roles, and the rating scale are not restated here, because Chapter 3 was not part of the program files and those facts must be copied from the approved methodology. The researchers shall guide the respondents through the tasks below, collect the questionnaires, and compute frequency, percentage, and weighted mean with the formula already stated in Chapter 3. No rating in Table 4.7 should be typed until it is computed from those questionnaires.
+The guided tasks that match the implemented system are signing in, reviewing or approving a borrower registration, completing or reviewing a loan application, reading the eligibility estimate, accepting an agreement, releasing a loan, recording a payment, checking an overdue penalty, opening a report for a chosen period, reading a notification, and changing a password. Each respondent uses only the tasks allowed for that respondent's role in Table 4.3.
+4.3 Presentation and Analysis of Results
+4.3.1 Presentation of Testing Data
+Functional results shall be transferred from Tables 4.4 and 4.5 after the researchers have recorded what the running system did. User acceptance results shall be transferred from the scored questionnaires into Table 4.7. Until then, the technical statement that can already be made is limited to implementation: the modules and the computations in Section 4.1 exist in the source. Table 4.6 is the summary shell for the functional tests. It does not contain a pass or fail count.
+Table 4.6
+Summary of functional testing, to be completed by the researchers
+Testing level
+Number of test cases
+Number passed
+Number failed
+Remarks
+Unit testing
+6
+To be recorded
+To be recorded
+From Table 4.4
+Integration testing
+7
+To be recorded
+To be recorded
+From Table 4.5
+Table 4.7
+User evaluation results of FRAMS, to be completed from the questionnaires
+Criterion
+Weighted mean
+Interpretation
+Functionality
+To be computed
+To be interpreted from Chapter 3
+Usability
+To be computed
+To be interpreted from Chapter 3
+Reliability
+To be computed
+To be interpreted from Chapter 3
+Security
+To be computed
+To be interpreted from Chapter 3
+Performance
+To be computed
+To be interpreted from Chapter 3
+The verbal interpretation shall use the scale adopted in Chapter 3. The researchers shall attach the raw tally in Appendix B. Charts of respondent ratings are not drawn in this chapter, because no scores have been computed. The charts already visible on the administrator dashboard and the reports page are operational summaries of loans, collections, and expenses. They are not graphs of test results.
+4.3.2 Analysis of Findings
+The analysis below relates the implemented software to the objectives stated in Chapter 1. It does not treat the eligibility estimate as a prediction that a borrower will default, and it does not replace the administrator's decision to approve or reject an application. Because the completed test tables and the questionnaire means are still open, this analysis describes what was implemented and what the tests are designed to confirm. It does not yet state that every objective has been achieved.
+Functionality. The implemented modules provide one path from public registration and administrator approval, through a five-step application and document review, to an eligibility estimate, an accepted agreement, a released loan, an installment schedule, payment recording, penalties on overdue installments, and period reports. Borrower, collector, and administrator each receive the functions in Table 4.3. The eligibility status is Eligible, Conditionally Eligible, or Not Eligible, and the review page still requires an administrator action before a loan is released. These functions are the basis for judging the functional objectives in Chapter 1 once those objectives are set beside Tables 4.4 and 4.5.
+Usability. The signed-in pages share a sidebar, a top bar, forms, and tables, and the loan application uses a five-step progress display. Validation messages are returned on the page when a login, an eligibility rule, an upload, or a payment amount fails. Usability ratings from the respondents in Chapter 3 shall be interpreted only after Table 4.7 is computed. No usability score is assigned in this chapter.
+Reliability. Reliability in this project means that a saved application, release, or payment is the same record later shown on the related page. The integration cases in Table 4.5 are designed to confirm that the review page, the borrower loan page, the payment history, the penalty page, and the reports read the records written by the earlier step. That confirmation is pending the actual-result column.
+Security. The controls present in the software are separate login pages, hashed passwords, session checks, role separation, prepared statements, a cross-site request token on forms that call the token check, and file type and size checks on loan documents. Borrower and collector queries add ownership or assignment. These controls reduce unauthorized use of the pages and forms that were inspected. They are not a finding that the deployed system is fully secure, and no penetration test was stored with the project.
+Performance. The application is built as a locally hosted lending office system. No measured response time, concurrent-user count, or load result was found in the project files. Performance findings, if the objectives require them, shall come from observation during the guided tasks and from the respondent ratings, not from an unmeasured benchmark.
+In relation to the problem stated in Chapter 1, FRAMS places borrower registration, the loan request, the eligibility estimate, the agreement, the released loan, the schedule, and the payments in one database. Collectors see assigned accounts. Administrators see approval, release, expenses, penalties, and reports. The estimate supports the review by showing debt-to-income and the maximum amount implied by the configured limits, and the code states that it is not the approval itself. Whether this implementation satisfies each numbered objective remains a conclusion for Chapter 5, after the objective statements and the completed Tables 4.6 and 4.7 are read together.
+4.3.3 Screenshots of the Working System
+The following figures document the principal interfaces of the implemented system. Each box is a placeholder. The researchers shall replace the placeholder with a screen capture taken from the installed FRAMS application, using sample records that may be shown in the manuscript. Debug pages, email-test pages, and the maintenance tools are not part of this set.
+Figure 4.1
+Public portal of RJ and RR Finance Services
+[INSERT SCREENSHOT: Public landing page showing the loan products and the registration and sign-in actions]
+Figure 4.2
+Borrower registration page
+[INSERT SCREENSHOT: Registration form before it is submitted]
+Figure 4.3
+Borrower login and staff login
+[INSERT SCREENSHOT: Both login pages; use two captures if they do not fit in one figure]
+Figure 4.4
+Administrator executive dashboard
+[INSERT SCREENSHOT: Indicator cards and charts after an administrator signs in]
+Figure 4.5
+Collector dashboard
+[INSERT SCREENSHOT: Assigned accounts, schedules, and pending collections]
+Figure 4.6
+Borrower dashboard
+[INSERT SCREENSHOT: Borrower home page after an approved borrower signs in]
+Figure 4.7
+Borrower approval page
+[INSERT SCREENSHOT: Pending registration with the approve and reject actions]
+Figure 4.8
+Loan application wizard
+[INSERT SCREENSHOT: The five steps; add 4.8a through 4.8e if one capture cannot show every step]
+Figure 4.9
+Eligibility estimate
+[INSERT SCREENSHOT: Loan assessment panel showing status, debt-to-income, and the maximum eligible amount]
+Figure 4.10
+Administrator review of a loan application
+[INSERT SCREENSHOT: Documents, verification, and the approve, reject, or request-documents action]
+Figure 4.11
+Loan agreement
+[INSERT SCREENSHOT: Agreement text and the borrower's accept or decline action]
+Figure 4.12
+Loan release
+[INSERT SCREENSHOT: Collector assignment and the release action]
+Figure 4.13
+Loan details and installment schedule
+[INSERT SCREENSHOT: Balance, status, and installment rows of one released loan]
+Figure 4.14
+Payment recording
+[INSERT SCREENSHOT: Payment form after a loan is selected, including the remaining balance and penalty portion]
+Figure 4.15
+Penalty summary and reports
+[INSERT SCREENSHOT: Penalty page and one reports view with the period filter visible]
+Figure 4.16
+User management and notifications
+[INSERT SCREENSHOT: User list with roles, and the notifications page; passwords must not be visible]
+The screenshots are evidence that the modules in Section 4.1.3 were built. They do not, by themselves, fill the actual-result columns in Tables 4.4 and 4.5. Chapter 5 can summarize these implementation and testing results, state the conclusions that the completed tables support, and list the recommendations that follow from the limits identified here.

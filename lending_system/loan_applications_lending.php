@@ -87,13 +87,7 @@ function getLoanApplicationDisplayStatus(array $application): string
 }
 
 function parseLoanTermMonthsForApproval($loanTerm) {
-    if (is_numeric($loanTerm)) {
-        return max(1, (int)$loanTerm);
-    }
-    if (preg_match('/(\d+)/', (string)$loanTerm, $matches)) {
-        return max(1, (int)$matches[1]);
-    }
-    return 12;
+    return parseLoanTermMonthsValue($loanTerm);
 }
 
 function calculatePaymentScheduleForReview(string $paymentFrequency, int $loanTermMonths, float $totalRepayment): array {
@@ -142,7 +136,9 @@ function getLoanApplicationStep3Summary(array $application): array {
     $loanTermMonths = parseLoanTermMonthsForApproval($loanTerm);
 
     $estimatedInterestRate = getStandardMonthlyInterestRatePercent();
-    $interestBreakdown = calculateLoanInterestBreakdown($loanAmount, $estimatedInterestRate, $loanTermMonths);
+    $interestBreakdown = ($loanAmount >= 0 && $loanTermMonths >= 1)
+        ? calculateLoanInterestBreakdown($loanAmount, $estimatedInterestRate, $loanTermMonths)
+        : ['monthly_interest' => 0.0, 'total_interest' => 0.0, 'total_payable' => 0.0];
     $estimatedInterest = $loanTermMonths > 0 ? $interestBreakdown['total_interest'] : 0.0;
     $totalRepayment = $loanAmount > 0 && $loanTermMonths > 0 ? $interestBreakdown['total_payable'] : 0.0;
 
@@ -357,8 +353,14 @@ function createClientAndPendingLoanForApplication($application, $adminName) {
 
     $loanAmount = $application['approved_loan_amount'] !== null ? (float)$application['approved_loan_amount'] : (float)($application['loan_amount'] ?? 0);
     $interestRate = getStandardMonthlyInterestRatePercent();
-    $loanTerm = trim((string)($application['approved_loan_term'] ?: $application['loan_term'] ?? '12'));
-    $termMonths = parseLoanTermMonthsForApproval($loanTerm);
+    $termChoice = resolveApplicationLoanTerm(
+        isset($application['approved_loan_term']) ? (string)$application['approved_loan_term'] : null,
+        isset($application['loan_term']) ? (string)$application['loan_term'] : null
+    );
+    $termMonths = $termChoice['months'];
+    if ($loanAmount < 0 || $termMonths < 1) {
+        return null;
+    }
     $dateReleased = date('Y-m-d');
     $dueDate = date('Y-m-d', strtotime($dateReleased . ' + ' . $termMonths . ' month'));
 
@@ -573,6 +575,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
+        $agreementTerm = resolveApplicationLoanTerm(
+            isset($applicationRow['approved_loan_term']) ? (string)$applicationRow['approved_loan_term'] : null,
+            isset($applicationRow['loan_term']) ? (string)$applicationRow['loan_term'] : null
+        );
+        if (!$agreementTerm['valid']) {
+            $_SESSION['loan_review_message'] = $agreementTerm['message'];
+            $_SESSION['loan_review_type'] = 'danger';
+            header('Location: loan_applications_lending.php');
+            exit;
+        }
+
         $lenderSignedBy = trim((string)($user['full_name'] ?? $user['username'] ?? 'Administrator'));
         if (!ensureLoanAgreementGeneratedWithLenderAcceptance($applicationId, $applicationRow, $lenderSignedBy)) {
             $_SESSION['loan_review_message'] = 'Unable to generate the loan agreement.';
@@ -618,18 +631,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // fetch existing application details (term fallback) before server-side recompute
         $applicationRow = executeQuery('SELECT user_id, loan_term, payment_frequency, approved_first_payment_date, approved_due_date FROM loan_applications WHERE id = ? LIMIT 1', [$applicationId])->fetch(PDO::FETCH_ASSOC);
 
+        if (!$applicationRow) {
+            $_SESSION['loan_review_message'] = 'Application record not found.';
+            $_SESSION['loan_review_type'] = 'danger';
+            header('Location: loan_applications_lending.php');
+            exit;
+        }
+
         $borrowerPaymentFrequency = trim((string)($applicationRow['payment_frequency'] ?? 'Monthly'));
+        $termChoice = resolveApplicationLoanTerm($approvedLoanTerm, (string)($applicationRow['loan_term'] ?? ''));
+        if ($action === 'approve' && !$termChoice['valid']) {
+            $_SESSION['loan_review_message'] = $termChoice['message'];
+            $_SESSION['loan_review_type'] = 'danger';
+            header('Location: loan_applications_lending.php');
+            exit;
+        }
+        if ($action === 'approve') {
+            $approvedLoanTerm = $termChoice['label'];
+        }
 
         // Recompute payment amount server-side using the borrower's saved Step 3 payment frequency
         $P = is_numeric($approvedLoanAmount) ? (float)$approvedLoanAmount : 0.0;
         $rate = getStandardMonthlyInterestRatePercent();
-        $termMonths = parseLoanTermMonthsForApproval($approvedLoanTerm ?: ($applicationRow['loan_term'] ?? '12'));
+        $termMonths = $termChoice['months'];
         $numberOfPayments = $termMonths > 0 ? getNumberOfPayments($borrowerPaymentFrequency, $termMonths) : 0;
         if ($P > 0 && $rate >= 0 && $termMonths > 0) {
             $interestBreakdown = calculateLoanInterestBreakdown($P, $rate, $termMonths);
             $totalRepayment = $interestBreakdown['total_payable'];
-            $serverInstallment = $numberOfPayments > 0 ? round($totalRepayment / $numberOfPayments, 2) : null;
-            $approvedMonthlyPayment = $serverInstallment !== null ? (string)$serverInstallment : '';
+            $installmentPair = $numberOfPayments > 0
+                ? describeEvenInstallments($P, $rate, $termMonths, $numberOfPayments)
+                : null;
+            $approvedMonthlyPayment = $installmentPair !== null ? number_format($installmentPair['regular'], 2, '.', '') : '';
         } else {
             $approvedMonthlyPayment = '';
         }
@@ -657,24 +689,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     break;
             }
         }
-        if (!$applicationRow) {
-            $_SESSION['loan_review_message'] = 'Application record not found.';
-            $_SESSION['loan_review_type'] = 'danger';
-            header('Location: loan_applications_lending.php');
-            exit;
-        }
-
         $status = '';
         $reviewNote = '';
         switch ($action) {
             case 'approve':
                 $status = 'Waiting for Loan Agreement';
                 // prepare auto-generated remark
-                $termMonthsForRemark = parseLoanTermMonthsForApproval($approvedLoanTerm ?: ($applicationRow['loan_term'] ?? '12'));
+                $termMonthsForRemark = $termMonths;
                 $amt = is_numeric($approvedLoanAmount) ? number_format((float)$approvedLoanAmount, 2) : '0.00';
                 $rateFmt = is_numeric($approvedInterestRate) ? rtrim(rtrim(number_format((float)$approvedInterestRate, 2), '0'), '.') : '0';
                 $monthlyFmt = is_numeric($approvedMonthlyPayment) ? number_format((float)$approvedMonthlyPayment, 2) : '0.00';
-                $autoReviewNote = "Approved: Amount ₱{$amt}, Interest {$rateFmt}% , Term {$termMonthsForRemark} months, Estimated Installment ₱{$monthlyFmt}";
+                $autoReviewNote = "Approved: Amount ₱{$amt}, Interest {$rateFmt}% , Term {$termMonthsForRemark} months, Regular installment ₱{$monthlyFmt}";
+                if (isset($installmentPair) && round($installmentPair['final'], 2) !== round($installmentPair['regular'], 2)) {
+                    $autoReviewNote .= ', Final installment ₱' . number_format($installmentPair['final'], 2);
+                }
                 if (!empty($approvedFirstPaymentDate)) $autoReviewNote .= ', First Payment ' . $approvedFirstPaymentDate;
                 if (!empty($approvedDueDate)) $autoReviewNote .= ', Due ' . $approvedDueDate;
                 $reviewNote = $remarks !== '' ? $remarks : $autoReviewNote;
@@ -691,7 +719,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $numberOfPaymentsForReview = $termMonths > 0 ? getNumberOfPayments($borrowerPaymentFrequency, $termMonths) : null;
         $totalRepaymentForReview = ($P > 0 && $termMonths > 0) ? calculateLoanInterestBreakdown($P, $rate, $termMonths)['total_payable'] : null;
-        $estimatedPaymentForReview = $numberOfPaymentsForReview > 0 && $totalRepaymentForReview !== null ? round($totalRepaymentForReview / $numberOfPaymentsForReview, 2) : null;
+        $estimatedPaymentForReview = isset($installmentPair) ? $installmentPair['regular'] : null;
 
         executeQuery('UPDATE loan_applications SET status = ?, remarks = ?, reviewed_by = ?, reviewed_at = NOW(), rejection_reason = ?, approved_loan_amount = ?, approved_interest_rate = ?, approved_monthly_payment = ?, approved_loan_term = ?, approved_first_payment_date = ?, approved_due_date = ?, payment_frequency = ?, number_of_payments = ?, estimated_payment = ?, estimated_due_date = ? WHERE id = ?', [$status, $reviewNote, $user['full_name'] ?? $user['username'] ?? 'Admin', $action === 'reject' ? $reason : null, $approvedLoanAmount !== '' ? $approvedLoanAmount : null, $approvedInterestRate !== '' ? $approvedInterestRate : null, $approvedMonthlyPayment !== '' ? $approvedMonthlyPayment : null, $approvedLoanTerm !== '' ? $approvedLoanTerm : null, $approvedFirstPaymentDate !== '' ? $approvedFirstPaymentDate : null, $approvedDueDate !== '' ? $approvedDueDate : null, $borrowerPaymentFrequency !== '' ? $borrowerPaymentFrequency : null, $numberOfPaymentsForReview, $estimatedPaymentForReview, $approvedDueDate !== '' ? $approvedDueDate : null, $applicationId]);
 
@@ -1233,28 +1261,6 @@ unset($application);
                                         // Determine installment label
                                         $estimatedPaymentLabel = 'Estimated ' . $paymentFrequency . ' Payment';
 
-                                        // Try to fetch Amount to Collect from loans table
-                                        $loanAmountToCollect = null;
-                                        if (!empty($application['user_id']) || !empty($loanAmount)) {
-                                            $loanQuery = "SELECT amount_to_collect FROM loans WHERE ";
-                                            $loanParams = [];
-                                            if (!empty($application['user_id'])) {
-                                                $loanQuery .= "user_id = ? OR client_id IN (SELECT client_id FROM clients WHERE user_id = ?)";
-                                                $loanParams[] = $application['user_id'];
-                                                $loanParams[] = $application['user_id'];
-                                            } else {
-                                                $loanQuery .= "1=0";
-                                            }
-                                            $loanQuery .= " ORDER BY date_released DESC LIMIT 1";
-                                            $loanResult = executeQuery($loanQuery, $loanParams);
-                                            if ($loanResult) {
-                                                $loanRow = $loanResult->fetch(PDO::FETCH_ASSOC);
-                                                if ($loanRow && !empty($loanRow['amount_to_collect'])) {
-                                                    $loanAmountToCollect = (float)$loanRow['amount_to_collect'];
-                                                }
-                                            }
-                                        }
-
                                         $approvedLoanAmount = $application['approved_loan_amount'] ?? $loanAmount;
                                         $approvedInterestRate = getStandardMonthlyInterestRatePercent();
                                         $approvedLoanTerm = $application['approved_loan_term'] ?? $loanTerm;
@@ -1262,94 +1268,70 @@ unset($application);
                                         $approvedFirstPaymentDate = $application['approved_first_payment_date'] ?? '';
                                         $approvedDueDate = $application['approved_due_date'] ?? '';
 
-                                        $interestEstimate = 0.0;
-                                        $termMonthsForEstimate = parseLoanTermMonthsForApproval($loanTerm);
-                                        if (!empty($loanAmount) && $termMonthsForEstimate > 0) {
-                                            $interestEstimate = calculateLoanInterestBreakdown((float)$loanAmount, getStandardMonthlyInterestRatePercent(), $termMonthsForEstimate)['total_interest'];
+                                        $termChoiceForCard = resolveApplicationLoanTerm(
+                                            isset($application['approved_loan_term']) ? (string)$application['approved_loan_term'] : null,
+                                            $loanTerm !== '' ? $loanTerm : null
+                                        );
+                                        $interestEstimate = null;
+                                        $amountForEstimate = (float)($application['approved_loan_amount'] ?? 0);
+                                        if ($amountForEstimate <= 0) {
+                                            $amountForEstimate = (float)$loanAmount;
+                                        }
+                                        $installmentPairForCard = null;
+                                        if ($amountForEstimate > 0 && $termChoiceForCard['valid']) {
+                                            $interestEstimate = calculateLoanInterestBreakdown($amountForEstimate, getStandardMonthlyInterestRatePercent(), $termChoiceForCard['months'])['total_interest'];
+                                            $cardPaymentCount = getNumberOfPayments($paymentFrequency !== '' ? $paymentFrequency : 'Monthly', $termChoiceForCard['months']);
+                                            if ($cardPaymentCount > 0) {
+                                                $installmentPairForCard = describeEvenInstallments($amountForEstimate, getStandardMonthlyInterestRatePercent(), $termChoiceForCard['months'], $cardPaymentCount);
+                                            }
                                         }
                                         ?>
                                         <div class="row g-3">
                                             <div class="col-md-6"><div class="text-muted small">Loan Type</div><div class="fw-semibold"><?php echo displayValue($loanType); ?></div></div>
                                             <div class="col-md-6"><div class="text-muted small">Requested Amount</div><div class="fw-semibold"><?php echo displayCurrency($loanAmount); ?></div></div>
-                                            <div class="col-md-6"><div class="text-muted small">Loan Term</div><div class="fw-semibold"><?php echo displayValue($loanTerm); ?></div></div>
+                                            <div class="col-md-6"><div class="text-muted small">Requested Loan Term</div><div class="fw-semibold"><?php echo displayValue($loanTerm); ?></div></div>
+                                            <div class="col-md-6"><div class="text-muted small">Approved Loan Term</div><div class="fw-semibold"><?php echo displayValue($application['approved_loan_term'] ?? ''); ?></div></div>
                                             <div class="col-md-6"><div class="text-muted small">Purpose of Loan</div><div class="fw-semibold"><?php echo displayValue($loanPurpose); ?></div></div>
                                             <div class="col-md-6"><div class="text-muted small">Payment Frequency</div><div class="fw-semibold"><?php echo displayValue($paymentFrequency); ?></div></div>
                                             <div class="col-md-6">
                                                 <div class="text-muted small">Number of Payments</div>
-                                                <div class="fw-semibold"><?php 
-                                                    $numPayments = !empty($numberOfPayments) ? (int)$numberOfPayments : null;
-                                                    if (!$numPayments) {
-                                                        $termMonths = parseLoanTermMonthsForApproval($approvedLoanTerm ?: $loanTerm);
-                                                        if ($termMonths > 0) {
-                                                            $numPayments = getNumberOfPayments($paymentFrequency, $termMonths);
-                                                        }
-                                                    }
-                                                    echo $numPayments ? htmlspecialchars((string)$numPayments) : 'Not Available';
+                                                <div class="fw-semibold"><?php
+                                                    $numPayments = $termChoiceForCard['valid']
+                                                        ? getNumberOfPayments($paymentFrequency, $termChoiceForCard['months'])
+                                                        : 0;
+                                                    echo $numPayments > 0 ? htmlspecialchars((string)$numPayments) : 'Not Available';
                                                 ?></div>
                                             </div>
                                             <div class="col-md-6">
-                                                <div class="text-muted small"><?php echo htmlspecialchars($estimatedPaymentLabel); ?></div>
-                                                <div class="fw-semibold"><?php 
-                                                    $installmentPayment = null;
-                                                    
-                                                    if (!empty($loanAmountToCollect)) {
-                                                        $installmentPayment = $loanAmountToCollect;
+                                                <div class="text-muted small">Regular installment</div>
+                                                <div class="fw-semibold"><?php echo $installmentPairForCard ? '₱' . number_format($installmentPairForCard['regular'], 2) : 'Not Provided'; ?></div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="text-muted small">Final installment</div>
+                                                <div class="fw-semibold"><?php
+                                                    if (!$installmentPairForCard) {
+                                                        echo 'Not Provided';
+                                                    } else {
+                                                        echo '₱' . number_format($installmentPairForCard['final'], 2);
+                                                        if (round($installmentPairForCard['final'], 2) !== round($installmentPairForCard['regular'], 2)) {
+                                                            echo '<div class="form-text">The earlier payments use the regular amount. The final payment takes the remaining centavos so the schedule equals ₱' . number_format($installmentPairForCard['total_payable'], 2) . '.</div>';
+                                                        }
                                                     }
-
-                                                    if (!$installmentPayment && !empty($estimatedPayment)) {
-                                                        $installmentPayment = (float)$estimatedPayment;
-                                                    }
-                                                    if (!$installmentPayment && !empty($estimatedMonthlyPayment)) {
-                                                        $installmentPayment = (float)$estimatedMonthlyPayment;
-                                                    }
-                                                    if (!$installmentPayment && !empty($approvedMonthlyPayment)) {
-                                                        $installmentPayment = (float)$approvedMonthlyPayment;
-                                                    }
-
-                                                    $frequencyForCalc = $paymentFrequency !== '' ? $paymentFrequency : 'Monthly';
-                                                    $termMonths = parseLoanTermMonthsForApproval($loanTerm);
-                                                    if (!$installmentPayment && !empty($application['approved_loan_amount']) && $termMonths > 0) {
-                                                        $P = (float)$application['approved_loan_amount'];
-                                                        $totalRepayment = calculateLoanInterestBreakdown($P, getStandardMonthlyInterestRatePercent(), $termMonths)['total_payable'];
-                                                        $installmentPayment = calculateAmountToCollect($totalRepayment, $frequencyForCalc, $termMonths, null, $approvedFirstPaymentDate ?: null, $approvedDueDate ?: null);
-                                                    }
-
-                                                    if (!$installmentPayment && !empty($loanAmount) && $termMonths > 0) {
-                                                        $P = (float)$loanAmount;
-                                                        $totalRepayment = calculateLoanInterestBreakdown($P, getStandardMonthlyInterestRatePercent(), $termMonths)['total_payable'];
-                                                        $installmentPayment = calculateAmountToCollect($totalRepayment, $frequencyForCalc, $termMonths, null, $approvedFirstPaymentDate ?: null, $approvedDueDate ?: null);
-                                                    }
-
-                                                    echo $installmentPayment ? '₱' . number_format((float)$installmentPayment, 2) : 'Not Provided';
                                                 ?></div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="text-muted small">Estimated Interest</div>
-                                                <div class="fw-semibold">₱<?php echo number_format($interestEstimate, 2); ?></div>
+                                                <div class="fw-semibold"><?php echo $interestEstimate === null ? 'Not Provided' : '₱' . number_format($interestEstimate, 2); ?></div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="text-muted small">Estimated Due Date</div>
-                                                <div class="fw-semibold"><?php 
-                                                    $dueDate = !empty($estimatedDueDate) ? trim((string)$estimatedDueDate) : (!empty($approvedDueDate) ? trim((string)$approvedDueDate) : '');
-                                                    if (empty($dueDate) && !empty($approvedLoanTerm)) {
-                                                        $termStr = trim((string)$approvedLoanTerm);
-                                                        $termMonths = is_numeric($termStr) ? (int)$termStr : (preg_match('/(\d+)/', $termStr, $m) ? (int)$m[1] : 12);
-                                                        if ($termMonths > 0) {
-                                                            $dueDateObj = new DateTime();
-                                                            $dueDateObj->modify("+{$termMonths} months");
-                                                            $dueDate = $dueDateObj->format('Y-m-d');
-                                                        }
-                                                    }
-                                                    if (empty($dueDate) && !empty($loanTerm)) {
-                                                        $termStr = trim((string)$loanTerm);
-                                                        $termMonths = is_numeric($termStr) ? (int)$termStr : (preg_match('/(\d+)/', $termStr, $m) ? (int)$m[1] : 12);
-                                                        if ($termMonths > 0) {
-                                                            $dueDateObj = new DateTime();
-                                                            $dueDateObj->modify("+{$termMonths} months");
-                                                            $dueDate = $dueDateObj->format('Y-m-d');
-                                                        }
-                                                    }
-                                                    echo $dueDate ? htmlspecialchars($dueDate) : 'Not Provided';
+                                                <div class="fw-semibold"><?php
+                                                    $dueDate = estimatePendingApplicationDueDate(
+                                                        isset($application['approved_loan_term']) ? (string)$application['approved_loan_term'] : null,
+                                                        isset($application['loan_term']) ? (string)$application['loan_term'] : null,
+                                                        trim((string)($application['approved_due_date'] ?? ''))
+                                                    );
+                                                    echo $dueDate !== '' ? htmlspecialchars($dueDate) : 'Not Provided';
                                                 ?></div>
                                             </div>
                                         </div>
@@ -1476,8 +1458,9 @@ unset($application);
                                                     <input type="number" step="0.01" min="5" max="5" class="form-control" name="approved_interest_rate" value="5.00" readonly>
                                                 </div>
                                                 <div class="col-md-6">
-                                                    <label class="form-label">Approved Installment Amount</label>
-                                                    <input type="number" step="0.01" min="0" class="form-control" name="approved_monthly_payment" value="<?php echo htmlspecialchars($approvedMonthlyPayment ?? ''); ?>" placeholder="Auto-calculated" readonly>
+                                                    <label class="form-label">Regular installment</label>
+                                                    <input type="number" step="0.01" min="0" class="form-control" name="approved_monthly_payment" value="<?php echo htmlspecialchars(isset($installmentPairForCard) && $installmentPairForCard ? number_format($installmentPairForCard['regular'], 2, '.', '') : ($approvedMonthlyPayment ?? '')); ?>" placeholder="Auto-calculated" readonly>
+                                                    <div class="form-text approved-final-installment"><?php echo isset($installmentPairForCard) && $installmentPairForCard && round($installmentPairForCard['final'], 2) !== round($installmentPairForCard['regular'], 2) ? 'Final installment ₱' . number_format($installmentPairForCard['final'], 2) . '. This is the scheduled last payment, not a second estimate.' : 'Each scheduled installment uses this amount.'; ?></div>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Approved Loan Term</label>
@@ -1655,15 +1638,16 @@ unset($application);
 
             // Auto-calculate payment amount inside each application modal based on the borrower's saved payment frequency
             function parseTermToMonths(term) {
-                if (!term) return 12;
+                if (!term) return 0;
                 var s = String(term).trim();
-                var m = s.match(/(\d+)/);
-                if (!m) return 12;
-                var num = parseInt(m[1], 10) || 12;
+                var m = s.match(/-?\d+/);
+                if (!m) return 0;
+                var num = parseInt(m[0], 10);
+                if (!isFinite(num)) return 0;
                 if (/year|yr|y\b/i.test(s)) {
                     return num * 12;
                 }
-                return num; // assume months when not specified
+                return num;
             }
 
             function normalizePaymentFrequency(paymentFrequency) {
@@ -1698,21 +1682,38 @@ unset($application);
                 var interestEl = modalEl.querySelector('input[name="approved_interest_rate"]');
                 var termEl = modalEl.querySelector('input[name="approved_loan_term"]');
                 var monthlyEl = modalEl.querySelector('input[name="approved_monthly_payment"]');
+                var finalNoteEl = modalEl.querySelector('.approved-final-installment');
                 if (!monthlyEl) return;
+
+                function evenInstallment(principal, ratePercent, months, count) {
+                    var interestCents = Math.round(principal * (ratePercent / 100) * months * 100);
+                    var payableCents = Math.round(principal * 100) + interestCents;
+                    var principalBase = Math.floor(Math.round(principal * 100) / count);
+                    var interestBase = Math.floor(interestCents / count);
+                    var regularCents = principalBase + interestBase;
+                    var finalCents = payableCents - (regularCents * (count - 1));
+                    return { regular: (regularCents / 100).toFixed(2), final: (finalCents / 100).toFixed(2) };
+                }
 
                 function computeMonthly() {
                     var P = parseFloat(amountEl.value) || 0;
                     var rate = parseFloat(interestEl && interestEl.value ? interestEl.value : 0) || 0;
-                    var months = parseTermToMonths(termEl && termEl.value ? termEl.value : '12');
+                    var months = parseTermToMonths(termEl ? termEl.value : '');
                     var paymentFrequency = modalEl.getAttribute('data-payment-frequency') || 'Monthly';
-                    if (P <= 0 || rate < 0 || months <= 0) { monthlyEl.value = ''; return; }
+                    if (P <= 0 || rate < 0 || months <= 0) {
+                        monthlyEl.value = '';
+                        if (finalNoteEl) finalNoteEl.textContent = '';
+                        return;
+                    }
 
-                    var totalInterest = P * (rate / 100);
-                    var totalInterestForLoan = totalInterest * months;
-                    var totalRepayment = P + totalInterestForLoan;
                     var paymentCount = getPaymentCount(paymentFrequency, months);
-                    var installmentAmount = totalRepayment / paymentCount;
-                    monthlyEl.value = isFinite(installmentAmount) ? installmentAmount.toFixed(2) : '';
+                    var amounts = evenInstallment(P, rate, months, paymentCount);
+                    monthlyEl.value = amounts.regular;
+                    if (finalNoteEl) {
+                        finalNoteEl.textContent = amounts.final === amounts.regular
+                            ? 'Each scheduled installment uses this amount.'
+                            : 'Final installment ₱' + Number(amounts.final).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '. This is the scheduled last payment, not a second estimate.';
+                    }
                 }
 
                 [amountEl, interestEl, termEl].forEach(function(el){ if (el) el.addEventListener('input', computeMonthly); });
@@ -1770,10 +1771,13 @@ unset($application);
 
                 function computeDueDate() {
                     if (!firstPaymentEl || !dueEl || !termEl) return;
+                    var months = parseTermToMonths(termEl.value);
+                    if (months < 1) {
+                        return;
+                    }
                     var fp = firstPaymentEl.value;
                     if (!fp) return;
                     var paymentFrequency = modalEl.getAttribute('data-payment-frequency') || 'Monthly';
-                    var months = parseTermToMonths(termEl.value || '12');
                     var start = new Date(fp + 'T00:00:00');
                     if (isNaN(start.getTime())) return;
 
@@ -1811,7 +1815,7 @@ unset($application);
                     if (!remarksEl) return;
                     var amt = parseFloat(amountEl.value) || 0;
                     var rateVal = parseFloat(interestEl && interestEl.value ? interestEl.value : 0) || 0;
-                    var months = parseTermToMonths(termEl && termEl.value ? termEl.value : '12');
+                    var months = parseTermToMonths(termEl ? termEl.value : '');
                     var monthlyVal = parseFloat(monthlyEl.value) || 0;
                     var firstDate = firstPaymentEl ? firstPaymentEl.value : '';
                     var dueDateVal = dueEl ? dueEl.value : '';

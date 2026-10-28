@@ -1,0 +1,162 @@
+{
+    "server": "http:\/\/127.0.0.1:8099",
+    "database": "frams_capstone_test",
+    "finished_at": "2026-10-19T14:42:26+02:00",
+    "counts": {
+        "PASS": 13,
+        "FAIL": 2,
+        "BLOCKED": 0
+    },
+    "results": [
+        {
+            "id": "HTTP-01",
+            "objective": "Staff login page loads on the isolated server",
+            "expected": "HTTP 200 and a login form",
+            "actual": "HTTP 200 in 16.32 ms; form=yes",
+            "status": "PASS",
+            "notes": "",
+            "executed_at": "2026-10-19T14:42:24+02:00",
+            "evidence": "testing\/evidence\/http_checks.json"
+        },
+        {
+            "id": "HTTP-02",
+            "objective": "Response includes common browser hardening headers",
+            "expected": "X-Frame-Options, Content-Security-Policy, and X-Content-Type-Options are present",
+            "actual": "missing x-frame-options, content-security-policy, x-content-type-options",
+            "status": "FAIL",
+            "notes": "Observed on the isolated login response. This is not a claim about a production web-server configuration.",
+            "executed_at": "2026-10-19T14:42:24+02:00",
+            "evidence": "testing\/evidence\/http_checks.json"
+        },
+        {
+            "id": "HTTP-03",
+            "objective": "Login with missing credentials",
+            "expected": "Validation message and no redirect",
+            "actual": "HTTP 200 message=shown",
+            "status": "PASS",
+            "notes": "",
+            "executed_at": "2026-10-19T14:42:24+02:00",
+            "evidence": "testing\/evidence\/http_checks.json"
+        },
+        {
+            "id": "HTTP-04",
+            "objective": "Login with a wrong password",
+            "expected": "HTTP 200 and Invalid username or password",
+            "actual": "HTTP 200 error=shown",
+            "status": "PASS",
+            "notes": "",
+            "executed_at": "2026-10-19T14:42:24+02:00",
+            "evidence": "testing\/evidence\/http_checks.json"
+        },
+        {
+            "id": "HTTP-05",
+            "objective": "Login identifier containing SQL metacharacters",
+            "expected": "Rejected as an ordinary failed login",
+            "actual": "HTTP 200 error=shown location=no",
+            "status": "PASS",
+            "notes": "One login request on the isolated server.",
+            "executed_at": "2026-10-19T14:42:24+02:00",
+            "evidence": "testing\/evidence\/http_checks.json"
+        },
+        {
+            "id": "HTTP-06",
+            "objective": "Login page escapes a markup username",
+            "expected": "The markup is escaped and the login error is shown",
+            "actual": "raw=no escaped=yes",
+            "status": "PASS",
+            "notes": "Checked only the staff login field.",
+            "executed_at": "2026-10-19T14:42:24+02:00",
+            "evidence": "testing\/evidence\/http_checks.json"
+        },
+        {
+            "id": "HTTP-07",
+            "objective": "Unauthenticated user-management request",
+            "expected": "Redirect to the staff login",
+            "actual": "HTTP 302 location_login=yes",
+            "status": "PASS",
+            "notes": "",
+            "executed_at": "2026-10-19T14:42:24+02:00",
+            "evidence": "testing\/evidence\/http_checks.json"
+        },
+        {
+            "id": "HTTP-08",
+            "objective": "Administrator login and dashboard",
+            "expected": "Login redirects and the dashboard returns HTTP 200",
+            "actual": "login HTTP 302 dashboard HTTP 200 executive=yes",
+            "status": "PASS",
+            "notes": "",
+            "executed_at": "2026-10-19T14:42:24+02:00",
+            "evidence": "testing\/evidence\/http_checks.json"
+        },
+        {
+            "id": "HTTP-09",
+            "objective": "Collector login and expenses denial",
+            "expected": "Collector dashboard opens and expenses returns HTTP 403",
+            "actual": "login 302 dashboard 200 expenses 403",
+            "status": "PASS",
+            "notes": "",
+            "executed_at": "2026-10-19T14:42:25+02:00",
+            "evidence": "testing\/evidence\/http_checks.json"
+        },
+        {
+            "id": "HTTP-10",
+            "objective": "Borrower login and administrator-page denial",
+            "expected": "Borrower dashboard opens and user management does not render the admin user table",
+            "actual": "login 302 dashboard 200 users 302",
+            "status": "PASS",
+            "notes": "",
+            "executed_at": "2026-10-19T14:42:25+02:00",
+            "evidence": "testing\/evidence\/http_checks.json"
+        },
+        {
+            "id": "HTTP-11",
+            "objective": "Collector payment post without a CSRF token",
+            "expected": "HTTP 419 and the payment count is unchanged",
+            "actual": "HTTP 419 payments 4 to 4",
+            "status": "PASS",
+            "notes": "No payment was stored.",
+            "executed_at": "2026-10-19T14:42:25+02:00",
+            "evidence": "testing\/evidence\/http_checks.json"
+        },
+        {
+            "id": "HTTP-12",
+            "objective": "Logout ends the administrator session",
+            "expected": "Dashboard request after logout redirects to login",
+            "actual": "logout 302 next 302 login=yes",
+            "status": "PASS",
+            "notes": "",
+            "executed_at": "2026-10-19T14:42:25+02:00",
+            "evidence": "testing\/evidence\/http_checks.json"
+        },
+        {
+            "id": "HTTP-13",
+            "objective": "Local webhook endpoint rejects an invalid signature",
+            "expected": "HTTP 401 and invalid_signature. This request is a local simulation.",
+            "actual": "HTTP 401 body {\"received\":false,\"status\":\"invalid_signature\"}",
+            "status": "PASS",
+            "notes": "PayMongo did not send this request.",
+            "executed_at": "2026-10-19T14:42:25+02:00",
+            "evidence": "testing\/evidence\/http_checks.json"
+        },
+        {
+            "id": "HTTP-14",
+            "objective": "Webhook endpoint rejects GET",
+            "expected": "HTTP 405",
+            "actual": "HTTP 405",
+            "status": "PASS",
+            "notes": "",
+            "executed_at": "2026-10-19T14:42:25+02:00",
+            "evidence": "testing\/evidence\/http_checks.json"
+        },
+        {
+            "id": "HTTP-15",
+            "objective": "Single-user page timing on the isolated server",
+            "expected": "Five login samples, five client-list samples, and three report samples, with status 200",
+            "actual": "{\"timing_login_status\":200,\"login_ms\":[38.77,64.98,38.2,22.97,35.94],\"login_avg_ms\":40.17,\"clients_ms\":[61.54,64.41,39.59,36.42,40.14],\"clients_avg_ms\":48.42,\"clients_status\":[302,302,302,302,302],\"reports_ms\":[39.56,62.38,30.48],\"reports_avg_ms\":44.14,\"reports_status\":[302,302,302]}",
+            "status": "FAIL",
+            "notes": "Sequential requests from one client. Not a concurrent load test.",
+            "executed_at": "2026-10-19T14:42:26+02:00",
+            "evidence": "testing\/evidence\/http_checks.json"
+        }
+    ]
+}

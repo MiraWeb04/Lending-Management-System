@@ -1,0 +1,3 @@
+﻿Observed alert innerHTML on expenses_lending.php while signed in as the synthetic administrator:
+FRAMSXSS<b>probe</b>
+The marker was parsed as HTML. The alert element had zero rendered size in the viewport, so the screenshot of that page does not show the text. This file records the DOM result.

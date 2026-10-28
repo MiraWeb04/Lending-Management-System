@@ -1,0 +1,257 @@
+Financial Risk Assessment and Micro-Lending System (FRAMS)
+A Capstone Project Presented to the Faculty of the College Department
+West Prime Horizon Institute, Inc.
+Pagadian City
+In Partial Fulfillment of the Requirements in Capstone Project
+for the Degree of Bachelor of Science in Information Technology
+Academic Year 2025–2026
+by
+Cabaraban, John Lloyd M.
+Mandawe, Mark Rexben S.
+Andulog, Joann R.
+Luy, Angel Ann S.
+Mr. Antonio Llagas Jr.
+Adviser
+April 15, 2026
+CHAPTER 1
+INTRODUCTION
+1.1 Background of the Study
+Many lending offices still keep borrower files, loan computations, and payment records in paper folders or separate spreadsheets. That practice makes it difficult to see, in one place, who applied, whether the request fits the borrower’s declared income and existing obligations, what amount was released, and what balance remains. Delays, inconsistent figures, and weak monitoring of overdue accounts follow when those records are not connected.
+Credit risk in micro-lending is not only a question of whether a person may borrow. Local studies of lending institutions show that officers still rely on interviews, business verification, and checks that the applicant has no unpaid loan elsewhere, and that many micro-borrowers have limited income and little formal credit history (Mina, 2024; Juventud et al., 2023). Digital studies add that web-based access and structured risk tools are becoming part of how microfinance offices manage loans (Santos, 2023; Campos, 2024). Those sources are discussed in full in Chapter 2. They support the need for a system that keeps the lending record and the risk review together.
+The system developed in this study is the Financial Risk Assessment and Micro-Lending System (FRAMS) for RJ and RR Finance Services, located at Purok San Francisco, Poblacion, Sominot, Zamboanga del Sur. FRAMS is a locally hosted, browser-based application. It registers borrowers, accepts a five-step loan application and supporting documents, computes an eligibility estimate from income, existing obligations, the requested amount, the term, and the office limits, and leaves the approval decision with the administrator. After the borrower accepts the agreement, the administrator assigns a collector and releases the loan. The system then creates the installment schedule, records payments and penalties, and provides reports for the administrator. The eligibility estimate is a review aid. It is not a machine-learning prediction of default, and it does not replace the officer’s decision.
+This study therefore focuses on the design and development of a practical system that connects borrower records, loan processing, eligibility estimation, collection, and financial monitoring for that lending office.
+1.2 Statement of the Problem
+RJ and RR Finance Services needs one record of loan applications, borrower information, payments, and the information used to judge whether a request is affordable. When those tasks depend on manual recording and separate files, the office faces delays, errors in balances, difficulty in seeing overdue accounts, and a risk review that is not tied to the same data as the loan.
+The study seeks to develop FRAMS so that borrower and loan information, an eligibility estimate, payment tracking, notifications, and reports are available in one web-based system. Specifically, this study sought to answer the following questions:
+• How does FRAMS record borrowers, loan applications, and released loans?
+• How does FRAMS check whether a requested loan is affordable?
+• How does FRAMS record payments and show reports?
+1.3 Objectives of the Study
+The general objective of the study is to design and develop a secure web-based Financial Risk Assessment and Micro-Lending System that records lending transactions, supports an eligibility review, and provides reports for RJ and RR Finance Services.
+Specifically, the study aims to:
+• develop borrower registration, administrator approval, and client records;
+• provide an online loan application for personal, employment, income, and loan details, together with the required documents, and provide administrator review of the application;
+• implement an eligibility estimate that uses debt-to-income, loan amount limits, and employment length, and present that estimate to the reviewer rather than as a final lending decision;
+• compute interest and the installment schedule from the rules built into the system, record agreement acceptance, assign a collector, and release the loan;
+• record payments, update balances, apply the penalty rule to overdue installments, and show the borrower the schedule and payment history;
+• provide notifications and administrator reports on loans, collections, borrowers, collectors, and financial totals;
+• limit access by role for the administrator, the collector, and the borrower; and
+• evaluate the system through unit testing, integration testing, and user acceptance testing.
+1.4 Scope and Limitations
+This study covers the design, development, and evaluation of FRAMS. The included functions are the public portal, borrower registration and approval, client records, the five-step loan application, document verification, the eligibility estimate, loan agreement acceptance, loan release with collector assignment, installment schedules, payment recording, penalties, expenses, notifications, contact inquiries, user management, and administrator reports. The loan products presented on the public page are the salary loan, business loan, emergency loan, and vehicle financing. The users are the administrator, the collector, and the borrower.
+The eligibility estimate uses monthly income, existing debt payments, other monthly obligations, employment or business length, the requested amount, the term, and the interest rate. The default limits in the program are a maximum debt-to-income ratio of 40%, a minimum loan of PHP 3,000, a maximum loan of PHP 500,000, and a minimum of 3 months of employment or business. Interest is a flat 5% per month on the original principal for each month of the term. Penalties on unpaid overdue installments are 1% for a daily loan, 2% for weekly, 3% for semi-monthly, and 5% for monthly. Evaluation uses the respondents and instruments described in Chapter 3. The results are presented in Chapter 4.
+The system is limited to this micro-lending workflow. It does not include deposits, savings, or investment accounts. It does not connect to a credit bureau, a payment gateway, or SMS. Dependents and a collateral note may be stored, but they are not variables in the eligibility formula. The estimate does not use machine learning and does not predict default. There is no loan restructuring module. A penalty appears in the penalty report when the penalty portion is entered with the payment. The study does not cover multi-branch deployment or a claim that recording errors are fully removed.
+1.5 Significance of the Study
+Lending office. FRAMS gives RJ and RR Finance Services one application for applications, eligibility review, release, collection, and reports, in place of disconnected files.
+Administrators. The system supports approval of borrowers, review of documents, release of loans, assignment of collectors, and reading of dashboards and period reports.
+Collectors. The system limits collection work to assigned clients and loans and provides the schedule and payment form for those accounts.
+Borrowers. An approved borrower can apply, upload requirements, accept or decline the agreement, and view the loan, the schedule, and the payment history.
+Educational institutions. The project may be used in teaching systems analysis, database design, and web development.
+Future researchers. The study may be a reference for later work on micro-lending systems and rule-based eligibility estimates.
+The researchers. The project provides practice in analysis, web development, database design, and the implementation of a lending workflow.
+1.6 Definition of Terms
+Administrator. The staff role that approves borrowers, reviews applications, releases loans, manages users and collectors, and views expenses, penalties, and reports.
+Borrower. The client who registers, applies after approval, responds to the agreement, and views that borrower’s own loan and payments.
+Collector. The staff role that views assigned clients and loans and records payments for those accounts.
+Debt-to-income ratio. Existing monthly obligations, with or without the proposed loan payment, divided by monthly gross income. FRAMS uses this ratio in the eligibility estimate.
+Eligibility estimate. The result Eligible, Conditionally Eligible, or Not Eligible produced from income, obligations, the requested loan, the term, and the configured limits. It is not a final approval.
+FRAMS. The Financial Risk Assessment and Micro-Lending System developed in this study.
+Installment schedule. The due amounts created when a loan is released, with due date, principal, interest, and status.
+Loan. The released amount recorded with its term, interest, schedule, and remaining balance.
+Payment. An amount recorded against a loan, including date, method, collector, and any penalty portion.
+Penalty. The amount computed on an unpaid installment whose due date has passed, using the rate for that loan’s payment frequency.
+Role-based access. The restriction of pages and records according to the signed-in role.
+CHAPTER 2
+REVIEW OF RELATED LITERATURE AND STUDIES
+This chapter reviews the local and foreign literature and studies that inform FRAMS. The same sources used in the researchers’ draft are retained. They are arranged as related literature, related studies, a synthesis, and the theoretical and conceptual framework required by the capstone guide. The discussion is used to show where a rule-based, office-level lending system fits. It does not claim that FRAMS reproduces the machine-learning models described in the foreign sources.
+2.1 Related Literature
+2.1.1 Local Literature
+Mina (2024) examined credit risk management practices of lending institutions in Nueva Ecija that offer microfinance loans. The institutions offered individual and group loans, with minimum and maximum amounts for first and later loans, and many loans were collected weekly. Officers obtained information mainly through interviews. The important checks were a credit review of the applicant, confirmation that the business existed, and confirmation that the borrower had no outstanding loan with another institution. Mina also reported weaknesses in these practices and proposed actions to reduce risks that cannot be avoided. The study used a descriptive design with four lending officers in San Isidro and Cabiao, Nueva Ecija.
+Juventud, Matigas, Himongala, and Galla (2023) discussed credit risk in microfinance loans for micro-enterprises. They described microfinance as a means for low-income households to stabilize cash and as support during periods of reduced income. They noted that limited credit data, the absence of credit bureaus in many settings, and over-indebtedness increase credit risk, and that most micro-borrowers have restricted income and little credit history. Group lending and selected forms of collateral were identified as practices used to reduce that risk.
+Estrellado (2024) studied the financial inclusion practices of lending institutions and the sustainability of micro-businesses in Sorsogon City for fiscal year 2024. The descriptive study involved 15 micro-business owners. It looked at years in operation, initial capital, loan amount, and daily sales, and it ranked strategies related to loan access, cash flow, profit and savings, repayment, and financial literacy. The common strategies included fewer loan requirements, use of the loan as capital, a choice of payment mode, and financial literacy education. Estrellado recommended credit information sharing, monitoring, need-based financial education, and better access to credit.
+Juventud, Matigas, Himongala, Galla, and Abiol (2023) assessed perceived credit risk of microfinance loans among micro-enterprise owners in Barangay Población, Iligan City. Using a descriptive-correlational design and 75 business owners, they found that many respondents were 51 years old or older, that cafeteria businesses were common, and that many had used microfinance loans. They again noted limited income and limited credit history, and the use of group lending, collateral, and cash-flow assessment. Age, business type, prior loan use, and loan experience did not significantly explain perceptions of credit risk.
+2.1.2 Foreign Literature
+Kou et al. (2022) examined machine-learning models for financial risk assessment on digital lending platforms. They reported that real-time data and adaptive risk algorithms improved approval accuracy and reduced default risk, and they emphasized systems that adjust risk scores as borrower behavior changes. That finding is relevant as literature on automated assessment. FRAMS does not implement a machine-learning score. It implements a rule-based eligibility estimate that the administrator still reviews.
+Bazarbash and Beaton (2022) studied fintech micro-lending in emerging economies. They reported that automated scoring with alternative data, such as transaction history and mobile use, can widen financial inclusion while holding risk at an acceptable level. The related point for this study is the value of a consistent assessment, not the use of mobile-use data, which FRAMS does not collect.
+Ghosh et al. (2023) described a microfinance system that uses predictive analytics to monitor delinquency, identify high-risk borrowers early, and adjust repayment terms. Chen and Li (2023) examined artificial intelligence that reassesses risk during the life of the loan, not only at approval, and reported better repayment compliance. Frost et al. (2024), in World Bank–supported work, analyzed digital lending platforms that combine agile development with real-time risk analytics and reported gains in efficiency, transparency, and borrower trust. Rahman and Hasan (2025) emphasized modular design, rapid revision, and continuous monitoring of changing borrower profiles.
+These foreign sources describe adaptive and predictive tools that are beyond the scope of FRAMS. They are retained because they show the direction of digital lending research. The present system answers a narrower need: one office application that computes an explainable eligibility estimate and keeps the loan and collection record in the same database.
+2.2 Related Studies
+2.2.1 Local Studies
+Santos (2023) reported that digital payments and mobile banking have changed the financial landscape in the Philippines, and that a micro-lending service needs web or online access if it is to remain reachable and trusted beside fintech applications. That finding supports the borrower portal in FRAMS.
+The Iligan City study of Juventud, Matigas, Himongala, Galla, and Abiol (2023), already cited as literature, is also a local empirical study. Its result, that many micro-borrowers lack a substantial credit history, supports the decision to base the FRAMS estimate on declared income and obligations rather than on a bureau score the office does not have.
+Ramirez (2024) developed and validated a tool for assessing risk and return in the gross loan portfolio of microfinance institutions in Occidental Mindoro. The study showed the value of a structured instrument for portfolio decisions. Campos (2024) described credit analysis and collection practices of microfinance institutions in Nueva Ecija and the growing place of digital tools in credit risk management. Penaso and Dagang (2025) examined loan management and non-performing loans in microfinance institutions in Northern Mindanao and linked structured loan handling to operational control. Together, these studies support digital records, a stated assessment rule, and monitoring of loans after release, which are functions of FRAMS.
+2.2.2 Foreign Studies
+LendStack (2025) and BlueOrchard (2025) were cited in the researchers’ draft for the spread of cloud-based lending platforms and for reported reductions in infrastructure cost. Those reports describe an industry trend toward hosted software. FRAMS is developed for local hosting on Apache, PHP, and MySQL, so the related point is web-based access, not a claim that this project is a cloud service or that it reduces cost by a stated percent.
+Khandani et al. (2018) reported that machine-learning models for consumer credit risk outperformed traditional scores. Batista and Montero (2020) studied a Brazilian digital micro-lending platform that combined automated scoring, borrower groups, and updates from repayment behavior, with higher approval for low-income borrowers and no increase in default. Chen et al. (2021) developed an early-warning monitor in China from transaction and behavior data. Juszczak et al. (2022) found that adaptive models which update risk from repayment behavior reduced defaults. Lopez and Martinez (2024), in OECD-supported work, pointed to modular architecture and continuous assessment as supports for reliability.
+These studies justify attention to repayment behavior after release. In FRAMS that attention is implemented as installment status, overdue penalties, payment history, and reports, not as a model that predicts default.
+2.3 Synthesis
+The local literature shows that microfinance lenders already practice credit checking, but much of it is manual, interview-based, and limited by the lack of a formal credit history (Mina, 2024; Juventud, Matigas, Himongala, & Galla, 2023; Juventud, Matigas, Himongala, Galla, & Abiol, 2023). Estrellado (2024) adds that access, repayment arrangements, and financial education matter to micro-business borrowers. Local studies then show the turn toward digital access and structured portfolio tools (Santos, 2023; Ramirez, 2024; Campos, 2024; Penaso & Dagang, 2025).
+The foreign literature and studies go further. They describe machine learning, alternative data, and continuous reassessment (Kou et al., 2022; Bazarbash & Beaton, 2022; Ghosh et al., 2023; Chen & Li, 2023; Frost et al., 2024; Rahman & Hasan, 2025; Khandani et al., 2018; Batista & Montero, 2020; Chen et al., 2021; Juszczak et al., 2022; Lopez & Martinez, 2024). Those capabilities are a research direction. They are not features of the system built in this study.
+The gap that FRAMS addresses is the absence of one web-based record that registers the borrower, stores the application and documents, applies a stated eligibility rule, releases the loan with a schedule, and tracks payments and penalties for a small lending office. FRAMS differs from the reviewed predictive systems because the eligibility result is explainable from income, debt, amount, term, and limits, and because the administrator remains the approving authority. Table 1 summarizes that comparison.
+Table 1
+Comparison of the reviewed focus and the FRAMS implementation
+Area
+Sources retained from the review
+What those sources emphasize
+What FRAMS implements
+Credit checking
+Mina (2024); Juventud et al. (2023)
+Interviews, business checks, and limited credit history
+An eligibility estimate from income, debt, amount, term, and limits
+Financial inclusion
+Estrellado (2024)
+Loan access, repayment choice, and financial education
+Online application and status viewing; no separate literacy module
+Digital lending records
+Santos (2023); Campos (2024); Penaso and Dagang (2025)
+Web access and structured loan monitoring
+Borrower portal, staff console, schedules, and reports
+Portfolio tools
+Ramirez (2024)
+A structured risk-return instrument
+Dashboard and period reports of loans, collections, and balances
+Predictive scoring
+Kou et al. (2022); Chen and Li (2023); Khandani et al. (2018)
+Machine learning and continuous rescoring
+Not implemented; the estimate is rule-based and is not an approval
+Delinquency monitoring
+Ghosh et al. (2023); Juszczak et al. (2022)
+Early warning from behavior data
+Overdue status, frequency-based penalties, and payment history
+2.4 Theoretical Framework
+The design of FRAMS is guided by four ideas already identified in the study. They are used here as the theoretical basis for the functions that were built.
+Financial risk management. The office must identify and manage the risk that a requested loan is not affordable. FRAMS applies this idea through the eligibility estimate and the administrator’s review, not through an automated rejection.
+Risk evaluation. Borrower information and the requested terms are evaluated against a stated rule. In FRAMS the rule is the debt-to-income limit, the minimum and maximum loan, and the minimum length of employment or business.
+Loan monitoring. Risk does not end at approval. FRAMS keeps the schedule, the balance, the overdue status, and the penalty so that repayment can be monitored after release.
+Timely notification. The people who must act are told inside the system. FRAMS writes notifications for events such as approval, application decisions, the agreement, and release, and it can send the matching email when mail is configured.
+Figure 1 shows how these ideas are applied. Literature on credit risk and micro-lending, including the sources in this chapter, informs the process. The inputs are the borrower, the income and obligations, the loan request and documents, later payments, and the three user roles. The process is FRAMS. The outputs are the eligibility status, the released loan and schedule, the updated balance and history, and the administrator’s reports. The outcome is a lending decision and a collection record that use the same data.
+Figure 1
+Conceptual framework of the Financial Risk Assessment and Micro-Lending System
+The earlier draft described the framework as an agile product with predictive analytics and financial-education support. Those items remain in the literature review as findings of other authors. They are not boxes in Figure 1, because they are not functions of the implemented system.
+CHAPTER 3
+METHODOLOGY AND DESIGN
+This chapter describes how FRAMS was planned and how the system is designed. The order follows the capstone guide: the development life cycle, the requirements, the system design, the technical specifications, and the development and testing environment. Respondent and instrument details from the researchers’ draft are placed in the planning phase, because that is when they were used.
+3.1 Project Development Life Cycle
+FRAMS was developed with an agile approach. Agile was chosen because the lending workflow is a series of related modules—registration, application, eligibility, agreement, release, payment, and reports—and each module could be built, checked, and revised before the next one was completed. The work is iterative in the sense that a module can return to an earlier phase when a rule, such as the eligibility limit or the penalty rate, has to be corrected. It is incremental in the sense that the borrower portal, the administrator review, and the collection pages were completed in sequence until the lending path was whole.
+Figure 2
+Agile phases used in the development of FRAMS
+Planning. The need for the system was identified from the difficulty of managing applications, credit review, and payment tracking in disconnected records. Selected borrowers, lenders, and administrators were the intended respondents for a survey conducted before development and for a later evaluation of the working system. The survey was meant to surface delays in applications, manual credit assessment, and payment-tracking problems. The evaluation respondents were meant to comment on errors, usability, and performance. The number of respondents and the accomplished forms are those of the researchers’ instrument and should be attached with the tally in the appendix. This chapter does not invent a respondent count.
+Instruments and procedures. The instruments identified for the study were a survey questionnaire, an interview guide for lenders and administrators, observation of loan processing and payment tracking, and secondary sources consisting of the literature in Chapter 2 and available lending records. Questionnaires were planned in printed and online form, and interviews in person or online. The procedure was to obtain consent, gather the responses, derive requirements, design and build FRAMS, test it, and revise it from the feedback.
+Requirements analysis. Functional and non-functional requirements were written from the objectives in Chapter 1 and from the lending workflow the office needs. They are listed in Section 3.2.
+System design. The architecture, the data relationships, and the process diagrams in Section 3.3 were prepared so that the pages and tables would follow one lending path.
+Development. The modules were programmed in PHP against MySQL. The order of work followed the path a loan takes: accounts and approval, the application and eligibility estimate, the agreement and release, then payments, penalties, and reports.
+Testing. Unit testing, integration testing, and user acceptance testing are the methods required for the report. They are described in Section 3.5 and carried out in Chapter 4.
+Deployment. The documented deployment is a local Apache, PHP, and MySQL environment, with XAMPP as the setup used for development. Further maintenance depends on the office after the study.
+3.2 Requirements Analysis
+3.2.1 Functional Requirements
+FRAMS is required to perform the following functions. Items that appeared in an earlier draft but are not part of this system, including loan restructuring, a separate risk-analyst role, and a machine-learning score, are not listed.
+Borrower and application. The system shall register a borrower, keep the account pending until an administrator approves or rejects it, and store client identity and contact information. An approved borrower shall submit personal details, employment and income, the loan product, amount, term, purpose, and payment frequency, and shall upload a government ID, proof of income, proof of billing, a selfie with the ID, and any additional file. The system shall compute an eligibility estimate and block an unaffordable request before documents are accepted as the next step. The administrator shall verify documents and approve, reject, or ask for more documents. The borrower shall see the application status.
+Loan computation and release. The system shall compute total interest as the original principal multiplied by the monthly rate and by the term in months, and total payable as principal plus that interest. The standard rate in the program is 5% per month. It shall generate the installment count from the payment frequency, divide principal and interest across the installments, and set the due dates. It shall store the agreement, the borrower’s acceptance or decline, the assigned collector, the loan number, and the schedule. Loan status shall reflect active, overdue, and paid conditions from the balance and the due dates.
+Payments and penalties. The system shall record a payment with amount, date, method, collector, an optional reference, and a penalty portion. It shall reject a payment that exceeds the remaining balance plus the penalty still due. It shall recompute the balance and the installment status. For an unpaid installment past its due date, it shall compute a penalty of 1%, 2%, 3%, or 5% of the installment amount for daily, weekly, semi-monthly, and monthly loans.
+Reports and notifications. The administrator dashboard shall summarize loans, amounts released and collected, outstanding balance, and overdue loans. Reports shall cover loans, payments, borrowers, collector performance, and a financial summary for a daily, monthly, yearly, or custom period, with export of the current view. The system shall store a notification for the user who must act and show the unread count.
+3.2.2 Non-Functional Requirements
+Security. Passwords shall be stored with a one-way hash. Pages shall require a session. Administrator, collector, and borrower shall reach only their own functions, and borrower and collector queries shall be limited to their own or assigned records. Forms that change data shall use a cross-site request token. Loan documents shall be limited to JPG, PNG, and PDF and to 8 MB.
+Reliability. The eligibility result, the schedule, and the balance shall be computed by the shared functions rather than typed as finished totals, so that the review page, the borrower page, and the reports read the same stored figures.
+Usability. Signed-in users shall share one sidebar and top bar. The application shall show the step the borrower is on. A failed login, upload, eligibility check, or payment shall return a message on the page.
+Performance and availability. The system is intended for ordinary office use on the local network. No numeric response-time target is stated here, because none was established as a measured requirement. The application is available when the local web server and database are running.
+3.3 System Design
+3.3.1 System Architecture
+FRAMS uses three tiers. The presentation tier is the browser. It shows the public site, the borrower pages, the collector dashboard, and the administrator console with HTML, CSS, JavaScript, and Bootstrap. The application tier is PHP. Shared includes perform authentication, the eligibility estimate, interest and schedule computation, penalties, mail, and role checks. The data tier is the MySQL database named lending_management. A payment page may request one loan’s balance as JSON. There is no separate public web service for the screens.
+Figure 3
+Three-tier architecture of FRAMS
+3.3.2 Data Design
+Figure 4 names the main entities and how they connect. A user owns a borrower registration, client record, applications, and notifications. A client is assigned to a collector and has loans. An application stores the eligibility status and the assessment, and it links to documents, reviews, an agreement, and a release. A release creates the loan and the installment rows. Payments belong to a loan. Expenses are office records used in reports. Eligibility is stored on the application. It is not a separate credit-score table, and the system does not keep a general activity-log table of every edit.
+Figure 4
+Main data relationships of FRAMS
+Table 2
+Principal entities and the information they store
+Entity
+Role in the design
+Information used by the system
+users
+Accounts for all roles
+Username, email, password hash, name, role, and status
+borrower_applications
+Registration review
+Registration details and the approval decision
+clients
+Borrower record
+Identity, contact data, and collector assignment
+loan_applications
+The request
+Income, terms, status, and the saved eligibility estimate
+loan_application_documents
+Requirements
+File path and verification status
+loan_agreements
+The contract step
+Text, acceptance, signature name, and time
+loan_releases
+The release event
+Loan number, amount, borrower, and collector
+loan_payment_schedules
+Installments
+Due date, principal, interest, amount due, and status
+loans
+The operational loan
+Total payable, frequency, and status
+payments
+Collections
+Amount, penalty portion, date, method, and receipt number
+notifications
+Alerts
+User, message, and read state
+expenses
+Office costs
+Description, amount, date, and category
+3.3.3 Process Design
+The actors are the borrower, the collector, and the administrator. A separate lender role and a risk-analyst role are not part of the implementation, so they are not drawn. Figure 5 shows the work of each actor. The borrower registers, applies, uploads documents, accepts or declines the agreement, and views the loan and receipts. The collector records payments for assigned loans. The administrator reviews, releases, assigns the collector, and opens users, expenses, penalties, and reports.
+Figure 5
+Use cases of FRAMS by role
+Figure 6 is the activity from registration through collection. The eligibility estimate sits before document review continues, and release sits only after the borrower accepts the agreement. Figure 7 is the sequence for that estimate: the borrower submits the figures, the application page calls the eligibility function, the result is saved, and the administrator reads the stored estimate on the review page. The administrator’s decision is a later action. The sequence does not approve the loan by itself.
+Figure 6
+Loan activity flow of FRAMS
+Figure 7
+Sequence of an eligibility check and administrator review
+3.4 Technical Specifications
+3.4.1 Hardware Requirements
+Table 3
+Hardware used for FRAMS
+Equipment
+Use
+Computer running the local web server and MySQL
+Hosts the application during development and office use
+Staff computer with a current browser
+Administrator and collector work
+Borrower phone or computer with a browser
+Registration, application, agreement, and loan viewing
+Local network
+Connects the browser to the office server
+3.4.2 Software Requirements
+Table 4
+Software used for FRAMS
+Component
+Software
+Server-side language
+PHP 8.1 or newer
+Database
+MySQL through PDO
+Web server
+Apache; XAMPP is the documented local package
+Browser interface
+HTML, CSS, JavaScript, and Bootstrap
+Charts and export
+Chart.js, with CSV export and browser scripts for Excel and PDF
+Mail
+PHPMailer for selected messages when mail is configured
+Operating system
+Windows for the development machine
+Browsers
+Google Chrome, Microsoft Edge, and Mozilla Firefox
+An earlier note that the system might use Laravel, Java, or Python does not describe the implementation. The running application is server-rendered PHP.
+3.5 Development and Testing Environment
+Development used a local XAMPP environment, MySQL, and a code editor, with the project files kept under version control. Testing follows the capstone requirement for unit testing, integration testing, and user acceptance testing.
+Unit testing. Login, registration, the eligibility gate, document upload, and the payment amount check are tested as separate rules. The expected results are stated in Chapter 4.
+Integration testing. The path from approval to login, from application to the saved estimate, from release to the schedule, and from payment to the balance, the borrower history, and the reports is tested as one chain.
+User acceptance testing. The respondents identified for evaluation use the tasks allowed for their role. Scores are computed from the questionnaires with the scale adopted for the study and are reported only after they are tallied. Chapter 4 leaves those cells open until the tally is attached.
+Security checks that belong to this environment are the role restrictions and the authentication checks. They are included in the integration cases. No separate penetration test is part of the recorded plan.

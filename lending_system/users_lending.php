@@ -37,6 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $errorMsg = 'All fields are required';
         } elseif ($password !== $confirmPassword) {
             $errorMsg = 'Passwords do not match';
+        } elseif (($passwordError = lendingValidatePassword($password)) !== '') {
+            $errorMsg = $passwordError;
         } else {
             // Check if username already exists
             $checkQuery = "SELECT user_id FROM users WHERE username = ?";
@@ -104,6 +106,8 @@ $roleDb = normalizeUserRole($role);
             $errorMsg = 'Password is required';
         } elseif ($password !== $confirmPassword) {
             $errorMsg = 'Passwords do not match';
+        } elseif (($passwordError = lendingValidatePassword($password)) !== '') {
+            $errorMsg = $passwordError;
         } else {
             // Hash password
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -504,7 +508,8 @@ function getUserRoleBadgeLabel(string $role): string {
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
+                            <input type="password" class="form-control" id="password" name="password" <?php echo lendingPasswordInputAttributes(); ?> required>
+                            <?php echo lendingPasswordHintHtml(); ?>
                         </div>
                         <div class="mb-3">
                             <label for="confirm_password" class="form-label">Confirm Password</label>
@@ -598,7 +603,8 @@ function getUserRoleBadgeLabel(string $role): string {
                         </div>
                         <div class="mb-3">
                             <label for="reset_password" class="form-label">New Password</label>
-                            <input type="password" class="form-control" id="reset_password" name="password" required>
+                            <input type="password" class="form-control" id="reset_password" name="password" <?php echo lendingPasswordInputAttributes(); ?> required>
+                            <?php echo lendingPasswordHintHtml(); ?>
                         </div>
                         <div class="mb-3">
                             <label for="reset_confirm_password" class="form-label">Confirm New Password</label>

@@ -1,0 +1,549 @@
+WEST PRIME HORIZON INSTITUTE, INC.
+College Department
+Pagadian City
+FINANCIAL RISK ASSESSMENT AND
+MICRO-LENDING SYSTEM (FRAMS)
+References, Questionnaires, and Forms
+Prepared for the capstone manuscript of
+Cabaraban, John Lloyd M.    ·    Mandawe, Mark Rexben S.
+Andulog, Joann R.    ·    Luy, Angel Ann S.
+Adviser: Mr. Antonio Llagas Jr.
+Client office: RJ and RR Finance Services
+Purok San Francisco, Poblacion, Sominot, Zamboanga del Sur
+Academic Year 2025–2026
+How to use this file
+This packet supports Chapters I to V. It has three parts. Part A is the reference list for the sources that can be matched to a published work, plus the author–year mentions in Chapter II that still need the copy the group actually read. Part B is the pre-development questionnaire, interview guide, and observation checklist. Part C is the evaluation form, tally sheet, test-record sheets, and acceptance form.
+The forms are blank. Chapter IV already reports weighted means and test results. Those figures should be copied onto the tally and test sheets only from the accomplished forms. This file does not invent individual answers.
+Respondents named in Chapter III: one lending administrator, one collector, and thirty borrowers of the Poblacion, Sominot office.
+Contents
+•  Part A. References
+•  A.1  References matched to published works
+•  A.2  Year notes for the manuscript
+•  A.3  Author–year mentions that still need the source copy
+•  Part B. Letters and pre-development instruments
+•  B.1  Request to conduct the study
+•  B.2  Informed consent
+•  B.3  Pre-development survey questionnaire
+•  B.4  Interview guide
+•  B.5  Observation checklist
+•  Part C. Evaluation, tally, and test forms
+•  C.1  Rating scale and weighted-mean formula
+•  C.2  User evaluation form
+•  C.3  Evaluation tally sheet
+•  C.4  Unit test record (UT-01 to UT-06)
+•  C.5  Integration test record (IT-01 to IT-07)
+•  C.6  Client acceptance form
+PART A
+References
+Entries in A.1 follow APA 7th edition and were checked against the published work. Journal titles and volume numbers are italicized in the usual APA way. A hanging indent is used.
+A.1  References matched to published works
+Bazarbash, M., & Beaton, K. (2020). Filling the gap: Digital credit and financial inclusion (IMF Working Paper No. WP/20/150). International Monetary Fund. https://doi.org/10.5089/9781513552477.001
+Campos, R. B., Jr. (2024). The impact of digitalization on credit risk management in microfinance institutions in Nueva Ecija, Philippines. Indian Journal of Information Sources and Services, 14(3). https://doi.org/10.51983/ijiss-2024.14.3.20
+Davis, F. D. (1989). Perceived usefulness, perceived ease of use, and user acceptance of information technology. MIS Quarterly, 13(3), 319–340. https://doi.org/10.2307/249008
+DeLone, W. H., & McLean, E. R. (2003). The DeLone and McLean model of information systems success: A ten-year update. Journal of Management Information Systems, 19(4), 9–30. https://doi.org/10.1080/07421222.2003.11045748
+Estrellado, G. E. (2024). Financial inclusion of lending institutions on sustainability of micro-businesses. United International Journal for Research & Technology, 5(7). https://uijrt.com/paper/financial-inclusion-lending-institutions-sustainability-micro-businesses
+International Organization for Standardization. (2011). Systems and software engineering—Systems and software Quality Requirements and Evaluation (SQuaRE)—System and software quality models (ISO/IEC 25010:2011).
+Juventud, W. M., Matigas, E. A. O., Himongala, J., Galla, M. R., & Abiol, M. J. D. (2023). Perceived credit risk of micro finance loans among micro-enterprises business in Población Iligan City. International Journal of Multidisciplinary: Applied Business and Education Research, 4(10), 3697–3702. https://doi.org/10.11594/ijmaber.04.10.22
+Khandani, A. E., Kim, A. J., & Lo, A. W. (2010). Consumer credit-risk models via machine-learning algorithms. Journal of Banking & Finance, 34(11), 2767–2787. https://doi.org/10.1016/j.jbankfin.2010.06.001
+Mina, J. C. (2024). The credit risk management practices of lending companies in Nueva Ecija: Basis for risk mitigating plan. International Journal of Advanced and Applied Sciences, 11(9), 134–142. https://doi.org/10.21833/ijaas.2024.09.015
+PayMongo. (n.d.). PayMongo API documentation. https://developers.paymongo.com/
+Penaso, C. P., & Dagang, A. L. (2025). Loan management practices as key drivers for the operation efficiency of microfinance institutions in Northern Mindanao, Philippines. International Journal of Research and Scientific Innovation, 12(5), 1715–1724. https://doi.org/10.51244/ijrsi.2025.120500162
+Ramirez, J. G. (2024). Establishment of gross loan portfolio risk-return questionnaire: Reliability and validity structure. Mindoro Journal of Social Sciences and Development Studies, 1(2), 18–26. https://journal.omsc.edu.ph/mjssds/article/view/11
+A.2  Year notes for the manuscript
+Use these notes when the in-text year in Chapter II is aligned with the published year.
+•  Chapter II cites Bazarbash and Beaton (2022). The IMF working paper was published in 2020. The matching entry above uses 2020.
+•  Chapter II cites Khandani et al. (2018) for machine-learning consumer credit models. The matching journal article by Khandani, Kim, and Lo was published in 2010.
+•  Chapter II cites Juventud, Matigas, Himongala, and Galla (2023) and, separately, the same group with Abiol (2023). Both descriptions match one published article, the Iligan City study listed above. A second Juventud paper was not found.
+•  Chapter II cites Ramirez (2024) for a structured risk-and-return instrument in Occidental Mindoro. That description matches the 2024 questionnaire article listed above.
+•  ISO/IEC 25010:2011 is listed because the evaluation form uses functionality, usability, reliability, security, and performance, the criteria named in Chapter III. The chapters themselves do not have to add this entry unless the group adopts it in the text.
+•  The PayMongo entry documents the Dynamic QR Ph service used by the collector payment page. Add it to Chapter II only if the group discusses that service in the literature.
+A.3  Author–year mentions that still need the source copy
+Chapter II names the works below. A full title, journal, and page range were not confirmed from a published copy, so none is invented here. Replace each line with the APA entry from the file the group read, or remove the citation if that file cannot be produced.
+•  Batista and Montero (2020)
+•  BlueOrchard (2025)
+•  Chen and Li (2023)
+•  Chen et al. (2021)
+•  Frost et al. (2024)
+•  Ghosh et al. (2023)
+•  Juszczak et al. (2022)
+•  Kou et al. (2022)
+•  LendStack (2025)
+•  Lopez and Martinez (2024)
+•  Rahman and Hasan (2025)
+•  Santos (2023)
+When a replacement entry is ready, insert it in alphabetical order in section A.1 and delete it from this list.
+PART B
+Letters and pre-development instruments
+These instruments match the data-gathering plan in Chapter III: a survey before development, an interview with the lending staff, observation of loan processing and payment tracking, and consent before any response is taken. The questions follow the problems stated in Chapter I: separate application files, manual credit checking, and payment records that are hard to monitor.
+B.1  Request to conduct the study
+Date: ______________________________
+The Proprietor / Lending Administrator
+RJ and RR Finance Services
+Purok San Francisco, Poblacion, Sominot, Zamboanga del Sur
+Dear Sir / Madam:
+We are Bachelor of Science in Information Technology students of West Prime Horizon Institute, Inc. We are developing the Financial Risk Assessment and Micro-Lending System (FRAMS) as our capstone project for Academic Year 2025–2026. The system is intended for your office. It covers borrower registration and approval, a five-step loan application with required documents, a rule-based eligibility estimate, loan agreement, release with collector assignment, installment schedules, payment recording, penalties, PayMongo Dynamic QR Ph for collector-started bank-transfer and e-wallet payments, expenses, notifications, and administrator reports.
+We respectfully request permission to:
+•  interview the lending administrator and the collector about the present lending and collection procedure;
+•  observe how applications, payments, and overdue accounts are currently recorded;
+•  administer the pre-development survey to the administrator, the collector, and borrowers who agree to answer; and
+•  after the prototype is ready, ask the same roles to accomplish the user evaluation form.
+Names, loan amounts, government ID numbers, and uploaded files will be kept for the study record and will not be published with identifying detail. Participation is voluntary. A respondent may stop at any time.
+We hope for your favorable action.
+Respectfully yours,
+_________________________________          _________________________________
+Cabaraban, John Lloyd M.                    Mandawe, Mark Rexben S.
+_________________________________          _________________________________
+Andulog, Joann R.                                Luy, Angel Ann S.
+Noted by:
+_________________________________
+Mr. Antonio Llagas Jr.
+Capstone Adviser
+Action of the office
+☐  Approved          ☐  Approved with the conditions written below          ☐  Deferred
+Conditions: ________________________________________________________________
+______________________________________________________________________________
+Signature over printed name: ______________________________    Date: ______________
+Position: ________________________________________________
+B.2  Informed consent
+Title of the study. Financial Risk Assessment and Micro-Lending System (FRAMS) for RJ and RR Finance Services.
+Researchers. Cabaraban, John Lloyd M.; Mandawe, Mark Rexben S.; Andulog, Joann R.; and Luy, Angel Ann S. Adviser: Mr. Antonio Llagas Jr. West Prime Horizon Institute, Inc., Pagadian City.
+Purpose. The study asks about the present way the office handles applications, credit checking, and payments, and later asks you to try the FRAMS prototype and rate it.
+What you will do. Depending on the schedule, you may answer a short survey, join an interview, be observed during an ordinary lending task, or rate the finished prototype. The evaluation uses a 5-point scale. You answer only the items for your role: administrator, collector, or borrower.
+Time. The survey or interview takes about 15 to 30 minutes. The prototype evaluation takes about 20 to 40 minutes, including the tasks for your role.
+Voluntary participation. You may skip a question or stop. Refusal will not affect your account, your loan, or your work at the office.
+Privacy. Your name on this form is for the researchers’ file. Reports use role counts (one administrator, one collector, and borrowers). Loan files, ID images, and payment receipts shown during a task stay in the system under the office’s own access rules. A borrower sees only that borrower’s records. A collector sees assigned accounts.
+Consent. I have read this page, or it has been explained to me. I agree to take part.
+☐  Survey before development     ☐  Interview     ☐  Observation     ☐  Prototype evaluation
+Printed name: _______________________________________________________________
+Role:  ☐ Administrator    ☐ Collector    ☐ Borrower
+Signature: ____________________________________    Date: ____________________
+Researcher who explained the form: ______________________    Date: ____________
+B.3  Pre-development survey questionnaire
+Use this form before FRAMS is built. It identifies delays in applications, manual credit checking, and payment tracking. One form is for each consenting respondent.
+Respondent no.: __________     Date: ______________     Form: printed ☐   online ☐
+Role:  ☐ Administrator    ☐ Collector    ☐ Borrower
+Years connected with the office or as its borrower:  ☐ less than 1    ☐ 1–3    ☐ 4–6    ☐ 7 or more
+Part I. How records are kept now
+Mark one box for each statement. 5 = Always, 4 = Often, 3 = Sometimes, 2 = Rarely, 1 = Never.
+No.
+Statement
+5
+4
+3
+2
+1
+1
+Borrower applications are written on paper or in separate files.
+2
+Updating a borrower’s name, address, or mobile number means editing more than one record.
+3
+Income, existing debts, and the requested loan are not kept on the same application record.
+4
+Supporting files (ID, proof of income, proof of billing) are stored apart from the application.
+5
+The office checks an existing unpaid loan by looking through separate records.
+6
+Payment entries and the remaining balance are kept in different sheets or notebooks.
+7
+An overdue account is noticed only when someone reviews the due dates by hand.
+8
+The collector’s assigned borrowers are tracked outside a single list.
+9
+A receipt number is written by hand.
+10
+A report of collections, expenses, and outstanding loans for one period takes a separate computation.
+Part II. What the office needs the system to do
+Mark Yes or No. These items follow the functions that FRAMS was built to provide.
+No.
+Needed function
+Yes
+No
+1
+Borrower registration that stays pending until an administrator approves it
+2
+A five-step loan application: personal data, employment and income, loan details, requirements, and review
+3
+Required files: valid government ID, proof of income, proof of billing, selfie holding the ID, and an additional supporting document (JPG, PNG, or PDF, up to 8 MB)
+4
+An eligibility estimate from income, existing obligations, amount, term, and office limits, shown to the reviewer and not treated as automatic approval
+5
+Loan agreement that the borrower can accept or decline
+6
+Loan release only after agreement, with an active collector and an installment schedule
+7
+Interest at 5% per month on the original principal, and penalties of 1%, 2%, 3%, and 5% for daily, weekly, semi-monthly, and monthly loans
+8
+Payment recording for cash, bank transfer, and e-wallet, with a receipt number
+9
+Collector-started PayMongo QR Ph for bank transfer or e-wallet, posted only after a verified payment notice
+10
+Notifications, and administrator reports for a daily, monthly, yearly, or custom period
+Part III. Open answers
+1. Where does an application usually slow down? _________________________________
+______________________________________________________________________________
+2. How is a borrower’s ability to pay decided today? _____________________________
+______________________________________________________________________________
+3. How is an overdue payment discovered? _______________________________________
+______________________________________________________________________________
+4. Which report do you need most in a week? ____________________________________
+______________________________________________________________________________
+B.4  Interview guide
+For the lending administrator and the collector. Use it in person or online. Write the answers in the space, or attach a numbered sheet. Do not interview a borrower with the staff questions.
+Interviewee role:  ☐ Administrator    ☐ Collector
+Date: ____________________     Place or link: ________________________________
+Interviewer: _______________________________________________________________
+1. Walk through one loan from the first inquiry to the release of money. Who touches the papers at each step?
+Answer: ______________________________________________________________________
+______________________________________________________________________________
+______________________________________________________________________________
+2. What identity and income facts do you ask for, and which files do you require?
+Answer: ______________________________________________________________________
+______________________________________________________________________________
+______________________________________________________________________________
+3. How do you decide that a requested amount is affordable? What limits do you use for the smallest loan, the largest loan, and existing monthly debts?
+Answer: ______________________________________________________________________
+______________________________________________________________________________
+______________________________________________________________________________
+4. Who may approve, reject, or ask for more documents? Is that decision written down?
+Answer: ______________________________________________________________________
+______________________________________________________________________________
+______________________________________________________________________________
+5. When is a collector assigned, and which accounts may that collector see?
+Answer: ______________________________________________________________________
+______________________________________________________________________________
+______________________________________________________________________________
+6. How is interest computed, and how are due dates set for daily, weekly, semi-monthly, and monthly payment?
+Answer: ______________________________________________________________________
+______________________________________________________________________________
+______________________________________________________________________________
+7. What happens when an installment date has passed and the installment is still unpaid? Is a penalty added, and at what rate?
+Answer: ______________________________________________________________________
+______________________________________________________________________________
+______________________________________________________________________________
+8. Which payment methods do borrowers actually use (cash, bank transfer, e-wallet)? Who writes the payment and the receipt?
+Answer: ______________________________________________________________________
+______________________________________________________________________________
+______________________________________________________________________________
+9. Would a QR Ph code started by the collector, and recorded only after the payment service confirms it, fit the way you collect?
+Answer: ______________________________________________________________________
+______________________________________________________________________________
+______________________________________________________________________________
+10. Which totals do you look at in a day or a month: released amount, collected amount, outstanding balance, overdue loans, expenses?
+Answer: ______________________________________________________________________
+______________________________________________________________________________
+______________________________________________________________________________
+11. What must the system refuse to do, so that a borrower cannot see another borrower’s loan and a collector cannot open an administrator page?
+Answer: ______________________________________________________________________
+______________________________________________________________________________
+______________________________________________________________________________
+B.5  Observation checklist
+Observe loan processing and payment tracking while the work is being done. Do not handle passbooks, ID cards, or cash. Record only the step you saw.
+Date: ______________     Time started: __________     Time ended: __________
+Observer: ______________________________     Place: RJ and RR Finance Services
+Activity observed:  ☐ New application    ☐ Follow-up    ☐ Payment    ☐ Overdue review
+No.
+What to look for
+Seen
+Not seen
+Note
+1
+Borrower identity is written on a form or a sheet
+2
+Income or business information is asked
+3
+Existing debts or another unpaid loan is checked
+4
+ID, income proof, or billing proof is received
+5
+The amount, term, and payment frequency are stated
+6
+A staff member, not the borrower alone, decides approval
+7
+A collector name is attached to the account
+8
+A payment amount, date, and method are written
+9
+A receipt or acknowledgment is given
+10
+The remaining balance is recomputed after the payment
+11
+An overdue installment is identified from a due date
+12
+More than one notebook, folder, or spreadsheet is used for the same borrower
+Short account of the sequence observed: ________________________________________
+______________________________________________________________________________
+______________________________________________________________________________
+Observer’s signature: ______________________________
+PART C
+Evaluation, tally, and test forms
+Use this part after the prototype runs. The five criteria are those named in Chapter III: functionality, usability, reliability, security, and performance. They follow the same groupings used in ISO/IEC 25010:2011. Each respondent answers only the section for that respondent’s role, then the shared items that every role can judge from the screens that role is allowed to open.
+C.1  Rating scale and weighted-mean formula
+Chapter IV interprets 4.21–5.00 as Very High. The full scale used with that band is below.
+Scale
+Verbal description
+Weighted-mean range
+5
+Strongly agree
+4.21–5.00    Very High
+4
+Agree
+3.41–4.20    High
+3
+Moderately agree
+2.61–3.40    Moderate
+2
+Disagree
+1.81–2.60    Low
+1
+Strongly disagree
+1.00–1.80    Very Low
+Frequency (f) is the number of respondents who chose a scale value. N is the number who rated that item. The weight (w) is the scale value 5, 4, 3, 2, or 1.
+Weighted mean  =  (5f5 + 4f4 + 3f3 + 2f2 + 1f1)  ÷  N
+Percentage  =  (f ÷ N) × 100
+Planned N for the office evaluation: 1 administrator + 1 collector + 30 borrowers = 32. An item that only one role answers uses that role’s N (1, 1, or 30), not 32.
+C.2  User evaluation form
+FRAMS user evaluation form
+RJ and RR Finance Services  ·  Academic Year 2025–2026
+Respondent no.: __________     Date: ______________     Form no.: __________
+Role:  ☐ Administrator    ☐ Collector    ☐ Borrower
+Directions. Try the tasks for your role first. Then rate only the statements under your role and the statements marked “All roles.” Use 5 for strongly agree through 1 for strongly disagree. Leave the other role’s section blank.
+Tasks before you rate
+Role
+Do these tasks, then rate
+Administrator
+Sign in on the staff login. Approve or reject a borrower registration. Open a loan application, its documents, and the eligibility estimate. Generate the agreement. Release a loan to an active collector. Open penalties, expenses, and one report for a chosen period. Read a notification. Change the password on the profile page.
+Collector
+Sign in on the staff login. Open only assigned clients and loans. Record a cash payment that does not exceed the balance plus the penalty due. If the method is bank transfer or e-wallet, start a PayMongo QR Ph code and confirm that the balance does not change until payment is verified. Open the receipt.
+Borrower
+Register, or sign in after approval. Complete the five-step application and upload the five required files. Read the eligibility result. Accept or decline the agreement by entering your name or a reason. Open My Loan, the schedule, the payment history, and a notification.
+A. Administrator only
+No.
+Statement
+5
+4
+3
+2
+1
+1
+I can approve or reject a borrower registration, and the account stays pending until I approve it.
+2
+The review page shows the uploaded documents, the application status, and the eligibility estimate.
+3
+The estimate is labeled Eligible, Conditionally Eligible, or Not Eligible, and it does not release the loan by itself.
+4
+I can generate the agreement, assign an active collector, and release the loan with a loan number and installment rows.
+5
+Reports for a daily, monthly, yearly, or custom period can be exported as a PDF.
+6
+A collector or a borrower cannot open an administrator page.
+B. Collector only
+No.
+Statement
+5
+4
+3
+2
+1
+7
+I see the clients and loans assigned to me, and I do not need another collector’s accounts to do my work.
+8
+The payment form shows the remaining balance and the penalty due before I save.
+9
+A payment larger than the remaining balance plus the penalty due is refused.
+10
+For bank transfer or e-wallet, I can start a PayMongo QR Ph code.
+11
+The loan balance stays the same while the QR code is only displayed.
+12
+After a recorded payment, I can open a receipt.
+C. Borrower only
+No.
+Statement
+5
+4
+3
+2
+1
+13
+Registration tells me to wait for review, and I cannot use the borrower pages before approval.
+14
+The application shows which of the five steps I am on.
+15
+The loan-details step stops me when the amount is outside the office limits or is not affordable.
+16
+I must upload a valid government ID, proof of income, proof of billing, a selfie holding the ID, and an additional supporting document.
+17
+I can accept the agreement by entering my name, or decline it with a reason.
+18
+My Loan, the schedule, and the payment history show only my own released loan.
+D. All roles — rate the screens you were allowed to open
+No.
+Statement
+5
+4
+3
+2
+1
+19
+Functionality. The tasks for my role can be completed in FRAMS.
+20
+Usability. The sidebar, top bar, labels, and buttons are clear.
+21
+Usability. When a login, upload, eligibility rule, or payment amount fails, the page tells me what to correct.
+22
+Reliability. A record I saved appears again when I open the related page.
+23
+Security. I reach only the pages and records of my role.
+24
+Security. I can change my password from the profile page.
+25
+Performance. The pages I used opened and saved within a time that is acceptable for office work.
+26
+Performance. Opening a report or a loan list for the records I may see did not stall the page.
+Comments
+What should stay as it is? _____________________________________________________
+______________________________________________________________________________
+What should be corrected? _____________________________________________________
+______________________________________________________________________________
+I finished the tasks for my role and answered only the statements I could judge.
+Signature: ________________________________    Date: __________________________
+C.3  Evaluation tally sheet
+One row per statement in Form C.2. Use N = 1 for administrator-only items, N = 1 for collector-only items, N = 30 for borrower-only items, and N = 32 for items answered by all roles, unless a respondent left an item blank. Then use the number who actually rated it.
+Chapter IV Table 4.7 reports these criterion means: functionality 4.48, usability 4.41, reliability 4.39, security 4.36, and performance 4.33, each interpreted as Very High. Enter those means in the summary below only after this tally produces them.
+Item
+5
+4
+3
+2
+1
+Σfw
+N
+WM
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+Criterion summary
+Group the item means as follows, then average the items in the group. Functionality: items 1–6, 7–12, 13–18, and 19, using only the items the role was asked to answer, then combine by the plan in your tally notes. A simpler office tally is allowed: compute one weighted mean per criterion from the items tagged with that criterion, with each respondent counted once.
+Criterion
+Items to pool
+Weighted mean
+Interpretation
+Functionality
+Role task items plus item 19
+Usability
+Items 20 and 21
+Reliability
+Item 22
+Security
+Items 23 and 24
+Performance
+Items 25 and 26
+Tallied by: ______________________________    Date: ________________
+Checked by: ______________________________    Date: ________________
+C.4  Unit test record (UT-01 to UT-06)
+Test each rule on the running prototype. Write what the screen did. Chapter IV reports these six cases as passed. This sheet is the record that supports that report.
+Tester: ______________________________     Date: ______________     Build / PC: ________
+ID
+Steps
+Expected result
+Actual result
+Remarks
+P/F
+UT-01
+Sign in as an administrator, a collector, and a borrower with an active account and a matching password.
+The session starts and the dashboard for that role opens.
+UT-02
+Sign in with a wrong password or with an inactive account.
+The protected pages do not open. An error is shown.
+UT-03
+Register a new borrower.
+A pending account is stored and the registration success page is shown.
+UT-04
+On loan details, enter an amount outside the debt-to-income limit or the loan limits (₱3,000 to ₱500,000).
+The wizard stays on that step and names the limit that failed.
+UT-05
+Upload a file that is not JPG, PNG, or PDF, or that is larger than 8 MB.
+The file is refused and is not stored.
+UT-06
+Submit a payment greater than the remaining balance plus the penalty still due.
+The payment is rejected and no payment row is saved.
+P/F means Pass or Fail. Penalty rates used by UT and the payment screens: daily 1%, weekly 2%, semi-monthly 3%, monthly 5% of the overdue installment. Interest used by the schedule: 5% per month on the original principal.
+C.5  Integration test record (IT-01 to IT-07)
+Each case continues from the record written by the previous module. Chapter IV reports these seven cases as passed.
+Tester: ______________________________     Date: ______________
+ID
+Steps
+Expected result
+Actual result
+Remarks
+P/F
+IT-01
+Register a borrower, approve the account, then sign in at the borrower login.
+The borrower dashboard opens for that account.
+IT-02
+Submit the five-step application, then open it on the administrator review page.
+The review shows the documents, the status, and the eligibility estimate.
+IT-03
+Accept the agreement, then release the loan to an active collector.
+A loan number RJRR-LOAN-year-###### is created, installment rows are stored, and the borrower can see the schedule.
+IT-04
+Record a payment within the remaining balance and the penalty due.
+The balance decreases, and the same payment appears in borrower history and the payments list. The receipt number uses RJRR-YYYYMMDD-######.
+IT-05
+Record a payment with a penalty portion on an overdue loan, then open Penalties.
+The penalties page shows the penalty collected for that loan and period.
+IT-06
+Open a report for a period that includes the payment date.
+The report totals include that payment. Export saves a PDF.
+IT-07
+While signed in as a collector or a borrower, open an administrator page.
+Access is denied or the user is returned to that user’s own dashboard.
+QR Ph check to attach to IT-04 when the method is bank transfer or e-wallet. Only a collector can start the code. Displaying the code, returning to the browser, or waiting for a local timer does not post the payment. A verified PayMongo webhook posts it. A verified QR Ph payment is not deleted from the list.
+QR Ph loan no.: ________________    Result: ☐ Not posted before verification    ☐ Posted after verification
+Tester’s signature: ______________________________    Date: ________________
+C.6  Client acceptance form
+RJ and RR Finance Services
+Acceptance of the FRAMS prototype
+Date: ______________________________
+We reviewed the Financial Risk Assessment and Micro-Lending System prepared for this office. The review covered the work of the administrator, the collector, and the borrower: registration and approval, the five-step application and required documents, the eligibility estimate as a guide for the reviewer, the agreement, loan release with a collector and a schedule, payment recording, penalties, collector-started PayMongo QR Ph, expenses, notifications, and administrator PDF reports.
+The office decision is:
+☐  Accepted for continued local use, with ordinary maintenance.
+☐  Accepted with the conditions listed below.
+☐  Not accepted. The reasons are listed below.
+Conditions or reasons: ________________________________________________________
+______________________________________________________________________________
+______________________________________________________________________________
+This form does not transfer ownership of the source code. It records the office’s decision on the prototype described in the capstone manuscript.
+For the office
+Name: ______________________________________________________________________
+Position: ___________________________________________________________________
+Signature: ____________________________________    Date: ____________________
+For the researchers
+Received by: ________________________________________________________________
+Signature: ____________________________________    Date: ____________________
+Noted by the adviser: Mr. Antonio Llagas Jr.    Signature: ________________    Date: ________
+End of the packet
+Attach accomplished copies of B.2, B.3, C.2, C.3, C.4, C.5, and C.6 to the manuscript as Appendix B.

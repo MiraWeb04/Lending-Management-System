@@ -17,7 +17,7 @@ function assertPaymongoWebhookCheck(bool $condition, string $label): void
 }
 
 $secret = 'whsk_test_fixture_only';
-$timestamp = '1781122334';
+$timestamp = (string)time();
 $body = json_encode([
     'data' => [
         'id' => 'evt_test_fixture',
@@ -57,11 +57,27 @@ assertPaymongoWebhookCheck(
 );
 assertPaymongoWebhookCheck(
     !lendingVerifyPaymongoWebhookSignature($body, 't=' . $timestamp . ',li=' . $signature, $secret),
-    'requires the test-mode signature field'
+    'requires the test-mode te signature field when PAYMONGO_MODE is test'
+);
+$liveSignature = hash_hmac('sha256', $timestamp . '.' . $body, $secret);
+$liveHeader = 't=' . $timestamp . ',te=,li=' . $liveSignature;
+assertPaymongoWebhookCheck(
+    lendingVerifyPaymongoWebhookSignature($body, $liveHeader, $secret, 'live'),
+    'accepts a valid live signature when verified in live mode'
 );
 assertPaymongoWebhookCheck(
-    !lendingVerifyPaymongoWebhookSignature($body, 't=' . $timestamp . ',te=' . $signature, $secret),
-    'requires the complete PayMongo signature header structure'
+    !lendingVerifyPaymongoWebhookSignature($body, 't=' . $timestamp . ',te=notahexsignature', $secret),
+    'rejects a malformed test signature value'
+);
+assertPaymongoWebhookCheck(
+    !lendingVerifyPaymongoWebhookSignature($body, 't=' . $timestamp . ',te=,li=', $secret, 'live'),
+    'rejects a live webhook without a live li signature'
+);
+$staleTimestamp = (string)(time() - 3600);
+$staleSignature = hash_hmac('sha256', $staleTimestamp . '.' . $body, $secret);
+assertPaymongoWebhookCheck(
+    !lendingVerifyPaymongoWebhookSignature($body, 't=' . $staleTimestamp . ',te=' . $staleSignature . ',li=', $secret),
+    'rejects a correctly signed webhook older than five minutes'
 );
 
 $event = lendingParsePaymongoWebhookEvent($body);
@@ -141,4 +157,104 @@ assertPaymongoWebhookCheck(
 assertPaymongoWebhookCheck(
     !lendingPaymongoWebhookMatchesTransaction($transaction, ['amount' => 12500, 'currency' => 'USD']),
     'rejects a different currency'
+);
+
+$pendingQr = [
+    'amount' => '125.00',
+    'currency' => 'PHP',
+    'qr_image_url' => 'data:image/png;base64,aaaa',
+    'expires_at' => date('Y-m-d H:i:s', time() - 60),
+    'provider_status' => 'awaiting_next_action',
+];
+$awaitingIntent = [
+    'id' => 'pi_test_fixture',
+    'type' => 'payment_intent',
+    'attributes' => [
+        'amount' => 12500,
+        'currency' => 'PHP',
+        'livemode' => false,
+        'status' => 'awaiting_payment_method',
+        'payments' => [],
+    ],
+];
+assertPaymongoWebhookCheck(
+    lendingPaymongoQrphInterpretIntent($pendingQr, $awaitingIntent)['action'] === 'expire',
+    'expires a QR after the stored window when PayMongo reports awaiting_payment_method'
+);
+$awaitingNextActionIntent = $awaitingIntent;
+$awaitingNextActionIntent['attributes']['status'] = 'awaiting_next_action';
+assertPaymongoWebhookCheck(
+    lendingPaymongoQrphInterpretIntent($pendingQr, $awaitingNextActionIntent)['action'] === 'expire',
+    'expires a QR after the stored window when PayMongo still reports awaiting_next_action'
+);
+$stillValid = $pendingQr;
+$stillValid['expires_at'] = date('Y-m-d H:i:s', time() + 600);
+assertPaymongoWebhookCheck(
+    lendingPaymongoQrphInterpretIntent($stillValid, $awaitingIntent)['action'] === 'pending',
+    'does not expire a QR before the stored validity window'
+);
+$noQr = $pendingQr;
+$noQr['qr_image_url'] = '';
+assertPaymongoWebhookCheck(
+    lendingPaymongoQrphInterpretIntent($noQr, $awaitingIntent)['action'] === 'pending',
+    'does not expire a transaction that never received a QR image'
+);
+$paidIntent = $awaitingIntent;
+$paidIntent['attributes']['status'] = 'succeeded';
+$paidIntent['attributes']['payments'] = [[
+    'id' => 'pay_test_fixture',
+    'type' => 'payment',
+    'attributes' => [
+        'amount' => 12500,
+        'currency' => 'PHP',
+        'status' => 'paid',
+        'livemode' => false,
+        'source' => ['type' => 'qrph'],
+    ],
+]];
+$paidDecision = lendingPaymongoQrphInterpretIntent($pendingQr, $paidIntent);
+assertPaymongoWebhookCheck(
+    $paidDecision['action'] === 'post' && $paidDecision['provider_payment_id'] === 'pay_test_fixture',
+    'posts only a succeeded test-mode QR Ph payment with the stored amount'
+);
+$wrongAmount = $paidIntent;
+$wrongAmount['attributes']['amount'] = 10000;
+$wrongAmount['attributes']['payments'][0]['attributes']['amount'] = 10000;
+assertPaymongoWebhookCheck(
+    lendingPaymongoQrphInterpretIntent($pendingQr, $wrongAmount)['action'] === 'review',
+    'requires review when the retrieved payment amount does not match'
+);
+$liveIntent = $paidIntent;
+$liveIntent['attributes']['livemode'] = true;
+assertPaymongoWebhookCheck(
+    lendingPaymongoQrphInterpretIntent($pendingQr, $liveIntent)['action'] === 'review',
+    'requires review when a live Payment Intent is retrieved while PAYMONGO_MODE is test'
+);
+$failedIntent = $awaitingIntent;
+$failedIntent['attributes']['payments'] = [[
+    'id' => 'pay_test_failed_fixture',
+    'type' => 'payment',
+    'attributes' => ['amount' => 12500, 'currency' => 'PHP', 'status' => 'failed', 'livemode' => false],
+]];
+$failedBeforeExpiry = $stillValid;
+assertPaymongoWebhookCheck(
+    lendingPaymongoQrphInterpretIntent($failedBeforeExpiry, $failedIntent)['action'] === 'fail',
+    'marks a failed provider payment without posting a repayment'
+);
+
+$intentEvent = [
+    'type' => 'payment_intent.awaiting_payment_method',
+    'resource' => ['id' => 'pi_documentedfixture', 'type' => 'payment_intent', 'attributes' => ['status' => 'awaiting_payment_method']],
+];
+assertPaymongoWebhookCheck(
+    lendingPaymongoWebhookCandidateIntentId($intentEvent) === 'pi_documentedfixture',
+    'reads the Payment Intent ID from a documented payment_intent event'
+);
+$undocumentedExpiry = [
+    'type' => 'qrph.expired',
+    'resource' => ['id' => 'qr_undocumented_fixture', 'type' => 'qrph', 'attributes' => ['status' => 'expired']],
+];
+assertPaymongoWebhookCheck(
+    lendingPaymongoWebhookCandidateIntentId($undocumentedExpiry) === '',
+    'does not invent a Payment Intent ID for a QR expiry payload that has none'
 );

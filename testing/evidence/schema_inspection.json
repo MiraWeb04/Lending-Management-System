@@ -1,0 +1,1517 @@
+{
+    "engine": "10.4.32-MariaDB",
+    "migration_files": [
+        "database\/migrations\/20261014_create_paymongo_qrph_transactions.sql",
+        "database\/migrations\/20261014_add_paymongo_qrph_webhooks.sql"
+    ],
+    "lending_management": {
+        "tables": [
+            "borrower_applications",
+            "clients",
+            "contact_inquiries",
+            "contact_inquiry_replies",
+            "email_notifications",
+            "expenses",
+            "loan_agreements",
+            "loan_application_documents",
+            "loan_application_reviews",
+            "loan_applications",
+            "loan_payment_schedules",
+            "loan_release_notifications",
+            "loan_releases",
+            "loans",
+            "notifications",
+            "password_resets",
+            "payments",
+            "paymongo_qrph_transactions",
+            "paymongo_qrph_webhook_events",
+            "users"
+        ],
+        "missing_required": [],
+        "foreign_keys": [
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "CONSTRAINT_NAME": "fk_paymongo_qrph_webhook_transaction",
+                "COLUMN_NAME": "transaction_id",
+                "REFERENCED_TABLE_NAME": "paymongo_qrph_transactions",
+                "REFERENCED_COLUMN_NAME": "id"
+            }
+        ],
+        "indexes_on_required_tables": [
+            {
+                "TABLE_NAME": "borrower_applications",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "clients",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "client_id"
+            },
+            {
+                "TABLE_NAME": "expenses",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "expense_id"
+            },
+            {
+                "TABLE_NAME": "loans",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "loan_id"
+            },
+            {
+                "TABLE_NAME": "loan_agreements",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "loan_applications",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "loan_application_documents",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "loan_application_reviews",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "loan_payment_schedules",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "loan_releases",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "notifications",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "password_resets",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "password_resets",
+                "INDEX_NAME": "token",
+                "NON_UNIQUE": 1,
+                "columns_list": "token"
+            },
+            {
+                "TABLE_NAME": "password_resets",
+                "INDEX_NAME": "user_id",
+                "NON_UNIQUE": 1,
+                "columns_list": "user_id"
+            },
+            {
+                "TABLE_NAME": "payments",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "payment_id"
+            },
+            {
+                "TABLE_NAME": "payments",
+                "INDEX_NAME": "receipt_number_unique",
+                "NON_UNIQUE": 0,
+                "columns_list": "receipt_number"
+            },
+            {
+                "TABLE_NAME": "payments",
+                "INDEX_NAME": "uq_payments_paymongo_qrph_transaction_id",
+                "NON_UNIQUE": 0,
+                "columns_list": "paymongo_qrph_transaction_id"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "paymongo_qrph_borrower_created",
+                "NON_UNIQUE": 1,
+                "columns_list": "borrower_user_id,created_at"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "paymongo_qrph_collector_created",
+                "NON_UNIQUE": 1,
+                "columns_list": "collector_id,created_at"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "paymongo_qrph_expires_at",
+                "NON_UNIQUE": 1,
+                "columns_list": "expires_at"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "paymongo_qrph_internal_reference_unique",
+                "NON_UNIQUE": 0,
+                "columns_list": "internal_reference"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "paymongo_qrph_loan_status",
+                "NON_UNIQUE": 1,
+                "columns_list": "loan_id,status"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "paymongo_qrph_payment_intent_unique",
+                "NON_UNIQUE": 0,
+                "columns_list": "payment_intent_id"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "uq_paymongo_qrph_payment_id",
+                "NON_UNIQUE": 0,
+                "columns_list": "payment_id"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "uq_paymongo_qrph_provider_payment_id",
+                "NON_UNIQUE": 0,
+                "columns_list": "provider_payment_id"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "INDEX_NAME": "idx_paymongo_qrph_webhook_received",
+                "NON_UNIQUE": 1,
+                "columns_list": "received_at"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "INDEX_NAME": "idx_paymongo_qrph_webhook_transaction",
+                "NON_UNIQUE": 1,
+                "columns_list": "transaction_id"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "INDEX_NAME": "uq_paymongo_qrph_webhook_event_id",
+                "NON_UNIQUE": 0,
+                "columns_list": "event_id"
+            },
+            {
+                "TABLE_NAME": "users",
+                "INDEX_NAME": "employee_id",
+                "NON_UNIQUE": 0,
+                "columns_list": "employee_id"
+            },
+            {
+                "TABLE_NAME": "users",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "user_id"
+            },
+            {
+                "TABLE_NAME": "users",
+                "INDEX_NAME": "username",
+                "NON_UNIQUE": 0,
+                "columns_list": "username"
+            }
+        ],
+        "selected_columns": [
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "loan_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "PRI"
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "client_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "loan_amount",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "interest",
+                "COLUMN_TYPE": "decimal(8,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "total_payable",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "daily_payment",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "date_released",
+                "COLUMN_TYPE": "date",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "due_date",
+                "COLUMN_TYPE": "date",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "status",
+                "COLUMN_TYPE": "varchar(50)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "collector_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "loan_number",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "release_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "payment_frequency",
+                "COLUMN_TYPE": "varchar(50)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "loan_term",
+                "COLUMN_TYPE": "varchar(50)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "agreement_status",
+                "COLUMN_TYPE": "varchar(50)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "released_by",
+                "COLUMN_TYPE": "varchar(150)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "loan_type",
+                "COLUMN_TYPE": "varchar(80)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "loan_purpose",
+                "COLUMN_TYPE": "text",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "payment_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "PRI"
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "receipt_number",
+                "COLUMN_TYPE": "varchar(50)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": "UNI"
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "collector_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "client_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "receipt_generated_at",
+                "COLUMN_TYPE": "datetime",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "payment_method",
+                "COLUMN_TYPE": "varchar(50)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "reference_number",
+                "COLUMN_TYPE": "varchar(255)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "paymongo_qrph_transaction_id",
+                "COLUMN_TYPE": "bigint(20) unsigned",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": "UNI"
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "remarks",
+                "COLUMN_TYPE": "text",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "loan_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "payment_date",
+                "COLUMN_TYPE": "date",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "amount_paid",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "collector_name",
+                "COLUMN_TYPE": "varchar(150)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "interest_paid",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "penalty_paid",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "principal_paid",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "notes",
+                "COLUMN_TYPE": "text",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "id",
+                "COLUMN_TYPE": "bigint(20) unsigned",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "PRI"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "internal_reference",
+                "COLUMN_TYPE": "varchar(40)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "UNI"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "payment_intent_id",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": "UNI"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "payment_method_id",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "provider_payment_id",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": "UNI"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "payment_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": "UNI"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "paid_at",
+                "COLUMN_TYPE": "datetime",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "loan_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "MUL"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "client_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "borrower_user_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "MUL"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "initiated_by_user_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "collector_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": "MUL"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "selected_method",
+                "COLUMN_TYPE": "varchar(30)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "amount",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "penalty_paid",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "currency",
+                "COLUMN_TYPE": "char(3)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "status",
+                "COLUMN_TYPE": "enum('pending','failed','expired','succeeded','review_required')",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "provider_status",
+                "COLUMN_TYPE": "varchar(60)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "qr_image_url",
+                "COLUMN_TYPE": "longtext",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "failure_message",
+                "COLUMN_TYPE": "text",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "expires_at",
+                "COLUMN_TYPE": "datetime",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "MUL"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "created_at",
+                "COLUMN_TYPE": "datetime",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "updated_at",
+                "COLUMN_TYPE": "datetime",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "id",
+                "COLUMN_TYPE": "bigint(20) unsigned",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "PRI"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "event_id",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "UNI"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "event_type",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "transaction_id",
+                "COLUMN_TYPE": "bigint(20) unsigned",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": "MUL"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "provider_payment_id",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "payment_intent_id",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "amount_centavos",
+                "COLUMN_TYPE": "bigint(20)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "currency",
+                "COLUMN_TYPE": "varchar(10)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "provider_status",
+                "COLUMN_TYPE": "varchar(50)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "livemode",
+                "COLUMN_TYPE": "tinyint(1)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "payload_sha256",
+                "COLUMN_TYPE": "char(64)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "signature_verified",
+                "COLUMN_TYPE": "tinyint(1)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "processing_status",
+                "COLUMN_TYPE": "enum('processed','ignored','review_required')",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "details",
+                "COLUMN_TYPE": "varchar(1000)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "received_at",
+                "COLUMN_TYPE": "datetime",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "MUL"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "processed_at",
+                "COLUMN_TYPE": "datetime",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            }
+        ]
+    },
+    "frams_capstone_test": {
+        "tables": [
+            "borrower_applications",
+            "clients",
+            "contact_inquiries",
+            "contact_inquiry_replies",
+            "email_notifications",
+            "expenses",
+            "loan_agreements",
+            "loan_application_documents",
+            "loan_application_reviews",
+            "loan_applications",
+            "loan_payment_schedules",
+            "loan_release_notifications",
+            "loan_releases",
+            "loans",
+            "notifications",
+            "password_resets",
+            "payments",
+            "paymongo_qrph_transactions",
+            "paymongo_qrph_webhook_events",
+            "users"
+        ],
+        "missing_required": [],
+        "foreign_keys": [
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "CONSTRAINT_NAME": "fk_paymongo_qrph_webhook_transaction",
+                "COLUMN_NAME": "transaction_id",
+                "REFERENCED_TABLE_NAME": "paymongo_qrph_transactions",
+                "REFERENCED_COLUMN_NAME": "id"
+            }
+        ],
+        "indexes_on_required_tables": [
+            {
+                "TABLE_NAME": "borrower_applications",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "clients",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "client_id"
+            },
+            {
+                "TABLE_NAME": "expenses",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "expense_id"
+            },
+            {
+                "TABLE_NAME": "loans",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "loan_id"
+            },
+            {
+                "TABLE_NAME": "loan_agreements",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "loan_applications",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "loan_application_documents",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "loan_application_reviews",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "loan_payment_schedules",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "loan_releases",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "notifications",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "password_resets",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "password_resets",
+                "INDEX_NAME": "token",
+                "NON_UNIQUE": 1,
+                "columns_list": "token"
+            },
+            {
+                "TABLE_NAME": "password_resets",
+                "INDEX_NAME": "user_id",
+                "NON_UNIQUE": 1,
+                "columns_list": "user_id"
+            },
+            {
+                "TABLE_NAME": "payments",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "payment_id"
+            },
+            {
+                "TABLE_NAME": "payments",
+                "INDEX_NAME": "receipt_number_unique",
+                "NON_UNIQUE": 0,
+                "columns_list": "receipt_number"
+            },
+            {
+                "TABLE_NAME": "payments",
+                "INDEX_NAME": "uq_payments_paymongo_qrph_transaction_id",
+                "NON_UNIQUE": 0,
+                "columns_list": "paymongo_qrph_transaction_id"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "paymongo_qrph_borrower_created",
+                "NON_UNIQUE": 1,
+                "columns_list": "borrower_user_id,created_at"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "paymongo_qrph_collector_created",
+                "NON_UNIQUE": 1,
+                "columns_list": "collector_id,created_at"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "paymongo_qrph_expires_at",
+                "NON_UNIQUE": 1,
+                "columns_list": "expires_at"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "paymongo_qrph_internal_reference_unique",
+                "NON_UNIQUE": 0,
+                "columns_list": "internal_reference"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "paymongo_qrph_loan_status",
+                "NON_UNIQUE": 1,
+                "columns_list": "loan_id,status"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "paymongo_qrph_payment_intent_unique",
+                "NON_UNIQUE": 0,
+                "columns_list": "payment_intent_id"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "uq_paymongo_qrph_payment_id",
+                "NON_UNIQUE": 0,
+                "columns_list": "payment_id"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "INDEX_NAME": "uq_paymongo_qrph_provider_payment_id",
+                "NON_UNIQUE": 0,
+                "columns_list": "provider_payment_id"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "INDEX_NAME": "idx_paymongo_qrph_webhook_received",
+                "NON_UNIQUE": 1,
+                "columns_list": "received_at"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "INDEX_NAME": "idx_paymongo_qrph_webhook_transaction",
+                "NON_UNIQUE": 1,
+                "columns_list": "transaction_id"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "id"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "INDEX_NAME": "uq_paymongo_qrph_webhook_event_id",
+                "NON_UNIQUE": 0,
+                "columns_list": "event_id"
+            },
+            {
+                "TABLE_NAME": "users",
+                "INDEX_NAME": "employee_id",
+                "NON_UNIQUE": 0,
+                "columns_list": "employee_id"
+            },
+            {
+                "TABLE_NAME": "users",
+                "INDEX_NAME": "PRIMARY",
+                "NON_UNIQUE": 0,
+                "columns_list": "user_id"
+            },
+            {
+                "TABLE_NAME": "users",
+                "INDEX_NAME": "username",
+                "NON_UNIQUE": 0,
+                "columns_list": "username"
+            }
+        ],
+        "selected_columns": [
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "loan_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "PRI"
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "client_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "loan_amount",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "interest",
+                "COLUMN_TYPE": "decimal(8,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "total_payable",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "daily_payment",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "date_released",
+                "COLUMN_TYPE": "date",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "due_date",
+                "COLUMN_TYPE": "date",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "status",
+                "COLUMN_TYPE": "varchar(50)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "collector_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "loan_number",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "release_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "payment_frequency",
+                "COLUMN_TYPE": "varchar(50)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "loan_term",
+                "COLUMN_TYPE": "varchar(50)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "agreement_status",
+                "COLUMN_TYPE": "varchar(50)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "released_by",
+                "COLUMN_TYPE": "varchar(150)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "loan_type",
+                "COLUMN_TYPE": "varchar(80)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "loans",
+                "COLUMN_NAME": "loan_purpose",
+                "COLUMN_TYPE": "text",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "payment_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "PRI"
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "receipt_number",
+                "COLUMN_TYPE": "varchar(50)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": "UNI"
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "collector_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "client_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "receipt_generated_at",
+                "COLUMN_TYPE": "datetime",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "payment_method",
+                "COLUMN_TYPE": "varchar(50)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "reference_number",
+                "COLUMN_TYPE": "varchar(255)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "paymongo_qrph_transaction_id",
+                "COLUMN_TYPE": "bigint(20) unsigned",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": "UNI"
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "remarks",
+                "COLUMN_TYPE": "text",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "loan_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "payment_date",
+                "COLUMN_TYPE": "date",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "amount_paid",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "collector_name",
+                "COLUMN_TYPE": "varchar(150)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "interest_paid",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "penalty_paid",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "principal_paid",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "payments",
+                "COLUMN_NAME": "notes",
+                "COLUMN_TYPE": "text",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "id",
+                "COLUMN_TYPE": "bigint(20) unsigned",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "PRI"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "internal_reference",
+                "COLUMN_TYPE": "varchar(40)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "UNI"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "payment_intent_id",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": "UNI"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "payment_method_id",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "provider_payment_id",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": "UNI"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "payment_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": "UNI"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "paid_at",
+                "COLUMN_TYPE": "datetime",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "loan_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "MUL"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "client_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "borrower_user_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "MUL"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "initiated_by_user_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "collector_id",
+                "COLUMN_TYPE": "int(11)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": "MUL"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "selected_method",
+                "COLUMN_TYPE": "varchar(30)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "amount",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "penalty_paid",
+                "COLUMN_TYPE": "decimal(12,2)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "currency",
+                "COLUMN_TYPE": "char(3)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "status",
+                "COLUMN_TYPE": "enum('pending','failed','expired','succeeded','review_required')",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "provider_status",
+                "COLUMN_TYPE": "varchar(60)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "qr_image_url",
+                "COLUMN_TYPE": "longtext",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "failure_message",
+                "COLUMN_TYPE": "text",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "expires_at",
+                "COLUMN_TYPE": "datetime",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "MUL"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "created_at",
+                "COLUMN_TYPE": "datetime",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_transactions",
+                "COLUMN_NAME": "updated_at",
+                "COLUMN_TYPE": "datetime",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "id",
+                "COLUMN_TYPE": "bigint(20) unsigned",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "PRI"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "event_id",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "UNI"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "event_type",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "transaction_id",
+                "COLUMN_TYPE": "bigint(20) unsigned",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": "MUL"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "provider_payment_id",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "payment_intent_id",
+                "COLUMN_TYPE": "varchar(100)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "amount_centavos",
+                "COLUMN_TYPE": "bigint(20)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "currency",
+                "COLUMN_TYPE": "varchar(10)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "provider_status",
+                "COLUMN_TYPE": "varchar(50)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "livemode",
+                "COLUMN_TYPE": "tinyint(1)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "payload_sha256",
+                "COLUMN_TYPE": "char(64)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "signature_verified",
+                "COLUMN_TYPE": "tinyint(1)",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "processing_status",
+                "COLUMN_TYPE": "enum('processed','ignored','review_required')",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "details",
+                "COLUMN_TYPE": "varchar(1000)",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "received_at",
+                "COLUMN_TYPE": "datetime",
+                "IS_NULLABLE": "NO",
+                "COLUMN_KEY": "MUL"
+            },
+            {
+                "TABLE_NAME": "paymongo_qrph_webhook_events",
+                "COLUMN_NAME": "processed_at",
+                "COLUMN_TYPE": "datetime",
+                "IS_NULLABLE": "YES",
+                "COLUMN_KEY": ""
+            }
+        ]
+    },
+    "lending_management_row_counts_unchanged": true,
+    "lending_management_row_count_differences": []
+}

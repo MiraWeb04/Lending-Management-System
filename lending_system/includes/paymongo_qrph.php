@@ -4,6 +4,56 @@ require_once __DIR__ . '/env_lending.php';
 require_once __DIR__ . '/loan_helpers.php';
 
 const LENDING_PAYMONGO_QRPH_EXPIRY_SECONDS = 1800;
+const LENDING_PAYMONGO_WEBHOOK_TOLERANCE_SECONDS = 300;
+
+function lendingPaymongoConfiguredMode(): string
+{
+    $mode = strtolower(trim((string)lendingEnv('PAYMONGO_MODE', '')));
+
+    return $mode === 'live' ? 'live' : 'test';
+}
+
+function lendingPaymongoExpectsLivemode(): bool
+{
+    return lendingPaymongoConfiguredMode() === 'live';
+}
+
+function lendingPaymongoProviderLivemodeMatchesConfiguration(?bool $providerLivemode): bool
+{
+    if ($providerLivemode === null) {
+        return false;
+    }
+
+    return lendingPaymongoExpectsLivemode() ? $providerLivemode : !$providerLivemode;
+}
+
+function lendingPaymongoSecretKey(): string
+{
+    $secretKey = trim((string)lendingEnv('PAYMONGO_SECRET_KEY', ''));
+    if (lendingPaymongoConfiguredMode() === 'live') {
+        if (!str_starts_with($secretKey, 'sk_live_')) {
+            throw new RuntimeException('PayMongo live mode requires a valid live secret key (sk_live_).');
+        }
+    } elseif (!str_starts_with($secretKey, 'sk_test_')) {
+        throw new RuntimeException('PayMongo test mode requires a valid test secret key (sk_test_).');
+    }
+
+    return $secretKey;
+}
+
+function lendingPaymongoPublicKey(): string
+{
+    $publicKey = trim((string)lendingEnv('PAYMONGO_PUBLIC_KEY', ''));
+    if (lendingPaymongoConfiguredMode() === 'live') {
+        if (!str_starts_with($publicKey, 'pk_live_')) {
+            throw new RuntimeException('PayMongo live mode requires a valid live public key (pk_live_).');
+        }
+    } elseif (!str_starts_with($publicKey, 'pk_test_')) {
+        throw new RuntimeException('PayMongo test mode requires a valid test public key (pk_test_).');
+    }
+
+    return $publicKey;
+}
 
 function lendingPaymongoQrphRequest(string $method, string $path, array $payload, string $apiKey): array
 {
@@ -16,9 +66,9 @@ function lendingPaymongoQrphRequest(string $method, string $path, array $payload
         throw new RuntimeException('Could not initialize a secure PayMongo request.');
     }
 
-    curl_setopt_array($curl, [
-        CURLOPT_CUSTOMREQUEST => strtoupper($method),
-        CURLOPT_POSTFIELDS => json_encode($payload, JSON_THROW_ON_ERROR),
+    $httpMethod = strtoupper($method);
+    $curlOptions = [
+        CURLOPT_CUSTOMREQUEST => $httpMethod,
         CURLOPT_RETURNTRANSFER => true,
         CURLOPT_HTTPHEADER => [
             'Accept: application/json',
@@ -29,7 +79,11 @@ function lendingPaymongoQrphRequest(string $method, string $path, array $payload
         CURLOPT_TIMEOUT => 30,
         CURLOPT_SSL_VERIFYPEER => true,
         CURLOPT_SSL_VERIFYHOST => 2,
-    ]);
+    ];
+    if ($httpMethod !== 'GET') {
+        $curlOptions[CURLOPT_POSTFIELDS] = json_encode($payload, JSON_THROW_ON_ERROR);
+    }
+    curl_setopt_array($curl, $curlOptions);
 
     $responseBody = curl_exec($curl);
     $curlError = curl_error($curl);
@@ -59,7 +113,8 @@ function lendingPaymongoQrphRequest(string $method, string $path, array $payload
         }
         $providerMessage = $messages !== [] ? implode(' ', $messages) : 'The provider rejected the request.';
         error_log('PayMongo QR Ph API error (HTTP ' . $httpStatus . '): ' . $providerMessage);
-        throw new RuntimeException('PayMongo could not create the QR payment. ' . $providerMessage);
+        $action = $httpMethod === 'GET' ? 'confirm the QR payment' : 'create the QR payment';
+        throw new RuntimeException('PayMongo could not ' . $action . ' (HTTP ' . $httpStatus . '). ' . $providerMessage);
     }
 
     return $response;
@@ -97,7 +152,7 @@ function lendingAssertNoOpenPaymongoQrphTransaction(PDO $connection, int $loanId
         return;
     }
 
-    $sql = "SELECT id FROM paymongo_qrph_transactions
+    $sql = "SELECT id, status, internal_reference FROM paymongo_qrph_transactions
             WHERE loan_id = ? AND status IN ('pending', 'review_required')";
     $parameters = [$loanId];
     if ($exceptTransactionId !== null) {
@@ -108,14 +163,24 @@ function lendingAssertNoOpenPaymongoQrphTransaction(PDO $connection, int $loanId
 
     $statement = $connection->prepare($sql);
     $statement->execute($parameters);
-    if ($statement->fetchColumn()) {
+    $openAttempt = $statement->fetch(PDO::FETCH_ASSOC);
+    if ($openAttempt) {
+        $transactionId = (int)$openAttempt['id'];
+        $status = (string)$openAttempt['status'];
+        $reference = trim((string)$openAttempt['internal_reference']);
+        $detail = $status === 'review_required'
+            ? 'An earlier QR Ph attempt needs administrator review before another payment can be recorded.'
+            : 'Finish or refresh the open QR Ph attempt before starting another one. If the QR was not paid, open the QR status page and wait until PayMongo marks it expired.';
         throw new RuntimeException(
-            'This loan already has an unresolved PayMongo QR Ph attempt. Confirm its provider status before recording another payment.'
+            'This loan already has an unresolved PayMongo QR Ph attempt'
+            . ($reference !== '' ? ' (' . $reference . ')' : '')
+            . '. ' . $detail
+            . ' Open payments_lending.php?qrph=' . $transactionId . ' to check its status.'
         );
     }
 }
 
-function lendingVerifyPaymongoWebhookSignature(string $rawBody, string $signatureHeader, string $webhookSecret): bool
+function lendingVerifyPaymongoWebhookSignature(string $rawBody, string $signatureHeader, string $webhookSecret, ?string $signatureMode = null): bool
 {
     if ($rawBody === '' || $signatureHeader === '' || $webhookSecret === '') {
         return false;
@@ -130,16 +195,53 @@ function lendingVerifyPaymongoWebhookSignature(string $rawBody, string $signatur
     }
 
     $timestamp = $signatureParts['t'] ?? '';
-    $testSignature = strtolower($signatureParts['te'] ?? '');
-    if (!array_key_exists('li', $signatureParts)
-        || $timestamp === ''
-        || !ctype_digit($timestamp)
-        || preg_match('/^[a-f0-9]{64}$/', $testSignature) !== 1) {
+    if ($timestamp === '' || !ctype_digit($timestamp)) {
+        return false;
+    }
+
+    $ageSeconds = abs(time() - (int)$timestamp);
+    if ($ageSeconds > LENDING_PAYMONGO_WEBHOOK_TOLERANCE_SECONDS) {
         return false;
     }
 
     $expectedSignature = hash_hmac('sha256', $timestamp . '.' . $rawBody, $webhookSecret);
-    return hash_equals($expectedSignature, $testSignature);
+    $configuredMode = $signatureMode ?? lendingPaymongoConfiguredMode();
+    if ($configuredMode === 'live') {
+        $liveSignature = strtolower($signatureParts['li'] ?? '');
+
+        return preg_match('/^[a-f0-9]{64}$/', $liveSignature) === 1
+            && hash_equals($expectedSignature, $liveSignature);
+    }
+
+    $testSignature = strtolower($signatureParts['te'] ?? '');
+
+    return preg_match('/^[a-f0-9]{64}$/', $testSignature) === 1
+        && hash_equals($expectedSignature, $testSignature);
+}
+
+function lendingPaymongoTestModeSecretKey(): string
+{
+    return lendingPaymongoSecretKey();
+}
+
+function lendingPaymongoRetrievePaymentIntent(string $paymentIntentId): array
+{
+    if (!preg_match('/^pi_[A-Za-z0-9]+$/', $paymentIntentId)) {
+        throw new InvalidArgumentException('PayMongo did not provide a usable Payment Intent ID.');
+    }
+
+    $response = lendingPaymongoQrphRequest(
+        'GET',
+        '/payment_intents/' . rawurlencode($paymentIntentId),
+        [],
+        lendingPaymongoSecretKey()
+    );
+    $intent = $response['data'] ?? null;
+    if (!is_array($intent) || ($intent['type'] ?? '') !== 'payment_intent') {
+        throw new RuntimeException('PayMongo did not return a Payment Intent.');
+    }
+
+    return $intent;
 }
 
 function lendingParsePaymongoWebhookEvent(string $rawBody): ?array
@@ -192,34 +294,77 @@ function lendingCreatePaymongoQrphTransaction(
         throw new InvalidArgumentException('Select a valid loan before creating a QR payment.');
     }
 
-    $secretKey = trim((string)lendingEnv('PAYMONGO_SECRET_KEY', ''));
-    $publicKey = trim((string)lendingEnv('PAYMONGO_PUBLIC_KEY', ''));
-    $mode = strtolower(trim((string)lendingEnv('PAYMONGO_MODE', '')));
-    if ($mode !== 'test' || !str_starts_with($secretKey, 'sk_test_') || !str_starts_with($publicKey, 'pk_test_')) {
-        throw new RuntimeException('PayMongo test mode is not configured with valid test keys. No payment was created.');
+    $initiator = executeQuery(
+        'SELECT role, status FROM users WHERE user_id = ? LIMIT 1',
+        [$collectorUserId]
+    )->fetch(PDO::FETCH_ASSOC);
+    if (!$initiator || !isActiveAccount($initiator)) {
+        throw new RuntimeException('Only authorized staff can initiate PayMongo QR Ph payments.');
     }
+    $initiatorRole = trim((string)($initiator['role'] ?? ''));
+    $initiatorIsCollector = strcasecmp($initiatorRole, 'Collector') === 0;
+    $initiatorIsAdmin = strcasecmp($initiatorRole, 'Admin') === 0;
+    if (!$initiatorIsCollector && !$initiatorIsAdmin) {
+        throw new RuntimeException('Only authorized staff can initiate PayMongo QR Ph payments.');
+    }
+
+    $secretKey = lendingPaymongoSecretKey();
+    $publicKey = lendingPaymongoPublicKey();
 
     if (!is_numeric($requestedAmount) || !is_finite((float)$requestedAmount)) {
         throw new InvalidArgumentException('Enter a valid payment amount.');
     }
-    $amount = round((float)$requestedAmount, 2);
+    $rawAmount = (float)$requestedAmount;
+    $amount = round($rawAmount, 2);
+    if ($rawAmount < 0 || abs($rawAmount - $amount) > 0.000001) {
+        throw new InvalidArgumentException('Payment amount must be nonnegative and cannot have more than two decimal places.');
+    }
     $amountCentavos = (int)round($amount * 100);
     if ($amountCentavos <= 0) {
         throw new InvalidArgumentException('Payment amount must be greater than zero.');
     }
     $amount = $amountCentavos / 100;
 
+    if (lendingPaymongoConfiguredMode() === 'live') {
+        $liveMaxAmount = trim((string)lendingEnv('PAYMONGO_LIVE_MAX_AMOUNT', ''));
+        if ($liveMaxAmount !== '' && is_numeric($liveMaxAmount) && is_finite((float)$liveMaxAmount)) {
+            $liveMax = round((float)$liveMaxAmount, 2);
+            if ($liveMax > 0 && $amount > $liveMax + 0.009) {
+                throw new InvalidArgumentException(
+                    'Live QR Ph is capped at ₱' . number_format($liveMax, 2)
+                    . ' while PAYMONGO_LIVE_MAX_AMOUNT is set. Lower the amount or remove the cap after go-live testing.'
+                );
+            }
+        }
+    }
+
     if (!is_numeric($requestedPenalty) || !is_finite((float)$requestedPenalty)) {
         throw new InvalidArgumentException('Enter a valid penalty portion.');
     }
-    $penaltyPaid = round((float)$requestedPenalty, 2);
+    $rawPenalty = (float)$requestedPenalty;
+    $penaltyPaid = round($rawPenalty, 2);
+    if (abs($rawPenalty - $penaltyPaid) > 0.000001) {
+        throw new InvalidArgumentException('Penalty portion cannot have more than two decimal places.');
+    }
     if ($penaltyPaid < 0 || $penaltyPaid > $amount) {
         throw new InvalidArgumentException('Penalty portion must be between zero and the payment amount.');
     }
 
-    if (!ensureCollectorCanAccessLoan($loanId, $collectorUserId)) {
-        throw new RuntimeException('You are not assigned to this loan.');
+    if ($initiatorIsCollector) {
+        $assignmentCheck = executeQuery(
+            'SELECT l.loan_id FROM loans l
+             JOIN clients c ON l.client_id = c.client_id
+             WHERE l.loan_id = ? AND (c.collector_id = ? OR l.collector_id = ?)
+             LIMIT 1',
+            [$loanId, $collectorUserId, $collectorUserId]
+        )->fetch(PDO::FETCH_ASSOC);
+        if (!$assignmentCheck) {
+            throw new RuntimeException('You are not assigned to this loan.');
+        }
     }
+
+    require_once __DIR__ . '/paymongo_qrph_webhook.php';
+    lendingPrepareLoanForNewPaymongoQrph($loanId);
 
     $conn->beginTransaction();
     try {
@@ -311,6 +456,7 @@ function lendingCreatePaymongoQrphTransaction(
     }
     $transactionId = (int)$conn->lastInsertId();
     $conn->commit();
+    $createdIntentId = null;
 
     try {
         $loanReference = trim((string)($loan['loan_number'] ?? ''));
@@ -326,11 +472,15 @@ function lendingCreatePaymongoQrphTransaction(
                     'currency' => 'PHP',
                     'payment_method_allowed' => ['qrph'],
                     'description' => 'Loan repayment ' . $loanReference . ' - ' . $borrowerName,
+                    'metadata' => [
+                        'internal_reference' => $internalReference,
+                    ],
                 ],
             ],
         ], $secretKey);
         $intent = $intentResponse['data'] ?? [];
         $intentId = trim((string)($intent['id'] ?? ''));
+        $createdIntentId = $intentId !== '' ? $intentId : null;
         $clientKey = trim((string)($intent['attributes']['client_key'] ?? ''));
         if ($intentId === '' || $clientKey === '') {
             throw new RuntimeException('PayMongo did not return the required Payment Intent fields.');
@@ -378,18 +528,61 @@ function lendingCreatePaymongoQrphTransaction(
             LENDING_PAYMONGO_QRPH_EXPIRY_SECONDS,
             $transactionId,
         ]);
+        if ($update->rowCount() !== 1) {
+            throw new RuntimeException('The QR payment could not be saved because the transaction was no longer pending.');
+        }
 
         return $transactionId;
     } catch (Throwable $exception) {
         $failure = $conn->prepare(
             "UPDATE paymongo_qrph_transactions
-             SET status = 'review_required', provider_status = 'creation_requires_review', failure_message = ?, updated_at = NOW()
-             WHERE id = ? AND status = 'pending'"
+             SET status = 'failed', provider_status = 'creation_failed', payment_intent_id = COALESCE(?, payment_intent_id),
+                 failure_message = ?, updated_at = NOW()
+             WHERE id = ? AND status = 'pending' AND qr_image_url IS NULL"
         );
         $failure->execute([
+            $createdIntentId,
             mb_substr($exception->getMessage(), 0, 1000),
             $transactionId,
         ]);
         throw $exception;
     }
+}
+
+function lendingPaymentIsLinkedToPaymongoQrph(int $paymentId): bool
+{
+    global $conn;
+
+    if ($paymentId <= 0 || !lendingPaymongoQrphTransactionsTableExists()) {
+        return false;
+    }
+
+    $columnExists = static function (string $table, string $column) use ($conn): bool {
+        $statement = $conn->prepare(
+            'SELECT COUNT(*) FROM information_schema.COLUMNS
+             WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?'
+        );
+        $statement->execute([$table, $column]);
+        return (int)$statement->fetchColumn() > 0;
+    };
+
+    if ($columnExists('paymongo_qrph_transactions', 'payment_id')) {
+        $linkedTransaction = $conn->prepare(
+            'SELECT id FROM paymongo_qrph_transactions WHERE payment_id = ? LIMIT 1'
+        );
+        $linkedTransaction->execute([$paymentId]);
+        if ($linkedTransaction->fetchColumn()) {
+            return true;
+        }
+    }
+
+    if (!$columnExists('payments', 'paymongo_qrph_transaction_id')) {
+        return false;
+    }
+
+    $linkedPayment = $conn->prepare(
+        'SELECT paymongo_qrph_transaction_id FROM payments WHERE payment_id = ? LIMIT 1'
+    );
+    $linkedPayment->execute([$paymentId]);
+    return (int)$linkedPayment->fetchColumn() > 0;
 }

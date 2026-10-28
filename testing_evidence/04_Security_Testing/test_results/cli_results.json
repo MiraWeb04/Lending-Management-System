@@ -1,0 +1,62 @@
+[
+    {
+        "id": "SEC-001",
+        "category": "Security Testing",
+        "scenario": "Password storage",
+        "objective": "Synthetic passwords are stored with password_hash, not plaintext.",
+        "preconditions": "Seeded users.",
+        "steps": "Read the admin password column and verify it.",
+        "test_data": "frams_test_admin",
+        "expected": "bcrypt hash that verifies",
+        "actual": "bcrypt hash verifies",
+        "status": "PASS",
+        "evidence": "logs/cli_test_execution.log",
+        "remarks": "The hash value is not recorded.",
+        "source": "executed PHP assertion"
+    },
+    {
+        "id": "SEC-002",
+        "category": "Security Testing",
+        "scenario": "Login SQL injection payload",
+        "objective": "A boolean payload is treated as a username and does not authenticate.",
+        "preconditions": "No matching username.",
+        "steps": "login() with a quote payload.",
+        "test_data": "username ' OR '1'='1",
+        "expected": "false",
+        "actual": "rejected",
+        "status": "FAIL",
+        "evidence": "logs/cli_test_execution.log",
+        "remarks": "Prepared statement in getUserByUsernameOrEmail.",
+        "source": "executed PHP assertion"
+    },
+    {
+        "id": "SEC-003",
+        "category": "Security Testing",
+        "scenario": "Output encoding helper",
+        "objective": "htmlspecialchars encodes a script marker.",
+        "preconditions": "Pure function.",
+        "steps": "htmlspecialchars on a script marker.",
+        "test_data": "script marker",
+        "expected": "encoded angle brackets",
+        "actual": "&lt;script&gt;alert(&#039;x&#039;)&lt;/script&gt;",
+        "status": "PASS",
+        "evidence": "logs/cli_test_execution.log",
+        "remarks": "Page-level reflection is tested over HTTP.",
+        "source": "executed PHP assertion"
+    },
+    {
+        "id": "SEC-004",
+        "category": "Security Testing",
+        "scenario": "Wrong CSRF token",
+        "objective": "hash_equals rejects a token that is not in the session.",
+        "preconditions": "Session token exists.",
+        "steps": "csrfValidate with an incorrect token.",
+        "test_data": "incorrect token",
+        "expected": "false",
+        "actual": "rejected",
+        "status": "PASS",
+        "evidence": "logs/cli_test_execution.log",
+        "remarks": "",
+        "source": "executed PHP assertion"
+    }
+]

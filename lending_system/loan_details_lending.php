@@ -122,11 +122,19 @@ foreach ($payments as $payment) {
 $balanceSummary = calculateLoanBalanceSummary($loanId);
 $remainingBalance = (float)($balanceSummary['remaining_balance'] ?? ($loan['total_payable'] - $totalPaid));
 $penaltyDue = (float)($balanceSummary['penalty_due'] ?? 0);
-$interestBreakdown = calculateLoanInterestBreakdown(
-    (float)($loan['loan_amount'] ?? 0),
-    getStandardMonthlyInterestRatePercent(),
-    $loanTermMonths
-);
+try {
+    $interestBreakdown = calculateLoanInterestBreakdown(
+        (float)($loan['loan_amount'] ?? 0),
+        getStandardMonthlyInterestRatePercent(),
+        $loanTermMonths
+    );
+} catch (InvalidArgumentException $e) {
+    $interestBreakdown = [
+        'monthly_interest' => 0.0,
+        'total_interest' => (float)($loan['interest'] ?? 0),
+        'total_payable' => (float)($loan['total_payable'] ?? 0),
+    ];
+}
 $penaltyRatePercent = getPenaltyRatePercentForFrequency($paymentFrequency);
 
 // Calculate payment progress percentage
@@ -189,8 +197,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_payment'])) {
         exit('Only administrators and collectors can record payments.');
     }
 
-    $paymentAmount = (float)($_POST['amount_paid'] ?? 0);
-    $penaltyPaid = (float)($_POST['penalty_paid'] ?? 0);
+    $paymentAmount = $_POST['amount_paid'] ?? '';
+    $penaltyPaid = $_POST['penalty_paid'] ?? '0';
     $paymentDate = trim((string)($_POST['payment_date'] ?? date('Y-m-d')));
     $collectorName = isCollector()
         ? trim((string)($user['full_name'] ?? $user['username'] ?? 'Unknown'))
@@ -207,46 +215,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_payment'])) {
         'remarks' => $remarks,
     ];
 
-    if ($collectorName === '') {
+    $submittedToken = trim((string)($_POST['payment_submission_token'] ?? ''));
+    $storedToken = (string)($_SESSION['loan_details_payment_submission_token'] ?? '');
+    if ($submittedToken === '' || $storedToken === '' || !hash_equals($storedToken, $submittedToken)) {
+        $message = 'This payment form was already submitted or has expired. Please review the form and try again.';
+        $messageType = 'danger';
+    } elseif ($collectorName === '') {
         $message = 'Collector name is required.';
         $messageType = 'danger';
     } elseif ($paymentMethod === '') {
         $message = 'Payment method is required.';
         $messageType = 'danger';
-    } elseif ($paymentAmount <= 0) {
-        $message = 'Payment amount must be greater than zero.';
-        $messageType = 'danger';
     } else {
-        $balanceSummary = calculateLoanBalanceSummary($loanId);
-        $remainingBalance = (float)($balanceSummary['remaining_balance'] ?? 0);
-        $penaltyDue = (float)($balanceSummary['penalty_due'] ?? 0);
-        $maxTotalPayment = (float)($balanceSummary['total_amount_due'] ?? $remainingBalance);
+        unset($_SESSION['loan_details_payment_submission_token']);
+        try {
+            $clientId = (int)($loan['client_id'] ?? 0);
+            $collectorId = isCollector() ? (int)$user['user_id'] : null;
+            recordPaymentTransaction($loanId, $paymentDate, $paymentAmount, $collectorName, $collectorId, $clientId, $paymentMethod, null, $penaltyPaid, $remarks);
 
-        $effectivePenalty = min($penaltyPaid, $penaltyDue);
-        if ($penaltyPaid > $paymentAmount + 0.009) {
-            $message = 'Penalty portion cannot exceed total payment received.';
+            header('Location: loan_details_lending.php?id=' . $loanId . '&message=' . urlencode('Payment recorded successfully.') . '&type=success');
+            exit;
+        } catch (Throwable $e) {
+            $message = 'Error recording payment: ' . $e->getMessage();
             $messageType = 'danger';
-        } elseif ($paymentAmount > $maxTotalPayment + 0.009) {
-            $message = 'Payment amount cannot exceed the total amount due of ₱' . number_format($maxTotalPayment, 2) . ' (balance + penalties).';
-            $messageType = 'danger';
-        } elseif (($paymentAmount - $effectivePenalty) > $remainingBalance + 0.009) {
-            $message = 'Installment portion cannot exceed the remaining loan balance of ₱' . number_format($remainingBalance, 2) . '.';
-            $messageType = 'danger';
-        } else {
-            try {
-                $clientId = (int)($loan['client_id'] ?? 0);
-                $collectorId = isCollector() ? (int)$user['user_id'] : null;
-                recordPaymentTransaction($loanId, $paymentDate, $paymentAmount, $collectorName, $collectorId, $clientId, $paymentMethod, null, $penaltyPaid, $remarks);
-
-                header('Location: loan_details_lending.php?id=' . $loanId . '&message=' . urlencode('Payment recorded successfully.') . '&type=success');
-                exit;
-            } catch (Exception $e) {
-                $message = 'Error recording payment: ' . $e->getMessage();
-                $messageType = 'danger';
-            }
         }
     }
 }
+
+if (empty($_SESSION['loan_details_payment_submission_token'])) {
+    $_SESSION['loan_details_payment_submission_token'] = bin2hex(random_bytes(32));
+}
+$paymentSubmissionToken = (string)$_SESSION['loan_details_payment_submission_token'];
 
 $totalPenaltyPaid = 0.0;
 foreach ($payments as $paymentRow) {
@@ -435,7 +434,9 @@ foreach ($payments as $paymentRow) {
                     <div><strong>Total amount due:</strong> ₱<?php echo number_format((float)($balanceSummary['total_amount_due'] ?? 0), 2); ?></div>
                 </div>
                 <form action="loan_details_lending.php?id=<?php echo (int)$loanId; ?>" method="post" class="needs-validation" novalidate>
+                    <?php echo csrfField(); ?>
                     <input type="hidden" name="add_payment" value="1">
+                    <input type="hidden" name="payment_submission_token" value="<?php echo htmlspecialchars($paymentSubmissionToken, ENT_QUOTES, 'UTF-8'); ?>">
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="amount_paid" class="form-label">Total Payment Received <span class="text-danger">*</span></label>
@@ -487,13 +488,14 @@ foreach ($payments as $paymentRow) {
             <div class="chart-panel__header"><h6 class="m-0 fw-bold"><i class="fas fa-clock-rotate-left me-2"></i>Payment History</h6></div>
             <div class="chart-panel__body pt-0 px-0 pb-0">
                 <?php if (count($payments) > 0): ?>
-                <div class="table-responsive">
+                <div class="table-responsive payment-history-scroll">
                     <table class="table table-hover mb-0 data-table">
                         <thead>
                             <tr>
                                 <th>Date</th>
-                                <th>Amount</th>
+                                <th>Loan payment</th>
                                 <th>Penalty</th>
+                                <th>Total received</th>
                                 <th>Method</th>
                                 <th>Reference</th>
                                 <th>Collector</th>
@@ -505,6 +507,7 @@ foreach ($payments as $paymentRow) {
                                 <td><?php echo date('M d, Y', strtotime($payment['payment_date'])); ?></td>
                                 <td class="fw-semibold">₱<?php echo number_format((float)$payment['amount_paid'], 2); ?></td>
                                 <td>₱<?php echo number_format((float)($payment['penalty_paid'] ?? 0), 2); ?></td>
+                                <td class="fw-semibold">₱<?php echo number_format((float)$payment['amount_paid'] + (float)($payment['penalty_paid'] ?? 0), 2); ?></td>
                                 <td><?php echo htmlspecialchars((string)($payment['payment_method'] ?? 'Cash')); ?></td>
                                 <td><?php echo htmlspecialchars((string)($payment['reference_number'] ?? '—')); ?></td>
                                 <td><?php echo htmlspecialchars($payment['collector_name']); ?></td>
@@ -513,10 +516,10 @@ foreach ($payments as $paymentRow) {
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th class="text-end">Total installment paid</th>
+                                <th class="text-end">Total loan payment</th>
                                 <th>₱<?php echo $formattedTotalPaid; ?></th>
                                 <th class="text-end">Penalties collected</th>
-                                <th colspan="3">₱<?php echo number_format($totalPenaltyPaid, 2); ?></th>
+                                <th colspan="4">₱<?php echo number_format($totalPenaltyPaid, 2); ?></th>
                             </tr>
                         </tfoot>
                     </table>
