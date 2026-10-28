@@ -1,22 +1,55 @@
-/vendor/
+# ==========================================
+# FRAMS - Financial Risk Assessment and Micro-Lending System
+# Git Ignore Configuration
+# ==========================================
+
+# Environment variables and secrets
 .env
 .env.*
 !.env.example
 
+# Dependencies
+/vendor/
+/node_modules/
+
+# Python virtual environments
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# Database SQL files
 /database/*.sql
 
+# Uploaded documents and private borrower files
 /lending_system/uploads/*
 !/lending_system/uploads/.htaccess
 !/lending_system/uploads/loan_documents/
 /lending_system/uploads/loan_documents/*
 !/lending_system/uploads/loan_documents/.htaccess
 
+# Logs and temporary files
 *.log
-.DS_Store
-Thumbs.db
-
+*.tmp
+*.bak
 /tmp_debug.php
 /audit_results.txt
+
+# Audit and temporary scripts
 /modal_audit.py
 /lending_system/query_users_sample.php
 /lending_system/query*
+
+# IDE settings
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temporary test and cache files
+.phpunit.cache/
+.phpunit.result.cache
+coverage/
